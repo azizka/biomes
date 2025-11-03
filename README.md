@@ -104,6 +104,4 @@ library(biomer)
 citation("biomer")
 ```
 
-Zizka A, Andermann T, Silvestro D (2022). "IUCNN - Deep learning approaches to approximate species’ extinction risk." [Diversity and Distributions, 28(2):227-241 doi: 10.1111/ddi.13450](https://doi.org/10.1111/ddi.13450). 
-
-Groß H, Zizka A (2025): biomer – Analysis of Taxon Distributions in Global Biomes. R package, Version 1.0. [https://github.com/azizka/biomer](https://github.com/azizka/biomer). 
+Groß H, Zizka A (2025): biomer: Analysis of Taxon Distributions in Global Biomes. R package, Version 1.0. [https://github.com/azizka/biomer](https://github.com/azizka/biomer). 
