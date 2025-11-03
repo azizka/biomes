@@ -94,7 +94,7 @@ biomer_info <- biomer_get()
 ```
 
 
-# Reference
+## Reference
 Fischer J-C, Waltenowitz A, Beierkuhnlein C (2022) The biome inventory - Standardizing global biogeographical units. Global Ecology and Biogeography31(11):2172-2183: [https://doi.org/10.1111/geb.13574](https://onlinelibrary.wiley.com/doi/full/10.1111/geb.13574)
 
 
