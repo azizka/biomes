@@ -2,43 +2,39 @@
 % Please edit documentation in R/biomer_plot.R
 \name{biomer_plot}
 \alias{biomer_plot}
-\title{Plot number of occurrence records per raster cell}
+\title{Plot biome distribution and heatmap for occurrence records}
 \usage{
 biomer_plot(
-  data,
-  lon_col = "decimalLongitude",
-  lat_col = "decimalLatitude",
-  biome_layer = 1,
-  raster_path = NULL,
+  x,
+  lon = "decimalLongitude",
+  lat = "decimalLatitude",
+  world_extent = TRUE,
+  plot_type = c("both", "Map", "Barplot"),
+  layer = 1,
   save_path = NULL,
-  show = TRUE
+  show_plot = FALSE,
+  save_list = TRUE
 )
 }
 \arguments{
-\item{data}{A data frame with occurrence records (must include lon/lat columns).}
+\item{x}{Data frame with occurrence records (must include longitude and latitude columns).}
 
-\item{lon_col}{Column name for longitude. Default: "decimalLongitude".}
+\item{lon}{Name of longitude column. Default: "decimalLongitude".}
 
-\item{lat_col}{Column name for latitude. Default: "decimalLatitude".}
+\item{lat}{Name of latitude column. Default: "decimalLatitude".}
 
-\item{biome_layer}{Integer or vector. Index(es) of the biome raster layer(s).}
+\item{world_extent}{Logical; if TRUE, show whole world, otherwise crop to points. Default: TRUE.}
 
-\item{raster_path}{Path to the biome raster stack. Default: internal package path.}
+\item{plot_type}{Plot type: "both", "Map", or "Barplot".}
 
-\item{save_path}{Optional folder path to save plots.}
+\item{layer}{Integer vector for raster layer indices (can be multiple).}
 
-\item{show}{Logical. Show plots in the R viewer. Default: TRUE.}
+\item{save_path}{Optional: base file path to save plot (PNG/JPG, without extension; extensions and descriptors are added automatically).}
+
+\item{show_plot}{Logical; if TRUE (default), plot is displayed in RStudio.}
+
+\item{save_list}{Logical; if TRUE, the function returns a named list with \code{mapplot} and \code{barplot} ggplot objects for each requested layer. If FALSE (default), plots are not collected in a return list.}
 }
 \description{
-This function visualizes the absolute number of species occurrence records per raster cell
-over a biome raster layer. It uses precomputed biome polygons (.gpkg files) for fast plotting.
-}
-\examples{
-biomer_plot(data,
-            lon_col = "decimalLongitude",
-            lat_col = "decimalLatitude",
-            biome_layer = c(1, 5, 20),
-            show = TRUE,
-            save_path = "test_environment/plots"
-            )
+Visualize occurrence points together with assigned biomes, overview pie chart, and/or barplot for one or more raster layers.
 }

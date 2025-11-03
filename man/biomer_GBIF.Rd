@@ -2,54 +2,81 @@
 % Please edit documentation in R/biomer_GBIF.R
 \name{biomer_GBIF}
 \alias{biomer_GBIF}
-\title{Download and clean GBIF occurrences for a taxon}
+\title{Download and filter GBIF occurrences for a taxon}
 \usage{
 biomer_GBIF(
   taxon,
-  username,
-  pwd,
-  email,
+  use_download = FALSE,
+  username = NULL,
+  pwd = NULL,
+  email = NULL,
+  write_files = FALSE,
   save_dir = "data/GBIF",
-  filter_clean = TRUE,
+  filter_clean = FALSE,
   filter_sea = FALSE,
   year_min = NULL,
-  year_max = NULL
+  year_max = NULL,
+  country = NULL,
+  limit = NULL
 )
 }
 \arguments{
-\item{taxon}{Scientific name of a taxon (e.g., species, genus, family, etc.).}
+\item{taxon}{Scientific name to query (species, genus, etc.). Required.}
 
-\item{username}{GBIF username.}
+\item{use_download}{Logical. If \code{TRUE}, use the GBIF download workflow
+(\code{occ_download}) instead of \code{occ_search}. \code{occ_download} is recommended
+for large or complete datasets (over 100,000 records) and when a citable
+GBIF download (with DOI) is needed. Default: \code{FALSE}.}
 
-\item{pwd}{GBIF password.}
+\item{username}{GBIF username (only used if \code{use_download = TRUE}).}
 
-\item{email}{Email address associated with the GBIF account.}
+\item{pwd}{GBIF password (only used if \code{use_download = TRUE}).}
 
-\item{save_dir}{Directory to store GBIF download and citation (default = "data/GBIF").}
+\item{email}{GBIF account email (only used if \code{use_download = TRUE}).}
 
-\item{filter_clean}{Logical; if TRUE, cleans coordinates using CoordinateCleaner.}
+\item{write_files}{Logical. If \code{TRUE}, write outputs such as citation text,
+the raw GBIF CSV, and the cleaned CSV to disk. Default: \code{FALSE} (only used if \code{use_download = TRUE}).}
 
-\item{filter_sea}{Logical; if TRUE, filters sea coordinates (default = FALSE).}
+\item{save_dir}{Directory used for saving outputs when \code{write_files = TRUE}.
+Default: \code{"data/GBIF"}.}
 
-\item{year_min}{Optional integer. Minimum year to include.}
+\item{filter_clean}{Logical. If \code{TRUE}, run basic spatial cleaning on
+coordinates using \code{CoordinateCleaner::clean_coordinates()}. Default: \code{FALSE}.}
 
-\item{year_max}{Optional integer. Maximum year to include.}
+\item{filter_sea}{Logical. If \code{TRUE}, also filter occurrences that fall in
+the sea (\code{tests} includes "seas"). Default: \code{FALSE}.}
+
+\item{year_min}{Optional integer. Minimum event year for records to keep.}
+
+\item{year_max}{Optional integer. Maximum event year for records to keep.}
+
+\item{country}{Optional character vector. One or more country ISO 3166-1 alpha-2 codes to filter occurrences by country.}
+
+\item{limit}{Optional integer. Record limit passed to \code{rgbif::occ_search()}.}
 }
 \value{
-A table with (optionally cleaned) GBIF occurrence records.
+A data frame of GBIF occurrences after optional cleaning.
 }
 \description{
-Downloads GBIF occurrence data using the GBIF API, filters by year range,
-limits number of records, applies coordinate cleaning, and stores citation.
+Retrieve occurrence records for a given taxon from GBIF.
+}
+\details{
+By default this uses \code{rgbif::occ_search()}, which does not require a GBIF
+account. If \code{use_download = TRUE}, it uses the GBIF download API via
+\code{rgbif::occ_download()}, which requires GBIF credentials and can return
+larger datasets.
+
+Coordinates can optionally be cleaned using \code{CoordinateCleaner}. No files
+are written unless \code{write_files = TRUE}.
 }
 \examples{
-data <- biomer_GBIF(taxon = "Solemyida",
-                    username = "XXX",
-                    pwd = "XXX",
-                    email = "XXX",
-                    save_dir = "test_environment/data",
-                    filter_Sclean = TRUE,
-                    filter_sea = FALSE,
-                    year_min = 2000,
-                    year_max = 2024)
+\dontrun{
+dat <- biomer_GBIF(
+  taxon = "Solemyida",
+  year_min = 2000,
+  year_max = 2024,
+  limit = 5000
+)
+}
+
 }

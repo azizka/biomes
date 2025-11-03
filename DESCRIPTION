@@ -1,8 +1,8 @@
 Package: biomer
-Title: Tools for Working with Biome Raster Data and Species Distributions
+Title: User-Friendly Species-to-Biome Classification
 Version: 0.1.0
 Authors@R: 
-    person("Christian", "Groß", email = "grossc@uni-marburg.de", role = c("aut", "cre"))
+    person("Hans Christian", "Groß", email = "grossc@uni-marburg.de", role = c("aut", "cre"))
 Description: Provides tools to visualize biome raster layers and analyze species
     occurrence data in relation to these biomes. The package enables downloading 
     GBIF occurrence records, cleaning coordinate data, and quantifying species 
@@ -15,14 +15,24 @@ Depends:
     R (>= 4.1.0)
 Imports:
     terra,
-    viridis,
+    ggplot2,
+    sf,
     dplyr,
-    magrittr,
-    rlang,
     readr,
     rgbif,
-    countrycode,
     CoordinateCleaner,
     tidyr,
-    stringr
-License: MIT + file LICENSE
+    cowplot,
+    ggforce,
+    viridis
+VignetteBuilder: knitr
+Suggests:
+    knitr,
+    readxl,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+License: CC0
+
+
+

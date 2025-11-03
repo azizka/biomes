@@ -1,23 +1,70 @@
-#' Load Biome Raster and Legend into Environment
+#' Load package biome data and example files
 #'
-#' Loads the raster stack and associated biome legend into the global environment for use in further analysis.
+#' Loads the raster stack and legend as list elements,
+#' optionally displays PNG maps from a single zip file,
+#' and provides an option to load an example .rds dataset.
 #'
-#' @param env The environment into which the objects should be loaded. Defaults to `.GlobalEnv`.
-#' @return NULL (objects are assigned in the environment)
-#'
+#' @param raster Logical. If TRUE (default), loads and returns biome raster as list element.
+#' @param legend Logical. If TRUE (default), loads and returns biome legend as list element.
+#' @param info Logical. If TRUE (default), loads and returns a table summarizing all available biome classifications for comparison.
+#' @param example Logical. If TRUE, load and return example_file.rds in the list.
+#' @return Returns a list with any or all of: raster, legend, info and example
 #' @examples
-#' biomer_get()
-#' head(biome_legend)
-#'
+#' \dontrun{
+#' biomer_info <- biomer_get()
+#' }
 #' @export
+biomer_get <- function(raster = TRUE,
+                       legend = TRUE,
+                       info = TRUE,
+                       example = TRUE) {
+  out <- list()
 
-biomer_get <- function(env = .GlobalEnv) {
-  path_legend <- system.file("extdata", "biome_legend.rds", package = "biomer")
-  path_raster <- system.file("extdata", "Biome_Inventory_RasterStack.tif", package = "biomer")
+  # Load raster stack if requested
+  if (raster) {
+    rasterfile <- system.file("extdata/Biome_Inventory_RasterStack.tif", package = "biomer")
+    if (file.exists(rasterfile)) {
+      biome_raster <- terra::rast(rasterfile)
+      out$raster <- biome_raster
+    } else {
+      message("biome_raster file not found.")
+    }
+  }
 
-  assign("biome_legend", readRDS(path_legend), envir = env)
-  assign("biome_raster", terra::rast(path_raster), envir = env)
+  # Load legend file if requested
+  if (legend) {
+    legendfile <- system.file("extdata/biome_legend.rds", package = "biomer")
+    if (file.exists(legendfile)) {
+      biome_legend <- readRDS(legendfile)
+      out$legend <- biome_legend
+    } else {
+      message("biome_legend file not found.")
+    }
+  }
 
-  message("Loaded: biome_legend, biome_raster")
-  invisible(NULL)
+  # Load information file
+  if (info) {
+    infofile <- system.file("extdata/biomer_information.xlsx", package = "biomer")
+    if (!file.exists(infofile)) infofile <- "biomer_information.xlsx" # fallback to working directory
+    if (file.exists(infofile)) {
+      if (!requireNamespace("readxl", quietly = TRUE)) stop("Package 'readxl' required for info table.")
+      biome_info <- readxl::read_excel(infofile)
+      out$info <- biome_info
+    } else {
+      message("biomer_information.xlsx file not found.")
+    }
+  }
+
+  # Load example rds file if requested
+  if (example) {
+    example_file <- system.file("extdata/example_file.rds", package = "biomer")
+    if (file.exists(example_file)) {
+      example_data <- readRDS(example_file)
+      out$example <- example_data
+    } else {
+      warning("example_file.rds not found in extdata.")
+    }
+  }
+
+  return(out)
 }
