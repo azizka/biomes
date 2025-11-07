@@ -4,6 +4,8 @@
 #' limits number of records, applies coordinate cleaning, and stores citation.
 #'
 #' @param taxon Scientific name of a taxon (e.g., species, genus, family, etc.).
+#' @param mode mode of retrieving GBIF data, use "search" for a quick overview (limited to 10,000 records!)
+#' and "download" for analyses
 #' @param username GBIF username.
 #' @param pwd GBIF password.
 #' @param email Email address associated with the GBIF account.
@@ -27,7 +29,7 @@
 #'                     year_max = 2024)
 #' @export
 #'
-#' @importFrom rgbif name_backbone occ_download occ_download_wait occ_download_get occ_download_import pred pred_gte pred_lte gbif_citation
+#' @importFrom rgbif name_backbone occ_download occ_download_wait occ_download_get occ_download_import occ_search pred pred_gte pred_lte gbif_citation
 #' @importFrom CoordinateCleaner clean_coordinates
 #' @importFrom dplyr filter slice_head mutate
 #' @importFrom readr read_tsv write_csv
@@ -36,6 +38,7 @@
 
 biomer_GBIF <- function(
     taxon,
+    mode,
     username,
     pwd,
     email,
@@ -44,7 +47,7 @@ biomer_GBIF <- function(
     filter_sea = FALSE,
     year_min = NULL,
     year_max = NULL
-) {
+){
   dir.create(save_dir, showWarnings = FALSE, recursive = TRUE)
 
   # Get taxonKey
@@ -63,32 +66,37 @@ biomer_GBIF <- function(
   if (!is.null(year_min)) pred_list <- append(pred_list, list(rgbif::pred_gte("year", year_min)))
   if (!is.null(year_max)) pred_list <- append(pred_list, list(rgbif::pred_lte("year", year_max)))
 
-  # Request download
-  message("→ Downloading GBIF data...")
-  dl <- do.call(rgbif::occ_download, c(
-    pred_list,
-    list(format = "SIMPLE_CSV", user = username, pwd = pwd, email = email)
-  ))
+  if(mode == "download"){
+    # Request download
+    message("→ Downloading GBIF data...")
+    dl <- do.call(rgbif::occ_download, c(
+      pred_list,
+      list(format = "SIMPLE_CSV", user = username, pwd = pwd, email = email)
+    ))
 
-  # Wait for download
-  rgbif::occ_download_wait(dl)
-  dl_key <- dl[[1]]
+    # Wait for download
+    rgbif::occ_download_wait(dl)
+    dl_key <- dl[[1]]
 
-  # Save citation
-  message("→ Saving GBIF citation...")
-  cit <- rgbif::gbif_citation(dl_key)
-  cit_text <- capture.output(print(cit))
-  writeLines(cit_text, file.path(save_dir, paste0(dl_key, "_citation.txt")))
+    # Save citation
+    message("→ Saving GBIF citation...")
+    cit <- rgbif::gbif_citation(dl_key)
+    cit_text <- capture.output(print(cit))
+    writeLines(cit_text, file.path(save_dir, paste0(dl_key, "_citation.txt")))
 
-  # Download ZIP + extract
-  zip_path <- file.path(save_dir, paste0(dl_key, ".zip"))
-  rgbif::occ_download_get(key = dl_key, overwrite = TRUE, path = save_dir)
-  unzipped_files <- unzip(zipfile = zip_path, exdir = save_dir)
-  csv_file <- unzipped_files[grepl("\\.csv$", unzipped_files)][1]
+    # Download ZIP + extract
+    zip_path <- file.path(save_dir, paste0(dl_key, ".zip"))
+    rgbif::occ_download_get(key = dl_key, overwrite = TRUE, path = save_dir)
+    unzipped_files <- unzip(zipfile = zip_path, exdir = save_dir)
+    csv_file <- unzipped_files[grepl("\\.csv$", unzipped_files)][1]
 
-  # Import data
-  occ_data <- readr::read_tsv(csv_file, guess_max = 100000)
-  message("→ Done. Returned ", nrow(occ_data), " occurrence records.")
+    # Import data
+    occ_data <- readr::read_tsv(csv_file, guess_max = 100000)
+    message("→ Done. Returned ", nrow(occ_data), " occurrence records.")
+  } else if(mode == "search") {
+    occ_data <- occ_data(taxonKey = taxonKey, limit = 10000, hasCoordinate = TRUE)$data
+  }
+
 
   # Coordinate cleaning
   if (filter_clean) {
