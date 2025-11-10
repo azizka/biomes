@@ -1,14 +1,14 @@
 Package: biomer
 Title: User-Friendly Species-to-Biome Classification
-Version: 0.1.0
+Version: 0.9.1
 Authors@R: 
     c(person("Christian", "Groß", email = "grossc@uni-marburg.de", role = c("cre")),
         person("Alexander", "Zizka", email = "alexander.ziza@biologie.uni-marburg.de", role = c("aut", "fnd")))
-Description: Provides tools to visualize biome raster layers and analyze species
-    occurrence data in relation to these biomes. The package enables downloading 
-    GBIF occurrence records, cleaning coordinate data, and quantifying species 
-    occurrences across user-defined biome layers. Additional functions support 
-    raster visualization, data loading, and summary generation.
+Description: Provides raster layers of 31 commonly used biome definitions (from Fischer et al, 2022)
+ at 10 x10 km resolutino globally. Furthermore contains two functions to classify species occurrences
+ and species into these biomes and visualize. 
+ Works with user-provided occurrences or a species name, in which case occurrences 
+ are downloaded from www.gbif.org and cleaned automatically.
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
@@ -33,7 +33,7 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-License: CC0
+License: CC-BY
 
 
 
