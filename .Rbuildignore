@@ -1,5 +1,7 @@
 ^biomer\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
-^test_environment$
 
+^doc$
+^Meta$
+^cran-comments\.md$

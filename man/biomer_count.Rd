@@ -2,53 +2,73 @@
 % Please edit documentation in R/biomer_count.R
 \name{biomer_count}
 \alias{biomer_count}
-\title{Occurrence records by biome}
+\title{Occurrence records by biome for multiple layers}
 \usage{
 biomer_count(
-  df,
-  species_col = "species",
-  lon_col = "decimalLongitude",
-  lat_col = "decimalLatitude",
-  biome_layer = 1,
-  raster_path = system.file("extdata", "Biome_Inventory_RasterStack.tif", package =
-    "biomer"),
-  legend_path = system.file("extdata", "Biome_Inventory_Legends.txt", package = "biomer"),
-  save_path = NULL,
-  include_summary = TRUE
+  x,
+  group_col = "species",
+  lon = "decimalLongitude",
+  lat = "decimalLatitude",
+  layer = 1,
+  raster = system.file("extdata", "Biome_Inventory_RasterStack.tif", package = "biomer"),
+  legend = system.file("extdata", "biome_legend.rds", package = "biomer"),
+  presence_min_n = 1,
+  presence_min_prop = NULL
 )
 }
 \arguments{
-\item{df}{Data frame with at least longitude, latitude and taxon columns.}
+\item{x}{Data frame with at least longitude and latitude and a taxon column for grouping.}
 
-\item{species_col}{Column name for species (or other grouping).}
+\item{group_col}{Column name in \code{x} to use for grouping (e.g. "species", "family", "genus", etc.). Default: "species".}
 
-\item{lon_col}{Name of longitude column. Default: "decimalLongitude"}
+\item{lon}{Column name for longitude. Default: "decimalLongitude".}
 
-\item{lat_col}{Name of latitude column. Default: "decimalLatitude"}
+\item{lat}{Column name for latitude. Default: "decimalLatitude".}
 
-\item{biome_layer}{Integer indicating raster layer to use (1–31)}
+\item{layer}{Integer vector of raster layer indices to use.}
 
-\item{raster_path}{Path to raster stack (default from package)}
+\item{raster}{Path to the biome raster stack file or a SpatRaster.}
 
-\item{legend_path}{Path to legend file (default from package)}
+\item{legend}{Path to the biome lookup table (RDS) or a data frame.}
 
-\item{save_path}{Path to export CSVs (without extension). If NULL, nothing is saved.}
+\item{presence_min_n}{Minimum number of records to count a taxon as present in a biome. Default: 1.}
 
-\item{include_summary}{Logical; whether to generate and export a summary table.}
+\item{presence_min_prop}{Optional threshold proportion for presence.}
 }
 \value{
-Adds two tables: df_biom and summary_table
+Two list objects:
+\itemize{
+\item biomer_taxon_summary: A table (or a list of tables for multiple layers) that shows which taxa (as specified by the grouping column, e.g., "species" or "genus") occur in which biomes, with presence indicated for each biome class.
+\item counts_per_biome: A table (or list of tables) that summarizes for each biome layer the number of unique taxa and the total number of occurrence records in each biome class, with clearly labeled columns for biome name, number of taxa and number of occurrences.
+}
 }
 \description{
-Adds biome ID, cell ID and biome name for each point from the selected biome layer.
-Also creates a summary table of occurrences per species and biome.
+Assign biome information from one or more raster layers to occurrence records, and summarize taxon presence.
 }
 \examples{
-biomer_count(df = data,
-             species_col = "species",
-             biome_layer = 1,
-             lon_col = "decimalLongitude",
-             lat_col = "decimalLatitude",
-             include_summary = TRUE,
-             save_path = NULL)
+\dontrun{
+result <- biomer_count(
+  x = df,
+  group_col = "species",
+  lon = "decimalLongitude",
+  lat = "decimalLatitude",
+  layer = c(1, 3, 31),
+  presence_min_n = 1,
+  presence_min_prop = NULL
+)
+
+# For single layer output, e.g.:
+res_single <- biomer_count(
+  x = df,
+  species = "species",
+  lon = "decimalLongitude",
+  lat = "decimalLatitude",
+  layer = 1
+)
+
+# Access the results (when multiple layers)
+result$biomer_taxon_summary$layer_1
+result$counts_per_biome$layer_1
+}
+
 }

@@ -2,21 +2,29 @@
 % Please edit documentation in R/biomer_get.R
 \name{biomer_get}
 \alias{biomer_get}
-\title{Load Biome Raster and Legend into Environment}
+\title{Load packaged biome data and example files}
 \usage{
-biomer_get(env = .GlobalEnv)
+biomer_get(raster = TRUE, legend = TRUE, info = TRUE, example = TRUE)
 }
 \arguments{
-\item{env}{The environment into which the objects should be loaded. Defaults to \code{.GlobalEnv}.}
+\item{raster}{Logical. If TRUE (default), loads and returns biome raster as list element.}
+
+\item{legend}{Logical. If TRUE (default), loads and returns biome legend as list element.}
+
+\item{info}{Logical. If TRUE (default), loads and returns a table summarizing all available biome classifications for comparison.}
+
+\item{example}{Logical. If TRUE, load and return example_file.rds in the list.}
 }
 \value{
-NULL (objects are assigned in the environment)
+Returns a list with any or all of: raster, legend, info and example
 }
 \description{
-Loads the raster stack and associated biome legend into the global environment for use in further analysis.
+Loads the raster stack and legend as list elements,
+optionally displays PNG maps from a single zip file,
+and provides an option to load an example .rds dataset.
 }
 \examples{
-biomer_get()
-head(biome_legend)
-
+\dontrun{
+biomer_info <- biomer_get()
+}
 }

@@ -1,0 +1,2 @@
+$download
+[1] "GBIF Occurrence Download https://doi.org/10.15468/dl.mxfaj9 Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 2025-11-01"
