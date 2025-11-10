@@ -9,8 +9,8 @@ and cleaned automatically.
 ## Installation
 
 ```r
-# install.packages("devtools")
 devtools::install_github("azizka/biomer")
+library(biomer)
 ``` 
 
 ---
@@ -34,7 +34,9 @@ The output is a list containing both the ready-to-use plots (`$mapplot`, `$barpl
 biomer_info <- biomer_get()
 ```
 
-2. Tabulate biome presence by group.
+2. Tabulate biome presence by group. Provide your occurrences as data.frame with `x`, 
+the relevant columns with `group_col`, `lon`, `lat` and the biome layers to use with `layer`. 
+See `?biomer_count` for further options.
 
 ```r
 df_counts <- biomer_count(
@@ -69,7 +71,6 @@ Fischer J-C, Waltenowitz A, Beierkuhnlein C (2022) The biome inventory - Standar
 
 ## Citation
 ```r
-library(biomer)
 citation("biomer")
 ```
 
