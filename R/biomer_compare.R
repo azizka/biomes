@@ -16,7 +16,7 @@ biomer_compare <- function(
     lon = "decimalLongitude",
     lat = "decimalLatitude",
     layer = 1,
-    limit = 100000
+    limit = 5000
 ) {
   if (!is.null(limit) && limit > 100000) {
     stop("Values greater than 100,000 for 'limit' are not supported in biomer_compare(). Use biomer_GBIF(use_download = TRUE, ...) for large downloads.")

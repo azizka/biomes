@@ -16,13 +16,22 @@ library(biomer)
 ---
 
 ## In a nutshell
-The `biomer_compare()` function performs occurrence download through visualization for a supplied taxon:
+The `biomer_compare()` is a wrapper function and compares occurrences across multiple biome definitions.
 
 ```r
-sp_to_biom <- biomer_compare(taxon = "Talpa europaea")
+data(biomer_example)
+sp_to_biom <- biomer_compare(x = biomer_example)
 ``` 
 
 The output is a list containing both the ready-to-use plots (`$mapplot`, `$barplot`) and tabular summary data for all biomes.
+
+
+It is also possible to use only a species name, then records are downloaded from www.gbif.org. 
+Remember to adapt the limit.This may take a while.
+
+```r
+sp_to_biom <- biomer_compare(taxon = "Talpa europaea", limit = 5000)
+``` 
 
 ---
 
