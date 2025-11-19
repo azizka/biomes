@@ -11,7 +11,7 @@ biomer_compare(
   lon = "decimalLongitude",
   lat = "decimalLatitude",
   layer = 1,
-  limit = NULL
+  limit = 5000
 )
 }
 \arguments{
