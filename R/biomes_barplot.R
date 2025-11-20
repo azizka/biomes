@@ -25,8 +25,8 @@ biomes_barplot <- function(
     show_plot = FALSE
 ) {
 
-  r_path <- system.file("extdata", "Biome_Inventory_RasterStack.tif", package = "biomer")
-  legendpath <- system.file("extdata", "biome_legend.rds", package = "biomer")
+  r_path <- system.file("extdata", "Biome_Inventory_RasterStack.tif", package = "biomes")
+  legendpath <- system.file("extdata", "biome_legend.rds", package = "biomes")
   r_stack <- terra::rast(r_path)
   legend <- readRDS(legendpath)
 

@@ -9,8 +9,8 @@ biomes_assign(
   lon = "decimalLongitude",
   lat = "decimalLatitude",
   layer,
-  raster = system.file("extdata", "Biome_Inventory_RasterStack.tif", package = "biomer"),
-  legend = system.file("extdata", "biome_legend.rds", package = "biomer")
+  raster = system.file("extdata", "Biome_Inventory_RasterStack.tif", package = "biomes"),
+  legend = system.file("extdata", "biome_legend.rds", package = "biomes")
 )
 }
 \arguments{

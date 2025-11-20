@@ -19,8 +19,8 @@ biomes_count <- function(
     lon = "decimalLongitude",
     lat = "decimalLatitude",
     layer = 1,
-    raster = system.file("extdata", "Biome_Inventory_RasterStack.tif", package = "biomer"),
-    legend = system.file("extdata", "biome_legend.rds", package = "biomer"),
+    raster = system.file("extdata", "Biome_Inventory_RasterStack.tif", package = "biomes"),
+    legend = system.file("extdata", "biome_legend.rds", package = "biomes"),
     presence_min_n = 1,
     presence_min_prop = NULL
 ) {

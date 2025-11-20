@@ -25,6 +25,6 @@ and provides an option to load an example .rds dataset.
 }
 \examples{
 \dontrun{
-biomer_info <- biomer_get()
+info <- biomes_get()
 }
 }

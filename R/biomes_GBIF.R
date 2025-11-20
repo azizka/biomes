@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' dat <- biomer_GBIF(
+#' dat <- biomes_GBIF(
 #'   taxon = c("Solemyida", "Bufo bufo"),
 #'   year_min = 2000,
 #'   year_max = 2024,
@@ -32,7 +32,7 @@
 #' @importFrom rgbif name_backbone occ_search
 #' @importFrom CoordinateCleaner clean_coordinates
 #' @importFrom dplyr filter
-biomer_GBIF <- function(
+biomes_GBIF <- function(
     taxon,
     filter_clean = FALSE,
     filter_sea = FALSE,
@@ -41,43 +41,6 @@ biomer_GBIF <- function(
     country = NULL,
     limit = NULL
 ) {
-  # ------------------------------------------------------------------------
-  # Assertions
-  # ------------------------------------------------------------------------
-  # taxon kommt als character vector (muss mind. 1 sein)
-  if (missing(taxon) || !is.character(taxon) || length(taxon) < 1L ||
-      any(is.na(taxon)) || any(nchar(taxon) == 0)) {
-    stop("`taxon` must be a non-empty character vector of taxon names.")
-  }
-  if (!is.logical(filter_clean) || length(filter_clean) != 1L ||
-      is.na(filter_clean)) {
-    stop("`filter_clean` must be TRUE or FALSE.")
-  }
-  if (!is.logical(filter_sea) || length(filter_sea) != 1L ||
-      is.na(filter_sea)) {
-    stop("`filter_sea` must be TRUE or FALSE.")
-  }
-  if (!is.null(year_min)) {
-    if (!is.numeric(year_min) || length(year_min) != 1L ||
-        is.na(year_min)) {
-      stop("`year_min` must be NULL or a single numeric value.")
-    }
-  }
-  if (!is.null(year_max)) {
-    if (!is.numeric(year_max) || length(year_max) != 1L ||
-        is.na(year_max)) {
-      stop("`year_max` must be NULL or a single numeric value.")
-    }
-  }
-  if (!is.null(limit)) {
-    if (!is.numeric(limit) || length(limit) != 1L ||
-        is.na(limit) || limit <= 0) {
-      stop("`limit` must be NULL or a single positive number.")
-    }
-    if (limit > 100000) {
-      stop("The maximum allowed value for 'limit' in occ_search() is 100000.")
-    }
-  }
 
   # ------------------------------------------------------------------------
   # Build year filter

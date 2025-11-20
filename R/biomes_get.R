@@ -11,7 +11,7 @@
 #' @return Returns a list with any or all of: raster, legend, info and example
 #' @examples
 #' \dontrun{
-#' biomer_info <- biomer_get()
+#' info <- biomes_get()
 #' }
 #' @export
 biomes_get <- function(raster = TRUE,
@@ -23,7 +23,7 @@ biomes_get <- function(raster = TRUE,
 
   # Load raster stack if requested
   if (raster) {
-    rasterfile <- system.file("extdata/Biome_Inventory_RasterStack.tif", package = "biomer")
+    rasterfile <- system.file("extdata/Biome_Inventory_RasterStack.tif", package = "biomes")
     if (file.exists(rasterfile)) {
       biome_raster <- terra::rast(rasterfile)
       out$raster <- biome_raster
@@ -34,7 +34,7 @@ biomes_get <- function(raster = TRUE,
 
   # Load legend file if requested
   if (legend) {
-    legendfile <- system.file("extdata/biome_legend.rds", package = "biomer")
+    legendfile <- system.file("extdata/biome_legend.rds", package = "biomes")
     if (file.exists(legendfile)) {
       biome_legend <- readRDS(legendfile)
       out$legend <- biome_legend
