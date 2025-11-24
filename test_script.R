@@ -1,6 +1,22 @@
 library(biomer)
 
 
+data(biome_information)
+
+biome_information <- readRDS("data/biome_information.rds")
+
+use_data(biome_information)
+use_data_raw("inst/extdata/biomer_information.xlsx")
+
+
+biome_legend<- readRDS("data/biome_legend.rds")
+use_data(biome_legend)
+use_data_raw("data/biome_legend.rds")
+
+
+biomes_example<- readRDS("data/example_file.rds")
+use_data(biomes_example)
+use_data_raw("data/example_filerds")
 
 biome_legend <- readRDS("inst/extdata/biome_legend.rds")
 
