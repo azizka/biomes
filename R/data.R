@@ -12,7 +12,7 @@
 #'   ...
 #' }
 #' @source <https://www.who.int/teams/global-tuberculosis-programme/data>
-"biome_information"
+"biomes_information"
 
 
 #' World Health Organization TB data
@@ -29,7 +29,7 @@
 #'   ...
 #' }
 #' @source <https://www.who.int/teams/global-tuberculosis-programme/data>
-"biomes_examples"
+"biomes_example"
 
 #' World Health Organization TB data
 #'

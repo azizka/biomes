@@ -1,10 +1,76 @@
-library(biomer)
+library(biomes)
+library(sf)
+library(terra)
+
+data(biomes_example)
+
+# biomes_get
+layers <- biomes_get()
+
+# biomes_info
+biomes_info(1)
+biomes_info(c(1,14,21)) # simultaneously for multiple biome layers
+biomes_info() # simultaneously for multiple biome layers
 
 
-test <- biomes_get()
+# biomes_classify
+biomes_classify(x = biomes_example,
+                lon = "decimalLongitude",
+                lat = "decimalLatitude")
 
 
-data(biome_information)
+biomes_classify(x = biomes_example,
+                biome = layers[[c(1,25)]],
+                lon = "decimalLongitude",
+                lat = "decimalLatitude")
+
+biomes_classify(x = biomes_example,
+                biome = layers[[1]],
+                lon = "decimalLongitude",
+                lat = "decimalLatitude",
+                value = "ID")
+
+biomes_classify(x = biomes_example,
+                biome = layers[[1]],
+                lon = "decimalLongitude",
+                lat = "decimalLatitude",
+                value = "both")
+
+test <- biomes_classify(x = biomes_example,
+                biome = layers[[c(1:3)]],
+                lon = "decimalLongitude",
+                lat = "decimalLatitude",
+                value = "both")
+
+t_sf <- st_as_sf(biomes_example,
+         coords = c("decimalLongitude", "decimalLatitude"),
+         crs = "EPSG:4326")
+
+biomes_classify(x = t_sf,
+                biome = layers[[c(1)]],
+                value = "ID")
+
+t_terra  <- terra::vect(biomes_example,
+                        geom = c(lon, lat),
+                        crs = "EPSG:4326")
+
+biomes_classify(x = t_terra,
+                biome = layers[[c(1)]],
+                value = "ID")
+
+# biomes_biome_tab
+library(tidyverse)
+
+class <- biomes_example %>%
+  biomes_classify(biome = layers[[1]])
+
+biomes_examples %>%
+  bind_cols(class) %>%
+
+
+
+
+data(biomes_information)
 
 biome_information <- readRDS("data/biome_information.rds")
 
@@ -22,47 +88,6 @@ use_data(biomes_example)
 use_data_raw("data/example_filerds")
 
 biome_legend <- readRDS("inst/extdata/biome_legend.rds")
-
-usethis::use_data(biome_legend)
-
-
-    check_is_package("use_data()")
-    objs <- get_objs_from_dots(dots(...))
-    original_minimum_r_version <- pkg_minimum_r_version()
-    serialization_minimum_r_version <- if (version < 3)
-        "2.10"
-    else "3.5"
-    if (is.na(original_minimum_r_version) || original_minimum_r_version <
-        serialization_minimum_r_version) {
-        use_dependency("R", "depends", serialization_minimum_r_version)
-    }
-    if (internal) {
-        use_directory("R")
-        paths <- path("R", "sysdata.rda")
-        objs <- list(objs)
-    }
-    else {
-        use_directory("data")
-        paths <- path("data", objs, ext = "rda")
-        desc <- proj_desc()
-        if (!desc$has_fields("LazyData")) {
-            ui_bullets(c(v = "Setting {.field LazyData} to {.val true} in {.path DESCRIPTION}."))
-            desc$set(LazyData = "true")
-            desc$write()
-        }
-    }
-    check_files_absent(proj_path(paths), overwrite = overwrite)
-    ui_bullets(c(v = "Saving {.val {unlist(objs)}} to {.val {paths}}."))
-    if (!internal) {
-        ui_bullets(c(`_` = "Document your data (see {.url https://r-pkgs.org/data.html})."))
-    }
-    envir <- parent.frame()
-    mapply(save, list = objs, file = proj_path(paths), MoreArgs = list(envir = envir,
-        compress = compress, version = version, ascii = ascii))
-    invisible()
-
-
-
 
 # biomer compare with own records
 data(biomer_example)

@@ -1,86 +1,124 @@
-# biomer: User-Friendly Species-to-Biome Classification v0.9
-**biomer** provides raster layers of 31 commonly used biome definitions (from Fischer et al, 2022) at 10 x10 km resolutino globally.
-Furthermore contains two functions to classify species occurrences and species into these biomes and visualize. 
-Works with user-provided occurrences or a species name, in which case occurrences are downloaded from www.gbif.org 
-and cleaned automatically.
+# biomes: User-Friendly Species-to-Biome Classification v0.9
+**biomes** provides raster layers of 31 commonly used biome definitions (from Fischer et al, 2022) at 10 x10 km resolution globally.
+Furthermore contains convenience functions for biogeographic analyses, classifying user-provided species occurrences and species into these biomes and visualize. 
 
 ---
 
 ## Installation
 
 ```r
-devtools::install_github("azizka/biomer")
-library(biomer)
+library(devtools)
+devtools::install_github("azizka/biomes")
+library(biomes)
 ``` 
 
 ---
-
-## In a nutshell
-The `biomer_compare()` is a wrapper function and compares occurrences across multiple biome definitions.
+## 1. Load biome legend and example dataset
 
 ```r
-data(biomer_example)
-sp_to_biom <- biomer_compare(x = biomer_example)
-``` 
-
-The output is a list containing both the ready-to-use plots (`$mapplot`, `$barplot`) and tabular summary data for all biomes.
-
-
-It is also possible to use only a species name, then records are downloaded from www.gbif.org. 
-Remember to adapt the limit.This may take a while.
-
-```r
-sp_to_biom <- biomer_compare(taxon = "Talpa europaea", limit = 5000)
-``` 
-
----
-
-## Step-by-step with existing occurrence records
-
-1. Load biome legend and example dataset
-
-```r
-biomer_info <- biomer_get()
+layers <- biomes_get()
 ```
 
-2. Tabulate biome presence by group. Provide your occurrences as data.frame with `x`, 
-the relevant columns with `group_col`, `lon`, `lat` and the biome layers to use with `layer`. 
-See `?biomer_count` for further options.
+You can obtain the metadata via the `biomes_information` dataset, where each row corresponds to one layer in the object obtained with `biomes_get()` 
 
-```r
-df_counts <- biomer_count(
-  biomer_info$example, 
-  group_col = "species",
-  lon = "decimalLongitude",
-  lat = "decimalLatitude",
-  layer = c(2, 31),
-  presence_min_n = 1
-)
+```{r}
+data(biomes_information)
+
+layers[[1]]
+biomes_information[1,]
+
 ```
 
-3. Visualize
+Alternatively you can display meta data for individual layers using the `biomes_info` function.
+
+```{r}
+biomes_info(1)
+biomes_info(c(1,14,21)) # simultaneously for multiple biome layers
+biomes_info() # simultaneously for multiple biome layers
+```
+
+The package further contains convenience functions for analyses using biomes common in biogeography.
+
+## 2. classify occurrence records into biomes
+Based on geographic coordinates occurrence records can be classified into biomes. 
 
 ```r
-df_plots <- biomer_plot(
-  biomer_info$example,
-  lon = "decimalLongitude",
-  lat = "decimalLatitude",
-  layer = c(1, 2, 15, 22),
-  save_list = TRUE
-)
+data(biomes_example)
 
-# Access plots
-df_plots$mapplot
-df_plots$barplot
+biomes_classify(x = biomes_example)
+```
+
+You can chose individual layers via the biome argument. For instance, the layers 1 and 25.
+
+```r
+data(biomes_example)
+layers <- biomes_get()
+
+biomes_classify(x = biomes_example,
+                biome = layers[[c(1,25)]])
+```
+
+You can also chose to display the ID of the biomes rather than the names, via the `value` argument.
+Further you can specify the column names of the coordinates in x, via the `lon` and `lat` arguments.
+
+```r
+data(biomes_example)
+layers <- biomes_get()
+
+biomes_classify(x = biomes_example,
+                biome = layers[[1]],
+                lon = "decimalLongitude",
+                lat = "decimalLatitude",
+                value = "ID")
+```
+## 3. Tabulate the number of occurrences per biome
+
+```{r}
+library(tidyverse)
+biomes_example %>% 
+  biomes_classify() %>% 
+  biomes_biome_tab()
+```
+You can also set a minimum threshold to count species presence in a biome via the `min.occ` argument. 
+
+
+## 4. Visualize
+```{r}
+
+```
+
+## Species per biome
+Often it is relevant to know the numebr of species per biom, you can easily use the biomes package together with basic data wrangling using the tidyverse package to answer this question.
+
+For a single layer:
+```{r}
+library(tidyverse)
+
+class <- biomes_example %>%
+  biomes_classify(biome = layers[[1]])
+
+biomes_example %>%
+  bind_cols(class) %>%
+  group_by(species, biome_name) %>% 
+  count()
+  
+```
+
+For multiple layers at the same time:
+
+```{r}
+library(tidyverse)
+
+class <- biomes_example %>%
+  biomes_classify(biome = layers[[c(1, 17)]])
 ```
 
 ## Reference
 Fischer J-C, Waltenowitz A, Beierkuhnlein C (2022) The biome inventory - Standardizing global biogeographical units. Global Ecology and Biogeography31(11):2172-2183: [https://doi.org/10.1111/geb.13574](https://onlinelibrary.wiley.com/doi/full/10.1111/geb.13574)
 
-
 ## Citation
 ```r
-citation("biomer")
+citation("biomes")
 ```
 
-Groß H, Zizka A (2025): biomer: Analysis of Taxon Distributions in Global Biomes. R package, Version 0.9. [https://github.com/azizka/biomer](https://github.com/azizka/biomer). 
+Groß H, Zizka A (2025): biomes: Analysis of Taxon Distributions in Global Biomes. R package, Version 0.9. [https://github.com/azizka/biomes](https://github.com/azizka/biomes). 

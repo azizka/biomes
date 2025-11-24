@@ -4,24 +4,13 @@
 \alias{biomes_get}
 \title{Load package biome data and example files}
 \usage{
-biomes_get(raster = TRUE, legend = TRUE, info = TRUE, example = TRUE)
-}
-\arguments{
-\item{raster}{Logical. If TRUE (default), loads and returns biome raster as list element.}
-
-\item{legend}{Logical. If TRUE (default), loads and returns biome legend as list element.}
-
-\item{info}{Logical. If TRUE (default), loads and returns a table summarizing all available biome classifications for comparison.}
-
-\item{example}{Logical. If TRUE, load and return example_file.rds in the list.}
+biomes_get()
 }
 \value{
 Returns a list with any or all of: raster, legend, info and example
 }
 \description{
-Loads the raster stack and legend as list elements,
-optionally displays PNG maps from a single zip file,
-and provides an option to load an example .rds dataset.
+Loads the 31 biome layers provided by the package as raster stack.
 }
 \examples{
 \dontrun{

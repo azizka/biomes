@@ -27,11 +27,11 @@
 #' )
 #' }
 #'
-#' @export
 #'
 #' @importFrom rgbif name_backbone occ_search
 #' @importFrom CoordinateCleaner clean_coordinates
 #' @importFrom dplyr filter
+#' @export
 biomes_GBIF <- function(
     taxon,
     filter_clean = FALSE,
