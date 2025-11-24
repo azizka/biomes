@@ -1,6 +1,9 @@
 library(biomer)
 
 
+test <- biomes_get()
+
+
 data(biome_information)
 
 biome_information <- readRDS("data/biome_information.rds")

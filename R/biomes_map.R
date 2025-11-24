@@ -29,10 +29,20 @@ biomes_map <- function(
     detail = TRUE,
     show_plot = FALSE
 ) {
-  r_path <- system.file("extdata", "Biome_Inventory_RasterStack.tif", package = "biomes")
-  if (!file.exists(r_path) || r_path == "") stop("Raster file not found.")
-  r_stack <- terra::rast(r_path)
-  legendpath <- system.file("extdata", "biome_legend.rds", package = "biomes")
+  r_path <- system.file("extdata",
+                        "Biome_Inventory_RasterStack.tif",
+                        package = "biomes")
+
+  if (!file.exists(r_path) || r_path == ""){
+    stop("Raster file not found.")
+  }else{
+    r_stack <- terra::rast(r_path)
+  }
+
+
+  legendpath <- system.file("extdata",
+                            "biome_legend.rds",
+                            package = "biomes")
   if (!file.exists(legendpath) || legendpath == "") stop("Legend RDS file not found.")
   legend <- readRDS(legendpath)
 
