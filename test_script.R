@@ -60,67 +60,109 @@ biomes_classify(x = t_terra,
 
 # biomes_biome_tab
 library(tidyverse)
+biomes_example %>%
+  biomes_classify() %>%
+  biomes_biome_tab()
+
+# species number per biome
+class <- biomes_example %>%
+  biomes_classify(biome = layers[[1]])
+
+biomes_example %>%
+  bind_cols(class) %>%
+  group_by(species, biome_name) %>%
+  count()
+
+# species per biome multiple biomes
+class <- biomes_example %>%
+  biomes_classify(biome = layers[[c(1, 17)]])
+
+biomes_example %>%
+  bind_cols(class) %>%
+  select(species, contains("Biome_Inventory")) %>%
+  pivot_longer(cols = contains("Biome_Inventory"),
+               names_to = "layer",
+               values_to = "value") %>%
+  distinct() %>%
+  group_by(layer, value) %>%
+  count()
+
+
+
+# species numbers per biome
+library(tidyverse)
 
 class <- biomes_example %>%
   biomes_classify(biome = layers[[1]])
 
-biomes_examples %>%
+biomes_example %>%
   bind_cols(class) %>%
+  group_by(species, biome_name) %>%
+  count()
+
+# bioem compare
+library(ggplot)
+library(biomes)
+library(viridis)
+
+data(biomes_example)
+layers <- biomes_get()
+
+class <- biomes_classify(x = biomes_example,
+                         biome = layers[[c(1,25)]])
+
+tab <- table(t[, names(t)[2]],
+             t[, names(t)[3]]) %>%
+  data.frame()
 
 
+ggplot()+
+  geom_raster(data = tab,
+              aes(x = Var1,
+                  y = Var2,
+                  fill = log(Freq)))+
+  scale_fill_viridis()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90,
+                                   vjust = 0.5,
+                                   hjust = 1))
 
+# Ordination
+library(vegan)
+library(tidyverse)
 
-data(biomes_information)
+# occurrence to biome classificaiton
+class <- biomes_classify(x = biomes_example,
+                         biome = layers[[c(1,12, 25)]])
 
-biome_information <- readRDS("data/biome_information.rds")
+# get number of occurrences per species per biome
+test <- biomes_example %>%
+  bind_cols(class)%>%
+  select(species, contains("Biome_Inventory")) %>%
+  pivot_longer(cols = contains("Biome_Inventory"),
+               names_to = "layer",
+               values_to = "value") %>%
+  group_by(layer, value, species) %>%
+  count() %>%
+  pivot_wider(id_cols = c(value,layer),
+              names_from = species,
+              values_from = n)
 
-use_data(biome_information)
-use_data_raw("inst/extdata/biomer_information.xlsx")
+# preapre data for ordination
+dat <- test[,-c(1:2)]
+dat[is.na(dat)] <- 0
 
+# ordination
+ord <- metaMDS(dat, trace = FALSE)
+plo <- data.frame(cbind(ord$points,
+                        test[,c(1,2)]))
 
-biome_legend<- readRDS("data/biome_legend.rds")
-use_data(biome_legend)
-use_data_raw("data/biome_legend.rds")
+# visualize first 2 axes
+ggplot()+
+  geom_text(data = plo,
+             aes(x = MDS1,
+                 y = MDS2,
+                 label = value,
+                 color = layer))+
+  theme_bw()
 
-
-biomes_example<- readRDS("data/example_file.rds")
-use_data(biomes_example)
-use_data_raw("data/example_filerds")
-
-biome_legend <- readRDS("inst/extdata/biome_legend.rds")
-
-# biomer compare with own records
-data(biomer_example)
-sp_to_biom <- biomer_compare(taxon = "Talpa europaea")
-
-# download from gbif
-sp_to_biom <- biomer_compare(taxon = c("Talpa europaea", "Vulpes vulpes"), limit = 500)
-
-sp_to_biom$mapplot
-sp_to_biom$barplot
-
-
-biomer_info <- biomer_get()
-sp_to_biom <- biomer_compare(x = biomer_info$example,
-                             layer = 24)
-
-sp_to_biom$mapplot
-sp_to_biom$barplot
-
-# multiple layers
-sp_to_biom <- biomer_compare(x = biomer_info$example,
-                             layer = c(23,24))
-
-sp_to_biom$mapplot
-sp_to_biom$barplot
-
-
-biomer_info <- biomer_get()
-df_counts <- biomer_count(
-  biomer_info$example,
-  group_col = "species",
-  lon = "decimalLongitude",
-  lat = "decimalLatitude",
-  layer = c(2, 31),
-  presence_min_n = 1
-)
