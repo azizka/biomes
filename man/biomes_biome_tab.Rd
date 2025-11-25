@@ -4,7 +4,7 @@
 \alias{biomes_biome_tab}
 \title{Count occurrences per biome}
 \usage{
-biomes_biome_tab(x, value = C("names", "ID"))
+biomes_biome_tab(x, value = "names")
 }
 \arguments{
 \item{x}{Data frame with occurrence records.}

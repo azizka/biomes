@@ -4,7 +4,7 @@
 #'
 #' @param x Data frame with occurrence records.
 #' @param value Display names or ID
-#' @return Data frame, columns: layer, biome, number of records
+#' @return data.frame, columns: layer, biome, number of records
 #' @export
 biomes_biome_tab <- function(x,
                              value = "names"){

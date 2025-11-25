@@ -1,4 +1,4 @@
-# biomes: User-Friendly Species-to-Biome Classification v0.9
+# biomes: 31 biome layers and utilities to use them in biogeographic research v0.9
 **biomes** provides raster layers of 31 commonly used biome definitions (from Fischer et al, 2022) at 10 x10 km resolution globally.
 Furthermore contains convenience functions for biogeographic analyses, classifying user-provided species occurrences and species into these biomes and visualize. 
 
@@ -82,16 +82,21 @@ In three short articles, we illustrate how to use the package to
 
 1. Count the number of species per biome
 2. Create publication level maps of a dataset over a biome
-3. Compare two or more biome definitions for a give occurrence dataset
+3. Compare two or more biome definitions for a given occurrence dataset
 
 **Add links here**
 
-## Reference
-Fischer J-C, Waltenowitz A, Beierkuhnlein C (2022) The biome inventory - Standardizing global biogeographical units. Global Ecology and Biogeography31(11):2172-2183: [https://doi.org/10.1111/geb.13574](https://onlinelibrary.wiley.com/doi/full/10.1111/geb.13574)
-
 ## Citation
+
+PLease cite these two publications when using the biomes package
+
+1. Fischer J-C, Waltenowitz A, Beierkuhnlein C (2022) The biome inventory - Standardizing global biogeographical units. Global Ecology and Biogeography31(11):2172-2183: [https://doi.org/10.1111/geb.13574](https://onlinelibrary.wiley.com/doi/full/10.1111/geb.13574)
+For the compilation of the biome layers.
+
+
+2. Groß H, Zizka A (2025): biomes: Analysis of Taxon Distributions in Global Biomes. R package, Version 0.9. [https://github.com/azizka/biomes](https://github.com/azizka/biomes). 
+For the Rpackage.
+
 ```r
 citation("biomes")
 ```
-
-Groß H, Zizka A (2025): biomes: Analysis of Taxon Distributions in Global Biomes. R package, Version 0.9. [https://github.com/azizka/biomes](https://github.com/azizka/biomes). 
