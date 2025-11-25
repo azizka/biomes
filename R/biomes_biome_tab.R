@@ -6,7 +6,8 @@
 #' @param value Display names or ID
 #' @return Data frame, columns: layer, biome, number of records
 #' @export
-biomes_biome_tab <- function(x, value = C("names", "ID")){
+biomes_biome_tab <- function(x,
+                             value = "names"){
   #Assertions
   # Assert that x is a data.frame and contains the necessary columns
 

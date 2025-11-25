@@ -1,0 +1,48 @@
+---
+title: "species_number_per_biome"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(biomes)
+library(tidyverse)
+```
+
+
+## Species per biome
+Often it is relevant to know the number of species per biome.
+You can easily use the biomes package together with basic data wrangling using the tidyverse 
+package to answer this question.
+
+For a single layer:
+```{r}
+class <- biomes_example %>%
+  biomes_classify(biome = layers[[1]])
+
+biomes_example %>%
+  bind_cols(class) %>%
+  group_by(species, biome_name) %>% 
+  count()
+```
+
+For multiple biome layers:
+```{r}
+class <- biomes_example %>%
+  biomes_classify(biome = layers[[c(1, 17)]])
+
+biomes_example %>%
+  bind_cols(class) %>%
+  select(species, contains("Biome_Inventory")) %>%
+  pivot_longer(cols = contains("Biome_Inventory"),
+               names_to = "layer",
+               values_to = "value") %>%
+  distinct() %>%
+  group_by(layer, value) %>%
+  count()
+```

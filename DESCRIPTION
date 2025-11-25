@@ -36,3 +36,4 @@ Suggests:
 Config/testthat/edition: 3
 License: CC-BY
 LazyData: true
+Config/Needs/website: rmarkdown

@@ -1,0 +1,14 @@
+---
+title: "publicaiton_level_map"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(biomes)
+```
