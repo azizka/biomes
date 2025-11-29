@@ -35,5 +35,5 @@ biomes_info <- function(x = NULL) {
 
   sapply(X = idx, FUN = info_grabber)
 
-  invisible(NULL)
+  invisible(idx)
 }
