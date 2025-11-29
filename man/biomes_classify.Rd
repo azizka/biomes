@@ -34,3 +34,16 @@ columns reflect different layers.
 \description{
 For each occurrence record, assigns a biome label based on spatial position and raster layer.
 }
+\examples{
+# Load example occurrence data and biome raster
+data("biomes_example")
+
+# Classify occurrences and return biome names
+biomes_classify(
+  x     = biomes_example,
+  lon = "decimalLongitude",
+  lat = "decimalLatitude",
+  value = "name"
+)
+
+}

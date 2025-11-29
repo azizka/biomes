@@ -4,7 +4,7 @@
 \alias{biomes_get}
 \title{Load package biome data and example files}
 \usage{
-biomes_get()
+biomes_get(...)
 }
 \value{
 Returns a list with any or all of: raster, legend, info and example
@@ -13,7 +13,7 @@ Returns a list with any or all of: raster, legend, info and example
 Loads the 31 biome layers provided by the package as raster stack.
 }
 \examples{
-\dontrun{
-info <- biomes_get()
-}
+# Load the default biome raster stack
+biomes_raster <- biomes_get()
+
 }

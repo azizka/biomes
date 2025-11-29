@@ -5,14 +5,35 @@
 #' @param x the layer for which information should be displayed
 #'
 #' @return prints information to screen
+#'
+#' @examples
+#' # Print information for all biome definitions
+#' biomes_info()
+#'
+#' # Print information for the first three biomes
+#' biomes_info(1:3)
+#'
 #' @export
-biomes_info <- function(x) {
+biomes_info <- function(x = NULL) {
 
-  if(exists("x", inherit = FALSE)){
-    sapply(X = x,
-           FUN = "info_grabber")
-  }else{
-    sapply(X = 1:nrow(biomes::biomes_information),
-           FUN = "info_grabber")
+  # Assertions: validate x (biome indices 1–31)
+  if (!is.null(x)) {
+    checkmate::assert_integerish(
+      x,
+      lower = 1,
+      upper = 31,
+      any.missing = FALSE,
+      .var.name = "x"
+    )
   }
+
+  if (is.null(x)) {
+    idx <- 1:31
+  } else {
+    idx <- x
+  }
+
+  sapply(X = idx, FUN = info_grabber)
+
+  invisible(NULL)
 }

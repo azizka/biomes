@@ -5,11 +5,45 @@
 #' @param x Data frame with occurrence records.
 #' @param value Display names or ID
 #' @return data.frame, columns: layer, biome, number of records
+#'
+#' @examples
+#' # Load example occurrence data
+#' data("biomes_example")
+#'
+#' # Classify occurrences into biomes (names)
+#' classified_names <- biomes_classify(
+#'   x     = biomes_example,
+#'   value = "name"
+#' )
+#'
+#' # Count records per biome (using biome names)
+#' biomes_biome_tab(classified_names, value = "names")
+#'
+#' # Classify occurrences into biomes (IDs)
+#' classified_ids <- biomes_classify(
+#'   x     = biomes_example,
+#'   value = "ID"
+#' )
+#'
+#' # Count records per biome (using biome IDs)
+#' biomes_biome_tab(classified_ids, value = "ID")
+#'
 #' @export
 biomes_biome_tab <- function(x,
                              value = "names"){
-  #Assertions
-  # Assert that x is a data.frame and contains the necessary columns
+
+  # Assertions: x must be a data.frame
+  checkmate::assert_data_frame(x, min.rows = 1)
+
+  # Assertions: x must have an ID column
+  checkmate::assert_true(
+    "ID" %in% names(x),
+    .var.name = "x must contain a column named 'ID'"
+  )
+
+  # Assertions: value must be "names" or "ID"
+  checkmate::assert_choice(value, c("names", "ID"))
+
 
   # select relevant columns
   # MAKE SURE THIS WORKS WITH DIFERENT SELECTIONS AND DIFFERENT NUMEBR OF LAYERS
@@ -17,7 +51,7 @@ biomes_biome_tab <- function(x,
     dat <- x[, which(grepl("_name", names(x)))]
   }else if(value == "ID"){
     dat <- x[, which(!grepl("_name", names(x)))]
-    dat <- dat[, which(grepl("Biome_Inventory_layer", names(dat)))]
+    dat <- dat[, which(grepl("Biomes_Inventory_layer", names(dat)))]
   }
 
   # count occurrences pr biome

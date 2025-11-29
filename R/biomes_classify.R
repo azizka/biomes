@@ -12,6 +12,19 @@
 #' @return Depending on the value argument either a data.frame with the ID of the
 #' biome or the name of biome for each occurrence record in x, or both. Incase of multiple biome layers,
 #' columns reflect different layers.
+#'
+#' @examples
+#' # Load example occurrence data and biome raster
+#' data("biomes_example")
+#'
+#' # Classify occurrences and return biome names
+#' biomes_classify(
+#'   x     = biomes_example,
+#'   lon = "decimalLongitude",
+#'   lat = "decimalLatitude",
+#'   value = "name"
+#' )
+#'
 #' @importFrom terra nlyr rast sources
 #' @importFrom readr parse_number
 #' @export
@@ -24,18 +37,42 @@ biomes_classify <- function(
     raster_file = NULL
 ) {
 
-  #assertions
-  # assert that x is either am sf spatial object, a spatraster or a dataframe
-  ##assert that x contains the lat and long columns if a data.frame
-  ## assert that x and y< are numeric if x is a data.frame
-  ##assert that biome is a terra raster or raster stack
+  # Assertions: x is either am sf spatial object, a spatraster or a dataframe
+  checkmate::assert_true(
+    any(c("data.frame", "sf", "SpatVector") %in% class(x)),
+    .var.name = "x"
+  )
+
+  # Assertions: x contains the lat and long columns if a data.frame
+  # Assertions: x and y< are numeric if x is a data.frame
+  if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+    checkmate::assert_subset(c(lon, lat), choices = names(x), .var.name = "x")
+    checkmate::assert_numeric(x[[lon]], any.missing = FALSE)
+    checkmate::assert_numeric(x[[lat]], any.missing = FALSE)
+  }
+
+  # Assertions: biome is a terra raster or raster stack
+  if (!is.null(biome)) {
+    checkmate::assert_class(biome, "SpatRaster")
+  }
+
+  # Assertions: raster_file must be NULL or a SpatRaster
+  if (!is.null(raster_file)) {
+    checkmate::assert_class(raster_file, "SpatRaster")
+  }
+
+  # Assertions: value
+  checkmate::assert_choice(value, c("ID", "name", "both"))
+
+
+
 
   # Give users the option to not provide biomes and load the defaults instead or a custom file
    if(is.null(biome)){
      if(is.null(raster_file)){
        message("no biome file or layer provided using default biomes")
        raster_file <- system.file("extdata",
-                                  "Biome_Inventory_RasterStack.tif",
+                                  "Biomes_Inventory_RasterStack.tif",
                                   package = "biomes")
      }
      biome <- terra::rast(raster_file)
@@ -55,9 +92,9 @@ biomes_classify <- function(
 
   # Display biome names if default biomes are used
   if(terra::sources(biome) == system.file("extdata",
-                                          "Biome_Inventory_RasterStack.tif",
+                                          "Biomes_Inventory_RasterStack.tif",
                                           package = "biomes")){
-    legend_df <- biomes::biome_legend
+    legend_df <- biome_legend
   }
 
   biome_id <- terra::extract(biome,

@@ -12,8 +12,31 @@ biomes_biome_tab(x, value = "names")
 \item{value}{Display names or ID}
 }
 \value{
-Data frame, columns: layer, biome, number of records
+data.frame, columns: layer, biome, number of records
 }
 \description{
 Summarizes the number of occurrence records in each biome and layer, outputting a long-format table.
+}
+\examples{
+# Load example occurrence data
+data("biomes_example")
+
+# Classify occurrences into biomes (names)
+classified_names <- biomes_classify(
+  x     = biomes_example,
+  value = "name"
+)
+
+# Count records per biome (using biome names)
+biomes_biome_tab(classified_names, value = "names")
+
+# Classify occurrences into biomes (IDs)
+classified_ids <- biomes_classify(
+  x     = biomes_example,
+  value = "ID"
+)
+
+# Count records per biome (using biome IDs)
+biomes_biome_tab(classified_ids, value = "ID")
+
 }

@@ -4,7 +4,7 @@
 \alias{biomes_info}
 \title{Print information for sleected biome definitions}
 \usage{
-biomes_info(x)
+biomes_info(x = NULL)
 }
 \arguments{
 \item{x}{the layer for which information should be displayed}
@@ -14,4 +14,12 @@ prints information to screen
 }
 \description{
 For each occurrence record, assigns a biome label based on spatial position and raster layer.
+}
+\examples{
+# Print information for all biome definitions
+biomes_info()
+
+# Print information for the first three biomes
+biomes_info(1:3)
+
 }

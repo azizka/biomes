@@ -1,11 +1,11 @@
-#' Internal package setup for biomer
+#' Internal package setup for biomes
 #'
 #' This file declares global variables for NSE-heavy code (dplyr, tidyr,
 #' ggplot2) to silence R CMD check NOTES, and lists package-level imports
 #' that are used across multiple functions.
 #'
 #' @keywords internal
-#' @name biomer_globals
+#' @name biomes_globals
 #'
 #' @importFrom grDevices colorRampPalette
 #' @importFrom stats setNames end reorder start

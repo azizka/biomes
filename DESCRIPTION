@@ -26,7 +26,8 @@ Imports:
     tidyr,
     cowplot,
     ggforce,
-    viridis
+    viridis,
+    checkmate
 VignetteBuilder: knitr
 Suggests:
     knitr,

@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   message = TRUE,
   warning = TRUE
 )
-library(biomer)
+library(biomes)
 ```
 
 # Goal
@@ -30,17 +30,17 @@ Two common use cases:
 
 ## Key functions
 
-- `biomer_GBIF()`  
+- `biomes_GBIF()`  
   Download and clean GBIF occurrences for a given taxon.
 
-- `biomer_get()`  
+- `biomes_get()`  
   Load the packaged biome raster stack and legend into your session.
 
-- `biomer_compare()`  
+- `biomes_compare()`  
   High-level helper. Runs biome assignment, summaries, and plotting for one or more biome layers and writes the result objects into your environment.
 
-- `biomer_count()` / `biomer_plot()`  
-  Lower-level building blocks. `biomer_compare()` calls these per layer.
+- `biomes_count()` / `biomes_plot()`  
+  Lower-level building blocks. `biomes_compare()` calls these per layer.
 
 
 All examples below are shown with `eval = FALSE` so they do not run during CRAN checks.
@@ -49,10 +49,10 @@ All examples below are shown with `eval = FALSE` so they do not run during CRAN 
 
 # 1. Download GBIF data for a taxon
 
-`biomer_GBIF()` is a convenience wrapper around rgbif. By default it uses `occ_search()` so you do not need GBIF credentials. It filters for records with coordinates and (optionally) cleans obvious coordinate issues.
+`biomes_GBIF()` is a convenience wrapper around rgbif. By default it uses `occ_search()` so you do not need GBIF credentials. It filters for records with coordinates and (optionally) cleans obvious coordinate issues.
 
 ```{r eval=FALSE}
-occ_raw <- biomer_GBIF(
+occ_raw <- biomes_GBIF(
   taxon = "Solemyida",
   use_download = FALSE,     # default pathway (occ_search)
   filter_clean = TRUE,      # basic CoordinateCleaner filters
@@ -79,7 +79,7 @@ These columns will later be mapped to biome classes.
 
 # 2. Load biome data
 
-`biomer_get()` loads two core objects from the package into your environment:
+`biomes_get()` loads two core objects from the package into your environment:
 
 - biome_raster: A SpatRaster containing all biome layers.
 - biome_legend: A table describing each layer (layer index, source, biome class labels, etc.).
@@ -88,13 +88,13 @@ It can also (optionally) open static pre-rendered PNG maps of specific layers.
 
 ```{r eval=FALSE}
 # Load biome_raster and biome_legend into the global environment
-biomer_get()
+biomes_get()
 
 # Optionally: show quick-look maps for specific layers (if shipped PNGs exist)
-biomer_get(view_layer = c(1, 5))
+biomes_get(view_layer = c(1, 5))
 ```
 
-After running `biomer_get()`, you should see biome_raster and biome_legend in your workspace.
+After running `biomes_get()`, you should see biome_raster and biome_legend in your workspace.
 You can inspect which biome layers exist like this:
 
 ```{r eval=FALSE}
@@ -106,11 +106,11 @@ head(biome_legend)
 
 # 3. Compare biome schemes
 
-`biomer_compare()` is the high-level entry point for typical users. It will:
+`biomes_compare()` is the high-level entry point for typical users. It will:
 
 - Harmonize your occurrence data (or download from GBIF if you only gave taxon).
 - Decide which biome layer(s) to use.
-- Run `biomer_count()` and `biomer_plot()` for each layer.
+- Run `biomes_count()` and `biomes_plot()` for each layer.
 - Store the results in the target environment.
 
 ## Case A: Only a taxon name
@@ -118,43 +118,43 @@ head(biome_legend)
 You do not have a dataset yet. You just want to say "classify this taxon".
 
 ```{r eval=FALSE}
-biomer_compare(
+biomes_compare(
   taxon = "Solemyida",
   layer = NULL,            # let the function decide which biome layer(s)
-  biomer_suggest = TRUE,   # call biomer_suggest() to pick a 'best' layer
+  biomes_suggest = TRUE,   # call biomes_suggest() to pick a 'best' layer
   env = .GlobalEnv         # write output objects into the global environment
 )
 ```
 
 What this does internally:
-- Calls `biomer_GBIF("Solemyida")`.
+- Calls `biomes_GBIF("Solemyida")`.
 - Cleans and standardizes column names. It creates a column `species` because downstream code expects a column with that name.
-- Picks biome layers. If `layer = NULL` and `biomer_suggest = TRUE`, it will call `biomer_suggest()` and use its chosen layer.
+- Picks biome layers. If `layer = NULL` and `biomes_suggest = TRUE`, it will call `biomes_suggest()` and use its chosen layer.
 - For each chosen layer it runs:
-    - `biomer_count()` to assign each point to a biome class and summarize per-biome presence.
-    - `biomer_plot()` to generate a map of occurrences per cell and barplots of total occurrences and unique taxa per layer.
+    - `biomes_count()` to assign each point to a biome class and summarize per-biome presence.
+    - `biomes_plot()` to generate a map of occurrences per cell and barplots of total occurrences and unique taxa per layer.
 
 After it finishes, the following objects appear in `.GlobalEnv`:
 
-- `biomer_compare_input`: The occurrence data actually used in the analysis. Includes `species`.
-- `biomer_compare_layers`: Integer vector of biome layer indices that were evaluated.
-- `biomer_compare_summary`: One row per biome layer. Contains total number of mapped occurrences, number of unique taxa, and source info for that biome scheme.
-- `biomer_count_<L>`: Output of `biomer_count()` for layer L.
-- `biomer_plot_<L>`: Output of `biomer_plot()` for layer L.
+- `biomes_compare_input`: The occurrence data actually used in the analysis. Includes `species`.
+- `biomes_compare_layers`: Integer vector of biome layer indices that were evaluated.
+- `biomes_compare_summary`: One row per biome layer. Contains total number of mapped occurrences, number of unique taxa, and source info for that biome scheme.
+- `biomes_count_<L>`: Output of `biomes_count()` for layer L.
+- `biomes_plot_<L>`: Output of `biomes_plot()` for layer L.
 
 You can inspect them:
 
 ```{r eval=FALSE}
-biomer_compare_layers
-biomer_compare_summary
+biomes_compare_layers
+biomes_compare_summary
 
-names(biomer_count_1)
-biomer_count_1$counts_per_biome
+names(biomes_count_1)
+biomes_count_1$counts_per_biome
 
-names(biomer_plot_1)
-biomer_plot_1$barplots$stats_df
-biomer_plot_1$barplots$p_occ
-biomer_plot_1$barplots$p_sp
+names(biomes_plot_1)
+biomes_plot_1$barplots$stats_df
+biomes_plot_1$barplots$p_occ
+biomes_plot_1$barplots$p_sp
 ```
 
 ---
@@ -179,33 +179,33 @@ df <- data.frame(
 df
 ```
 
-Now run `biomer_compare()` directly on your data. No GBIF call will be made.
+Now run `biomes_compare()` directly on your data. No GBIF call will be made.
 
 ```{r eval=FALSE}
-biomer_compare(
+biomes_compare(
   x = df,
   lon = "decimalLongitude",
   lat = "decimalLatitude",
   taxon_col = "scientificName",
   layer = c(1, 5, 10),     # test multiple biome schemes
-  biomer_suggest = FALSE,  # skip automatic suggestion
+  biomes_suggest = FALSE,  # skip automatic suggestion
   env = .GlobalEnv
 )
 ```
 
 Again you will get:
 
-- biomer_compare_input
-- biomer_compare_layers
-- biomer_compare_summary
+- biomes_compare_input
+- biomes_compare_layers
+- biomes_compare_summary
 
-plus one `biomer_count_<layer>` and one `biomer_plot_<layer>` object per tested layer.
+plus one `biomes_count_<layer>` and one `biomes_plot_<layer>` object per tested layer.
 
 ---
 
-# 4. Understanding `biomer_count()` output
+# 4. Understanding `biomes_count()` output
 
-Each `biomer_count_<L>` object (the result from `biomer_count()`) contains:
+Each `biomes_count_<L>` object (the result from `biomes_count()`) contains:
 
 - `counts_per_biome`: One row per biome class in that layer. Includes:
     - number of unique taxa considered "present" in that biome,
@@ -213,18 +213,18 @@ Each `biomer_count_<L>` object (the result from `biomer_count()`) contains:
 
 - `summary_species_biome`: A presence matrix (taxon × biome).
     - Value 1 means that taxon is considered present in that biome.
-    - Presence is controlled by two arguments in `biomer_count()`:
+    - Presence is controlled by two arguments in `biomes_count()`:
         - `presence_min_n`: minimum number of records in a biome.
         - `presence_min_prop`: optional minimum fraction of that taxon's records that must fall in that biome.
 
 Default is `presence_min_n = 1`, meaning a taxon is counted as present in a biome if it has at least one record there.
 
-You can call `biomer_count()` manually and adjust these thresholds:
+You can call `biomes_count()` manually and adjust these thresholds:
 
 ```{r eval=FALSE}
-res_strict <- biomer_count(
-  x = biomer_compare_input,
-  species = "species",          # column created by biomer_compare()
+res_strict <- biomes_count(
+  x = biomes_compare_input,
+  species = "species",          # column created by biomes_compare()
   lon = "decimalLongitude",
   lat = "decimalLatitude",
   layer = 5,
@@ -238,11 +238,11 @@ res_strict$counts_per_biome
 res_strict$summary_species_biome
 ```
 
-You can also ask `biomer_count()` to write CSVs by giving the `path` argument:
+You can also ask `biomes_count()` to write CSVs by giving the `path` argument:
 
 ```{r eval=FALSE}
-res_export <- biomer_count(
-  x = biomer_compare_input,
+res_export <- biomes_count(
+  x = biomes_compare_input,
   species = "species",
   lon = "decimalLongitude",
   lat = "decimalLatitude",
@@ -259,9 +259,9 @@ This writes:
 
 ---
 
-# 5. Understanding `biomer_plot()` output
+# 5. Understanding `biomes_plot()` output
 
-Each `biomer_plot_<L>` object (result from `biomer_plot()`) contains two kinds of products:
+Each `biomes_plot_<L>` object (result from `biomes_plot()`) contains two kinds of products:
 
 - Per-layer occurrence maps  
   Raster cells are colored by how many occurrences fall inside.
@@ -275,22 +275,22 @@ You can access the barplot data and ggplot objects:
 
 ```{r eval=FALSE}
 # Barplot data frame
-biomer_plot_5$barplots$stats_df
+biomes_plot_5$barplots$stats_df
 
 # Barplot of total occurrences per layer
-biomer_plot_5$barplots$p_occ
+biomes_plot_5$barplots$p_occ
 
 # You can save any ggplot:
 ggplot2::ggsave(
   filename = "total_occurrences_per_layer.png",
-  plot = biomer_plot_5$barplots$p_occ,
+  plot = biomes_plot_5$barplots$p_occ,
   width = 6,
   height = 4,
   dpi = 300
 )
 
 # Map for layer 5
-biomer_plot_5$map_results[["5"]]$plot
+biomes_plot_5$map_results[["5"]]$plot
 ```
 
 ---
@@ -299,7 +299,7 @@ biomer_plot_5$map_results[["5"]]$plot
 
 Different biome layers represent different biome concepts (for example remotely sensed land cover vs. potential natural vegetation vs. climate-driven biome definitions).
 
-`biomer_compare_summary` gives you, per layer:
+`biomes_compare_summary` gives you, per layer:
 - total number of occurrences mapped
 - number of unique taxa detected
 - source label from the legend
@@ -307,10 +307,10 @@ Different biome layers represent different biome concepts (for example remotely 
 This helps you justify and report which biome scheme you will use:
 
 ```{r eval=FALSE}
-biomer_compare_summary
+biomes_compare_summary
 ```
 
-If you ran `biomer_compare(..., biomer_suggest = TRUE)`, then `biomer_compare_layers` typically has just one entry. That entry is the layer suggested by `biomer_suggest()`, which tries to match:
+If you ran `biomes_compare(..., biomes_suggest = TRUE)`, then `biomes_compare_layers` typically has just one entry. That entry is the layer suggested by `biomes_suggest()`, which tries to match:
 - spatial coverage of your points
 - reasonable number of biome classes in your region
 - the conceptual basis (for example climate vs. land cover)
@@ -320,9 +320,9 @@ If you ran `biomer_compare(..., biomer_suggest = TRUE)`, then `biomer_compare_la
 # Summary
 
 This workflow:
-- Obtain or provide occurrence data (`biomer_GBIF()` or your own data frame).
-- Load biome layers and metadata (`biomer_get()`).
-- Compare biome schemes (`biomer_compare()`).
-- Inspect and export summaries (`biomer_count()`, `biomer_plot()`).
+- Obtain or provide occurrence data (`biomes_GBIF()` or your own data frame).
+- Load biome layers and metadata (`biomes_get()`).
+- Compare biome schemes (`biomes_compare()`).
+- Inspect and export summaries (`biomes_count()`, `biomes_plot()`).
 
 The result is a reproducible link from occurrences to biome classes, with both tables and publication-ready figures.

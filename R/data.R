@@ -45,4 +45,4 @@
 #'   ...
 #' }
 #' @source <https://www.who.int/teams/global-tuberculosis-programme/data>
-"biome_legend"
+"biomes_legend"
