@@ -7,6 +7,11 @@ data(biomes_example)
 # biomes_get
 layers <- biomes_get()
 
+data(biomes_information)
+
+layers[[1]]
+biomes_information[1,]
+
 # biomes_info
 biomes_info(1)
 biomes_info(c(1,14,21)) # simultaneously for multiple biome layers

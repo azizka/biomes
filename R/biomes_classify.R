@@ -94,7 +94,7 @@ biomes_classify <- function(
   if(terra::sources(biome) == system.file("extdata",
                                           "Biomes_Inventory_RasterStack.tif",
                                           package = "biomes")){
-    legend_df <- biome_legend
+    legend_df <- biomes_legend
   }
 
   biome_id <- terra::extract(biome,

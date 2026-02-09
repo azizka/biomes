@@ -2,7 +2,7 @@ info_grabber <- function(num){
 
   out <- biomes::biomes_information[num,]
 
-  nams <- unlist(biome_legend[num, -c(1:2)])
+  nams <- unlist(biomes_legend[num, -c(1:2)])
   nams <- nams[!is.na(nams)]
   nams <- paste(nams, collapse = ", ")
 

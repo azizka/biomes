@@ -15,7 +15,9 @@
 #'
 #' @export
 biomes_info <- function(x = NULL) {
-
+  if (!exists("biomes_legend")) {
+    data(biomes_legend, package = "biomes")
+  }
   # Assertions: validate x (biome indices 1–31)
   if (!is.null(x)) {
     checkmate::assert_integerish(
