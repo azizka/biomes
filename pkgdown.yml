@@ -1,0 +1,12 @@
+pandoc: 3.8.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  biomes-workflow: biomes-workflow.html
+  articles/compare_biome_definitions: compare_biome_definitions.html
+  articles/publicaiton_level_map: publicaiton_level_map.html
+  articles/species_number_per_biome: species_number_per_biome.html
+last_built: 2026-05-13T17:22Z
+urls:
+  reference: https://azizka.github.io/biomes/reference
+  article: https://azizka.github.io/biomes/articles
