@@ -119,11 +119,11 @@ deduplicate by `species` before tabulating.
 Three companion articles illustrate how to use the package:
 
 1.  [Count the number of species per
-    biome](https://azizka.github.io/biomes/articles/species_number_per_biome.html)
+    biome](https://azizka.github.io/biomes/vignettes/articles/species_number_per_biome.html)
 2.  [Create publication-level maps of a dataset over a
-    biome](https://azizka.github.io/biomes/articles/publicaiton_level_map.html)
+    biome](https://azizka.github.io/biomes/vignettes/articles/publicaiton_level_map.html)
 3.  [Compare two or more biome definitions for a given occurrence
-    dataset](https://azizka.github.io/biomes/articles/compare_biome_definitions.html)
+    dataset](https://azizka.github.io/biomes/vignettes/articles/compare_biome_definitions.html)
 
 ## Citation
 
