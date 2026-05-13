@@ -1,0 +1,37 @@
+url: https://azizka.github.io/biomes/
+
+template:
+  bootstrap: 5
+
+home:
+  title: biomes — 31 biome layers and utilities for biogeographic research
+  description: >
+    biomes provides raster layers of 31 commonly used biome definitions
+    (Fischer et al, 2022) at 10x10 km resolution globally, plus
+    convenience functions to classify species occurrences into biomes,
+    summarize them and visualize.
+
+reference:
+- title: Biome data
+  desc: Load raster layers and metadata shipped with the package.
+  contents:
+  - biomes_get
+  - biomes_info
+  - biomes_information
+  - biomes_legend
+  - biomes_example
+- title: Classify and summarize occurrences
+  contents:
+  - biomes_classify
+  - biomes_biome_tab
+
+articles:
+- title: Get started
+  navbar: ~
+  contents:
+  - biomes-workflow
+- title: Use cases
+  contents:
+  - articles/species_number_per_biome
+  - articles/publicaiton_level_map
+  - articles/compare_biome_definitions

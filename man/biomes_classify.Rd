@@ -14,36 +14,55 @@ biomes_classify(
 )
 }
 \arguments{
-\item{x}{Data frame with at least longitude and latitude and a taxon column for grouping.}
+\item{x}{A data frame (with longitude and latitude columns), an \code{sf}
+spatial object, or a \code{terra::SpatVector} of point geometries.}
 
-\item{biome}{a terra raster SpatRaster object, if NULL all the raster layers provided by the package are used.}
+\item{biome}{A \code{terra::SpatRaster} with one or more biome layers. If
+\code{NULL} (the default), the 31 layers shipped with the package are used.}
 
-\item{lon}{Column name for longitude. Default: "decimalLongitude".}
+\item{lon}{Column name of longitude in \code{x} (only used if \code{x} is a
+non-spatial data frame). Default: "decimalLongitude".}
 
-\item{lat}{Column name for latitude. Default: "decimalLatitude".}
+\item{lat}{Column name of latitude in \code{x} (only used if \code{x} is a
+non-spatial data frame). Default: "decimalLatitude".}
 
-\item{value}{character string. Defining the return. c("ID", "name", "both")}
+\item{value}{Character. One of \code{"ID"}, \code{"name"}, or \code{"both"}. Controls
+whether the returned data frame contains the raw raster value
+(\code{"ID"}), the biome name (\code{"name"}), or both (\code{"both"}).}
 
-\item{raster_file}{if biome is not provided a path to a custom biome raster stack file or a SpatRaster.}
+\item{raster_file}{Optional path to a custom biome raster stack file
+or a \code{SpatRaster}. Only used if \code{biome} is \code{NULL}.}
 }
 \value{
-Depending on the value argument either a data.frame with the ID of the
-biome or the name of biome for each occurrence record in x, or both. Incase of multiple biome layers,
-columns reflect different layers.
+A data frame with one row per record in \code{x}. Columns are named
+after the input layers, with the suffix \verb{_value} for the raster value
+and \verb{_name} for the biome name. For raster values without a name in
+the legend (typically azonal classes encoded with high values),
+\verb{_name} falls back to \code{"azonal (raster value: X)"}.
 }
 \description{
-For each occurrence record, assigns a biome label based on spatial position and raster layer.
+For each occurrence record, assigns a biome label based on its spatial
+position and one or more biome raster layers. One row of the returned
+data frame corresponds to one row (one occurrence record) of \code{x}.
 }
 \examples{
-# Load example occurrence data and biome raster
+# Load example occurrence data
 data("biomes_example")
 
-# Classify occurrences and return biome names
+# Classify occurrences and return biome names (uses the 31 default layers)
 biomes_classify(
   x     = biomes_example,
-  lon = "decimalLongitude",
-  lat = "decimalLatitude",
+  lon   = "decimalLongitude",
+  lat   = "decimalLatitude",
   value = "name"
+)
+
+# Single layer, both raster value and biome name
+layers <- biomes_get()
+biomes_classify(
+  x     = biomes_example,
+  biome = layers[[1]],
+  value = "both"
 )
 
 }

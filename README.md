@@ -1,101 +1,135 @@
-# biomes: 31 biome layers and utilities to use them in biogeographic research v0.9
-**biomes** provides raster layers of 31 commonly used biome definitions (from Fischer et al, 2022) at 10 x10 km resolution globally.
-Furthermore contains convenience functions for biogeographic analyses, classifying user-provided species occurrences and species into these biomes and visualize. 
+# biomes
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+<!-- badges: end -->
+
+**biomes** provides raster layers of 31 commonly used biome definitions
+(from Fischer et al, 2022) at 10 × 10 km resolution globally, plus
+convenience functions for biogeographic analyses: classify
+user-provided species occurrences into biomes, summarize them and
+visualize.
 
 ---
 
 ## Installation
+
 ```r
-library(devtools)
+# install.packages("devtools")
 devtools::install_github("azizka/biomes")
 library(biomes)
-``` 
+```
+
+`biomes` depends on the [terra](https://rspatial.github.io/terra/) package
+and attaches it for you, so `plot()` on a biome layer works directly.
 
 ---
 
-## 1. Load biome legend and example dataset
+## 1. Load the biome layers and example dataset
+
 ```r
-layers <- biomes_get()
+library(biomes)
+
+layers <- biomes_get()   # SpatRaster with 31 biome layers
+layers[[1]]              # first biome layer
+plot(layers[[1]])        # quick look (terra is attached by biomes)
 ```
 
-You can obtain the metadata via the `biomes_information` dataset, where each row corresponds to one layer in the object obtained with `biomes_get()` 
+The matching metadata is available as the `biomes_information` data
+frame — one row per layer, in the same order as the raster stack:
 
-```{r}
+```r
 data(biomes_information)
-
-layers[[1]]
-biomes_information[1,]
+biomes_information[1, ]
 ```
 
-Alternatively you can display meta data for individual layers using the `biomes_info` function.
+For a human-readable summary of one or more biome schemes, use
+`biomes_info()`:
 
-```{r}
-biomes_info(1)
-biomes_info(c(1,14,21)) # simultaneously for multiple biome layers
-biomes_info() # simultaneously for multiple biome layers
+```r
+biomes_info(1)              # info for layer 1
+biomes_info(c(1, 14, 21))   # info for several layers
+biomes_info()               # info for all 31 layers
 ```
 
-The package further contains convenience functions for analyses using biomes common in biogeography.
+---
 
 ## 2. Classify occurrence records into biomes
-Based on geographic coordinates occurrence records can be classified into biomes. 
+
+`biomes_classify()` takes a data frame of points (or an `sf` /
+`SpatVector` of points) and returns one biome assignment per record.
+By default it classifies against all 31 layers shipped with the package.
 
 ```r
 data(biomes_example)
 
+# Default: classify against all 31 layers and return biome names
 biomes_classify(x = biomes_example)
 ```
 
-You can chose individual layers via the biome argument. For instance, the layers 1 and 25.
+You can restrict the classification to specific layers:
 
 ```r
-data(biomes_example)
 layers <- biomes_get()
 
-biomes_classify(x = biomes_example,
-                biome = layers[[c(1,25)]]) # change numbers for different layers
+biomes_classify(
+  x     = biomes_example,
+  biome = layers[[c(1, 25)]]
+)
 ```
 
-You can also chose to display the ID of the biomes rather than the names, via the `value` argument.
-Further you can specify the column names of the coordinates in x, via the `lon` and `lat` arguments.
+You can also display the raster value (the raw biome ID) instead of the
+biome name, and customize the coordinate column names:
 
 ```r
-data(biomes_example)
-layers <- biomes_get()
-
-biomes_classify(x = biomes_example,
-                biome = layers[[1]],
-                lon = "decimalLongitude", # use custom column names if necessary
-                lat = "decimalLatitude",
-                value = "ID")
+biomes_classify(
+  x     = biomes_example,
+  biome = layers[[1]],
+  lon   = "decimalLongitude",
+  lat   = "decimalLatitude",
+  value = "ID"   # "name" (default), "ID", or "both"
+)
 ```
-## 3. Tabulate the number of occurrences per biome
 
-```{r}
-library(tidyverse)
-biomes_example %>% 
-  biomes_classify() %>% 
+The output columns are named after the input layers with the suffixes
+`_value` (raster value) and `_name` (biome name).
+
+## 3. Tabulate occurrences per biome
+
+```r
+library(dplyr)
+
+biomes_example |>
+  biomes_classify() |>
   biomes_biome_tab()
 ```
 
-In three short articles, we illustrate how to use the package to
+This counts **occurrence records** (one row of the input = one
+occurrence) per biome and layer. To count unique species per biome,
+deduplicate by `species` before tabulating.
 
-1. Count the number of species per biome
-2. Create publication level maps of a dataset over a biome
-3. Compare two or more biome definitions for a given occurrence dataset
+## 4. Articles
 
-**Add links here**
+Three companion articles illustrate how to use the package:
+
+1. [Count the number of species per biome](https://azizka.github.io/biomes/articles/species_number_per_biome.html)
+2. [Create publication-level maps of a dataset over a biome](https://azizka.github.io/biomes/articles/publicaiton_level_map.html)
+3. [Compare two or more biome definitions for a given occurrence dataset](https://azizka.github.io/biomes/articles/compare_biome_definitions.html)
 
 ## Citation
 
-PLease cite these two publications when using the biomes package
+Please cite these two references when using the `biomes` package:
 
-1. Fischer J-C, Walentowitz A, Beierkuhnlein C (2022) The biome inventory - Standardizing global biogeographical units. Global Ecology and Biogeography31(11):2172-2183: [https://doi.org/10.1111/geb.13574](https://onlinelibrary.wiley.com/doi/full/10.1111/geb.13574)
-For the compilation of the biome layers.
+1. Fischer J-C, Walentowitz A, Beierkuhnlein C (2022) The biome
+   inventory — Standardizing global biogeographical units.
+   *Global Ecology and Biogeography* 31(11): 2172–2183.
+   <https://doi.org/10.1111/geb.13574>
+   — for the compilation of the biome layers.
 
-
-2. Groß H, Zizka A (2025): biomes: Analysis of Taxon Distributions in Global Biomes. R package, Version 0.9. [https://github.com/azizka/biomes](https://github.com/azizka/biomes). 
-For the Rpackage.
+2. Groß H, Zizka A (2025): biomes: Analysis of Taxon Distributions in
+   Global Biomes. R package, Version 0.9.
+   <https://github.com/azizka/biomes> — for the R package.
 
 ```r
 citation("biomes")

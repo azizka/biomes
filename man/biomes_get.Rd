@@ -2,18 +2,26 @@
 % Please edit documentation in R/biomes_get.R
 \name{biomes_get}
 \alias{biomes_get}
-\title{Load package biome data and example files}
+\title{Load the packaged biome raster stack}
 \usage{
 biomes_get(...)
 }
+\arguments{
+\item{...}{Reserved for future use. Currently no arguments are
+accepted; passing any will raise an error.}
+}
 \value{
-Returns a list with any or all of: raster, legend, info and example
+A \code{terra::SpatRaster} with 31 layers, one per biome
+classification (in the same order as the rows of
+\code{\link{biomes_information}}).
 }
 \description{
-Loads the 31 biome layers provided by the package as raster stack.
+Loads the 31 biome layers shipped with the package as a
+\code{terra::SpatRaster} stack.
 }
 \examples{
 # Load the default biome raster stack
 biomes_raster <- biomes_get()
+biomes_raster
 
 }

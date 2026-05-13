@@ -3,27 +3,27 @@
 \docType{data}
 \name{biomes_example}
 \alias{biomes_example}
-\title{World Health Organization TB data}
+\title{Example species occurrence dataset}
 \format{
-\subsection{\code{who}}{
-
-A data frame with 7,240 rows and 60 columns:
+A data frame with 29,104 rows and 5 columns:
 \describe{
-\item{country}{Country name}
-\item{iso2, iso3}{2 & 3 letter ISO country codes}
-\item{year}{Year}
-...
-}
+\item{genus}{Genus name.}
+\item{species}{Scientific species name.}
+\item{countryCode}{ISO 3166-1 alpha-2 country code of the record.}
+\item{decimalLongitude}{Decimal longitude in WGS84.}
+\item{decimalLatitude}{Decimal latitude in WGS84.}
 }
 }
 \source{
-\url{https://www.who.int/teams/global-tuberculosis-programme/data}
+Records downloaded and cleaned from the Global Biodiversity
+Information Facility (GBIF). See
+\code{inst/extdata/GBIF_example_citation.txt} for the full citation.
 }
 \usage{
 biomes_example
 }
 \description{
-A subset of data from the World Health Organization Global Tuberculosis
-Report ...
+A cleaned subset of species occurrence records downloaded from GBIF,
+used in examples and vignettes to demonstrate biome classification.
 }
 \keyword{datasets}

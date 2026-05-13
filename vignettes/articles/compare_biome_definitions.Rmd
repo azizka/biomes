@@ -1,92 +1,91 @@
 ---
-title: "compare_biome_definitions"
+title: "Compare biome definitions"
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment  = "#>"
 )
 ```
 
 ```{r setup}
 library(biomes)
+library(ggplot2)
+library(viridis)
+library(dplyr)
+library(tidyr)
 ```
 
 
-## Compare bime definitions for specific datasets
+## Compare biome definitions for a specific dataset
 
-You may want to compare the differences of two biome definitions for a given 
-occurrence dataset. For two definitions a levelplot based on the number of occurrences
-can show the number of overlapp between different biomes between both deifnitions.
+You may want to compare two biome definitions for a given occurrence
+dataset. For two definitions a tile plot based on the number of
+occurrences shows how biome classes overlap between the two schemes.
 
 ```{r}
-library(ggplot)
-library(biomes)
-library(viridis)
-
 data(biomes_example)
 layers <- biomes_get()
 
-class <- biomes_classify(x = biomes_example,
-                         biome = layers[[c(1,25)]])
+class <- biomes_classify(
+  x     = biomes_example,
+  biome = layers[[c(1, 25)]]
+)
 
-tab <- table(t[, names(t)[2]],
-             t[, names(t)[3]]) %>% 
-  data.frame()
+# class has one *_name column per layer
+name_cols <- grep("_name$", names(class), value = TRUE)
+tab <- as.data.frame(
+  table(class[[name_cols[1]]], class[[name_cols[2]]])
+)
+names(tab) <- c("biome_layer_1", "biome_layer_2", "Freq")
 
-
-ggplot()+
-  geom_raster(data = tab,
-              aes(x = Var1,
-                  y = Var2,
-                  fill = log(Freq)))+
-  scale_fill_viridis()+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 90, 
-                                   vjust = 0.5, 
+ggplot(tab) +
+  geom_raster(aes(x    = biome_layer_1,
+                  y    = biome_layer_2,
+                  fill = log1p(Freq))) +
+  scale_fill_viridis() +
+  labs(x = name_cols[1], y = name_cols[2]) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90,
+                                   vjust = 0.5,
                                    hjust = 1))
 ```
-For comparison of multiple biome definitions a multivariant analyses, for instance a PCoA can 
-help to identify clusters of similar biomes accross definitions.
 
-```{r}
+For comparing multiple biome definitions a multivariate ordination
+(e.g. NMDS) can help identify clusters of similar biomes across
+definitions.
+
+```{r, eval = requireNamespace("vegan", quietly = TRUE)}
 library(vegan)
-library(tidyverse)
 
-# occurrence to biome classificaiton
-class <- biomes_classify(x = biomes_example,
-                         biome = layers[[c(1,12, 25)]])
+class <- biomes_classify(
+  x     = biomes_example,
+  biome = layers[[c(1, 12, 25)]]
+)
 
-# get number of occurrences per species per biome
-test <- biomes_example %>%
-  bind_cols(class)%>%
-  select(species, contains("Biome_Inventory")) %>%
-  pivot_longer(cols = contains("Biome_Inventory"),
-               names_to = "layer",
-               values_to = "value") %>%
-  group_by(layer, value, species) %>%
-  count() %>%
-  pivot_wider(id_cols = c(value,layer),
-              names_from = species,
+# number of occurrences per species per biome, wide format
+test <- biomes_example |>
+  bind_cols(class) |>
+  select(species, ends_with("_name")) |>
+  pivot_longer(cols      = ends_with("_name"),
+               names_to  = "layer",
+               values_to = "biome") |>
+  group_by(layer, biome, species) |>
+  count() |>
+  pivot_wider(id_cols     = c(biome, layer),
+              names_from  = species,
               values_from = n)
 
-# preapre data for ordination
-dat <- test[,-c(1:2)]
+# prepare data for ordination
+dat <- test[, -c(1:2)]
 dat[is.na(dat)] <- 0
 
 # ordination
 ord <- metaMDS(dat, trace = FALSE)
-plo <- data.frame(cbind(ord$points,
-                        test[,c(1,2)]))
+plo <- data.frame(cbind(ord$points, test[, c(1, 2)]))
 
-# visualize first 2 axes
-ggplot()+
-  geom_text(data = plo,
-             aes(x = MDS1,
-                 y = MDS2,
-                 label = value,
-                 color = layer))+
+ggplot(plo, aes(x = MDS1, y = MDS2, label = biome, color = layer)) +
+  geom_text() +
   theme_bw()
-
 ```

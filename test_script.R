@@ -47,6 +47,18 @@ test <- biomes_classify(x = biomes_example,
                 lat = "decimalLatitude",
                 value = "both")
 
+biomes_example$biome_1 <- biomes_classify(
+  x     = biomes_example,
+  biome = layers[[1]],
+  value = "name"
+)[[1]]
+
+biomes_example <- cbind(
+  biomes_example,
+  biomes_classify(biomes_example, biome = layers[[1]], value = "both")
+)
+
+
 t_sf <- st_as_sf(biomes_example,
          coords = c("decimalLongitude", "decimalLatitude"),
          crs = "EPSG:4326")
@@ -56,7 +68,7 @@ biomes_classify(x = t_sf,
                 value = "ID")
 
 t_terra  <- terra::vect(biomes_example,
-                        geom = c(lon, lat),
+                        geom = c("decimalLongitude", "decimalLatitude"),
                         crs = "EPSG:4326")
 
 biomes_classify(x = t_terra,
@@ -70,12 +82,13 @@ biomes_example %>%
   biomes_biome_tab()
 
 # species number per biome
-class <- biomes_example %>%
-  biomes_classify(biome = layers[[1]])
+class <- biomes_classify(biomes_example, biome = layers[[1]], value = "name")
+
+tab2 <- biomes_biome_tab(class, value = "names")
 
 biomes_example %>%
   bind_cols(class) %>%
-  group_by(species, biome_name) %>%
+  group_by(species, `Biome_Inventory_layer_01_name`) %>%
   count()
 
 # species per biome multiple biomes
@@ -93,20 +106,8 @@ biomes_example %>%
   count()
 
 
-
-# species numbers per biome
-library(tidyverse)
-
-class <- biomes_example %>%
-  biomes_classify(biome = layers[[1]])
-
-biomes_example %>%
-  bind_cols(class) %>%
-  group_by(species, biome_name) %>%
-  count()
-
 # bioem compare
-library(ggplot)
+library(ggplot2)
 library(biomes)
 library(viridis)
 
@@ -116,8 +117,8 @@ layers <- biomes_get()
 class <- biomes_classify(x = biomes_example,
                          biome = layers[[c(1,25)]])
 
-tab <- table(t[, names(t)[2]],
-             t[, names(t)[3]]) %>%
+tab <- table(class[, names(class)[1]],
+             class[, names(class)[2]]) %>%
   data.frame()
 
 

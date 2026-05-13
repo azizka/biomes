@@ -1,72 +1,80 @@
-#' Count occurrences per biome
+#' Tabulate the number of occurrences per biome
 #'
-#' Summarizes the number of occurrence records in each biome and layer, outputting a long-format table.
+#' Summarizes the number of **occurrence records** (one row of `x` =
+#' one occurrence) in each biome, for one or more biome layers. The
+#' output is a long-format table with one row per (layer, biome) pair.
 #'
-#' @param x Data frame with occurrence records.
-#' @param value Display names or ID
-#' @return data.frame, columns: layer, biome, number of records
+#' This function counts occurrences, not species. To count unique species
+#' per biome, deduplicate by species before tabulating
+#' (e.g. `dplyr::distinct(species, biome)` after combining classifications
+#' with the original data).
+#'
+#' @param x A data frame returned by [biomes_classify()].
+#' @param value Character. `"names"` (default) tabulates the `_name`
+#'   columns from [biomes_classify()]; `"ID"` tabulates the `_value`
+#'   columns.
+#'
+#' @return A data frame with columns `layer`, `biome`, and `n` (the number
+#'   of occurrence records in that biome on that layer).
 #'
 #' @examples
 #' # Load example occurrence data
 #' data("biomes_example")
 #'
-#' # Classify occurrences into biomes (names)
+#' # Tabulate by biome name
 #' classified_names <- biomes_classify(
 #'   x     = biomes_example,
 #'   value = "name"
 #' )
-#'
-#' # Count records per biome (using biome names)
 #' biomes_biome_tab(classified_names, value = "names")
 #'
-#' # Classify occurrences into biomes (IDs)
+#' # Tabulate by raster value
 #' classified_ids <- biomes_classify(
 #'   x     = biomes_example,
 #'   value = "ID"
 #' )
-#'
-#' # Count records per biome (using biome IDs)
 #' biomes_biome_tab(classified_ids, value = "ID")
 #'
 #' @export
 biomes_biome_tab <- function(x,
-                             value = "names"){
+                             value = "names") {
 
-  # Assertions: x must be a data.frame
+  # Assertions
   checkmate::assert_data_frame(x, min.rows = 1)
-
-  # Assertions: x must have an ID column
-  checkmate::assert_true(
-    "ID" %in% names(x),
-    .var.name = "x must contain a column named 'ID'"
-  )
-
-  # Assertions: value must be "names" or "ID"
   checkmate::assert_choice(value, c("names", "ID"))
 
+  # Pick the relevant columns by suffix (drop = FALSE keeps single-layer
+  # results as a data frame).
+  suffix <- if (value == "names") "_name" else "_value"
+  sel    <- grepl(paste0(suffix, "$"), names(x))
 
-  # select relevant columns
-  # MAKE SURE THIS WORKS WITH DIFERENT SELECTIONS AND DIFFERENT NUMEBR OF LAYERS
-  if(value == "names"){
-    dat <- x[, which(grepl("_name", names(x)))]
-  }else if(value == "ID"){
-    dat <- x[, which(!grepl("_name", names(x)))]
-    dat <- dat[, which(grepl("Biomes_Inventory_layer", names(dat)))]
-  }
+  checkmate::assert_true(
+    any(sel),
+    .var.name = paste0(
+      "x must contain at least one column ending in '", suffix,
+      "' (output of biomes_classify with value = '",
+      if (value == "names") "name" else "ID",
+      "' or 'both')"
+    )
+  )
 
-  # count occurrences pr biome
-  tab <- apply(dat, 2, FUN = "table")
+  dat <- x[, sel, drop = FALSE]
 
-  tab2 <- list()
-  for(i in 1:length(tab)){
-    tab2[[i]] <- data.frame(tab[[i]])
-    tab2[[i]]$layer <- names(tab)[i]
-  }
+  # Tabulate occurrences per biome, per layer.
+  tab2 <- lapply(seq_along(dat), function(i) {
+    counts <- table(dat[[i]], useNA = "no")
+    if (length(counts) == 0) {
+      return(NULL)
+    }
+    data.frame(
+      layer = sub(paste0(suffix, "$"), "", names(dat)[i]),
+      biome = names(counts),
+      n     = as.integer(counts),
+      stringsAsFactors = FALSE
+    )
+  })
 
   out <- do.call(rbind, tab2)
-  out <- out[,c(3,1,2)]
-  names(out) <- c("layer", "biome", "n")
-
-  #return value
-  return(out)
+  rownames(out) <- NULL
+  out
 }

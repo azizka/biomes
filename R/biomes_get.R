@@ -1,11 +1,19 @@
-#' Load package biome data and example files
+#' Load the packaged biome raster stack
 #'
-#' Loads the 31 biome layers provided by the package as raster stack.
+#' Loads the 31 biome layers shipped with the package as a
+#' `terra::SpatRaster` stack.
 #'
-#' @return Returns a list with any or all of: raster, legend, info and example
+#' @param ... Reserved for future use. Currently no arguments are
+#'   accepted; passing any will raise an error.
+#'
+#' @return A `terra::SpatRaster` with 31 layers, one per biome
+#'   classification (in the same order as the rows of
+#'   [`biomes_information`]).
+#'
 #' @examples
 #' # Load the default biome raster stack
 #' biomes_raster <- biomes_get()
+#' biomes_raster
 #'
 #' @importFrom terra rast
 #' @export
@@ -17,9 +25,10 @@ biomes_get <- function(...) {
     .var.name = "biomes_get() does not take any arguments"
   )
 
-  rasterfile <- system.file("extdata/Biomes_Inventory_RasterStack.tif",
-                            package = "biomes")
+  rasterfile <- system.file(
+    "extdata/Biomes_Inventory_RasterStack.tif",
+    package = "biomes"
+  )
 
-  out <- terra::rast(rasterfile)
-  return(out)
+  terra::rast(rasterfile)
 }

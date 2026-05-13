@@ -2,18 +2,31 @@
 % Please edit documentation in R/biomes_info.R
 \name{biomes_info}
 \alias{biomes_info}
-\title{Print information for sleected biome definitions}
+\title{Print metadata for selected biome definitions}
 \usage{
 biomes_info(x = NULL)
 }
 \arguments{
-\item{x}{the layer for which information should be displayed}
+\item{x}{Integer vector of layer indices between 1 and 31. If \code{NULL}
+(the default), information for all 31 classifications is printed.}
 }
 \value{
-prints information to screen
+Invisibly returns the integer vector of layer indices that
+was printed. The function is called for its side effect of printing
+to the console.
 }
 \description{
-For each occurrence record, assigns a biome label based on spatial position and raster layer.
+Prints a human-readable summary of the biome classifications shipped
+with the package. For each requested classification the function prints
+the publication, the criteria and methodology used to define the
+classes, a short description, the number of classes, the raster layer
+index, and a list of biome names with their raster values.
+}
+\details{
+This is the \emph{interactive} sibling of the \code{biomes_information} data set:
+use \code{\link{biomes_information}} when you want the raw metadata table (e.g.
+to subset, filter, or join programmatically), and \code{biomes_info()} when
+you want a quick read of the most relevant fields for a specific layer.
 }
 \examples{
 # Print information for all biome definitions
@@ -22,4 +35,8 @@ biomes_info()
 # Print information for the first three biomes
 biomes_info(1:3)
 
+}
+\seealso{
+\code{\link{biomes_information}} for the underlying metadata table and
+\code{\link{biomes_legend}} for the mapping from raster values to biome names.
 }

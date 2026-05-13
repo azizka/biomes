@@ -2,41 +2,48 @@
 % Please edit documentation in R/biomes_biome_tab.R
 \name{biomes_biome_tab}
 \alias{biomes_biome_tab}
-\title{Count occurrences per biome}
+\title{Tabulate the number of occurrences per biome}
 \usage{
 biomes_biome_tab(x, value = "names")
 }
 \arguments{
-\item{x}{Data frame with occurrence records.}
+\item{x}{A data frame returned by \code{\link[=biomes_classify]{biomes_classify()}}.}
 
-\item{value}{Display names or ID}
+\item{value}{Character. \code{"names"} (default) tabulates the \verb{_name}
+columns from \code{\link[=biomes_classify]{biomes_classify()}}; \code{"ID"} tabulates the \verb{_value}
+columns.}
 }
 \value{
-data.frame, columns: layer, biome, number of records
+A data frame with columns \code{layer}, \code{biome}, and \code{n} (the number
+of occurrence records in that biome on that layer).
 }
 \description{
-Summarizes the number of occurrence records in each biome and layer, outputting a long-format table.
+Summarizes the number of \strong{occurrence records} (one row of \code{x} =
+one occurrence) in each biome, for one or more biome layers. The
+output is a long-format table with one row per (layer, biome) pair.
+}
+\details{
+This function counts occurrences, not species. To count unique species
+per biome, deduplicate by species before tabulating
+(e.g. \code{dplyr::distinct(species, biome)} after combining classifications
+with the original data).
 }
 \examples{
 # Load example occurrence data
 data("biomes_example")
 
-# Classify occurrences into biomes (names)
+# Tabulate by biome name
 classified_names <- biomes_classify(
   x     = biomes_example,
   value = "name"
 )
-
-# Count records per biome (using biome names)
 biomes_biome_tab(classified_names, value = "names")
 
-# Classify occurrences into biomes (IDs)
+# Tabulate by raster value
 classified_ids <- biomes_classify(
   x     = biomes_example,
   value = "ID"
 )
-
-# Count records per biome (using biome IDs)
 biomes_biome_tab(classified_ids, value = "ID")
 
 }

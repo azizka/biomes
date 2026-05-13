@@ -3,27 +3,37 @@
 \docType{data}
 \name{biomes_legend}
 \alias{biomes_legend}
-\title{World Health Organization TB data}
+\title{Legend (biome class names) for the 31 biome classifications}
 \format{
-\subsection{\code{who}}{
-
-A data frame with 7,240 rows and 60 columns:
+A data frame with 31 rows and 41 columns:
 \describe{
-\item{country}{Country name}
-\item{iso2, iso3}{2 & 3 letter ISO country codes}
-\item{year}{Year}
-...
-}
+\item{layer}{Index of the layer in the raster stack returned by
+\code{\link[=biomes_get]{biomes_get()}}.}
+\item{source}{Short reference to the publication that defines the
+classification.}
+\item{id_1, id_2, id_3, id_4, id_5, id_6, id_7, id_8, id_9, id_10,
+id_11, id_12, id_13, id_14, id_15, id_16, id_17, id_18, id_19,
+id_20, id_21, id_22, id_23, id_24, id_25, id_26, id_27, id_28,
+id_29, id_30, id_31, id_32, id_33, id_34, id_35, id_36, id_37,
+id_38, id_39}{Biome class names for raster values 1 through 39.
+\code{NA} if the classification has fewer classes.}
 }
 }
 \source{
-\url{https://www.who.int/teams/global-tuberculosis-programme/data}
+Fischer J-C, Walentowitz A, Beierkuhnlein C (2022) The biome
+inventory - Standardizing global biogeographical units.
+Global Ecology and Biogeography 31(11): 2172-2183.
+\doi{10.1111/geb.13574}
 }
 \usage{
 biomes_legend
 }
 \description{
-A subset of data from the World Health Organization Global Tuberculosis
-Report ...
+A data frame mapping the raster values used in each of the 31 biome
+layers to human-readable biome class names. Each row corresponds to one
+layer in the raster stack returned by \code{\link[=biomes_get]{biomes_get()}}, in the same order.
+Columns \code{id_1}, \code{id_2}, ... give the biome class names for raster values
+1, 2, ..., respectively. Cells are \code{NA} for classifications with fewer
+classes than the maximum across all classifications.
 }
 \keyword{datasets}

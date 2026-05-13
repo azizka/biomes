@@ -10,319 +10,124 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  message = TRUE,
-  warning = TRUE
+  comment  = "#>"
 )
 library(biomes)
 ```
 
 # Goal
 
-This vignette shows how to classify species occurrence data into biome schemes.  
-Two common use cases:
+This vignette shows how to classify species occurrence data into
+biome schemes shipped with the `biomes` package. The workflow has
+three building blocks:
 
-- You only know a taxon name.  
-  You want to download occurrences from GBIF and classify them.
-
-- You already have your own cleaned dataset (longitude, latitude, taxon column).  
-  You want to classify it directly.
-
-## Key functions
-
-- `biomes_GBIF()`  
-  Download and clean GBIF occurrences for a given taxon.
-
-- `biomes_get()`  
-  Load the packaged biome raster stack and legend into your session.
-
-- `biomes_compare()`  
-  High-level helper. Runs biome assignment, summaries, and plotting for one or more biome layers and writes the result objects into your environment.
-
-- `biomes_count()` / `biomes_plot()`  
-  Lower-level building blocks. `biomes_compare()` calls these per layer.
-
-
-All examples below are shown with `eval = FALSE` so they do not run during CRAN checks.
+- `biomes_get()` — load the 31 biome raster layers.
+- `biomes_info()` / `biomes_information` — inspect biome metadata.
+- `biomes_classify()` — assign each occurrence to a biome.
+- `biomes_biome_tab()` — tabulate occurrences per biome.
 
 ---
 
-# 1. Download GBIF data for a taxon
+# 1. Load biome layers and metadata
 
-`biomes_GBIF()` is a convenience wrapper around rgbif. By default it uses `occ_search()` so you do not need GBIF credentials. It filters for records with coordinates and (optionally) cleans obvious coordinate issues.
-
-```{r eval=FALSE}
-occ_raw <- biomes_GBIF(
-  taxon = "Solemyida",
-  use_download = FALSE,     # default pathway (occ_search)
-  filter_clean = TRUE,      # basic CoordinateCleaner filters
-  filter_sea = FALSE,       # optionally remove marine-only points
-  year_min = 2000,
-  year_max = 2024,
-  limit = 5000
-)
-
-dim(occ_raw)
-head(occ_raw[, c("scientificName",
-                 "decimalLongitude",
-                 "decimalLatitude")])
+```{r}
+layers <- biomes_get()
+layers
 ```
 
-Minimum required columns for downstream steps:
-- decimalLongitude
-- decimalLatitude
-- a taxon column such as scientificName or family
+`layers` is a `SpatRaster` with 31 layers. Each layer corresponds to one
+row of the `biomes_information` data frame:
 
-These columns will later be mapped to biome classes.
-
----
-
-# 2. Load biome data
-
-`biomes_get()` loads two core objects from the package into your environment:
-
-- biome_raster: A SpatRaster containing all biome layers.
-- biome_legend: A table describing each layer (layer index, source, biome class labels, etc.).
-
-It can also (optionally) open static pre-rendered PNG maps of specific layers.
-
-```{r eval=FALSE}
-# Load biome_raster and biome_legend into the global environment
-biomes_get()
-
-# Optionally: show quick-look maps for specific layers (if shipped PNGs exist)
-biomes_get(view_layer = c(1, 5))
+```{r}
+data(biomes_information)
+biomes_information[1, c("publication", "name_of_classification",
+                        "layer_in_raster_stack")]
 ```
 
-After running `biomes_get()`, you should see biome_raster and biome_legend in your workspace.
-You can inspect which biome layers exist like this:
+For an interactive summary of a specific scheme:
 
-```{r eval=FALSE}
-terra::nlyr(biome_raster)
-head(biome_legend)
+```{r, eval=FALSE}
+biomes_info(1)
 ```
 
 ---
 
-# 3. Compare biome schemes
+# 2. Classify occurrence records
 
-`biomes_compare()` is the high-level entry point for typical users. It will:
+`biomes_classify()` accepts a `data.frame` (with longitude/latitude
+columns), an `sf` object, or a `terra::SpatVector`. By default it uses
+all 31 layers.
 
-- Harmonize your occurrence data (or download from GBIF if you only gave taxon).
-- Decide which biome layer(s) to use.
-- Run `biomes_count()` and `biomes_plot()` for each layer.
-- Store the results in the target environment.
+```{r}
+data(biomes_example)
 
-## Case A: Only a taxon name
-
-You do not have a dataset yet. You just want to say "classify this taxon".
-
-```{r eval=FALSE}
-biomes_compare(
-  taxon = "Solemyida",
-  layer = NULL,            # let the function decide which biome layer(s)
-  biomes_suggest = TRUE,   # call biomes_suggest() to pick a 'best' layer
-  env = .GlobalEnv         # write output objects into the global environment
+# Classify against a single layer, return biome names
+class_1 <- biomes_classify(
+  x     = biomes_example,
+  biome = layers[[1]],
+  value = "name"
 )
+head(class_1)
 ```
 
-What this does internally:
-- Calls `biomes_GBIF("Solemyida")`.
-- Cleans and standardizes column names. It creates a column `species` because downstream code expects a column with that name.
-- Picks biome layers. If `layer = NULL` and `biomes_suggest = TRUE`, it will call `biomes_suggest()` and use its chosen layer.
-- For each chosen layer it runs:
-    - `biomes_count()` to assign each point to a biome class and summarize per-biome presence.
-    - `biomes_plot()` to generate a map of occurrences per cell and barplots of total occurrences and unique taxa per layer.
+Use `value = "ID"` for the raw raster value, or `value = "both"` to keep
+both side by side. With multiple layers, one `_value` / `_name` column
+is produced per layer:
 
-After it finishes, the following objects appear in `.GlobalEnv`:
-
-- `biomes_compare_input`: The occurrence data actually used in the analysis. Includes `species`.
-- `biomes_compare_layers`: Integer vector of biome layer indices that were evaluated.
-- `biomes_compare_summary`: One row per biome layer. Contains total number of mapped occurrences, number of unique taxa, and source info for that biome scheme.
-- `biomes_count_<L>`: Output of `biomes_count()` for layer L.
-- `biomes_plot_<L>`: Output of `biomes_plot()` for layer L.
-
-You can inspect them:
-
-```{r eval=FALSE}
-biomes_compare_layers
-biomes_compare_summary
-
-names(biomes_count_1)
-biomes_count_1$counts_per_biome
-
-names(biomes_plot_1)
-biomes_plot_1$barplots$stats_df
-biomes_plot_1$barplots$p_occ
-biomes_plot_1$barplots$p_sp
+```{r}
+class_multi <- biomes_classify(
+  x     = biomes_example,
+  biome = layers[[c(1, 5, 25)]],
+  value = "both"
+)
+head(class_multi)
 ```
+
+For raster values that have no entry in the legend (azonal classes
+encoded with high values such as 90+), the name column falls back to
+`"azonal (raster value: X)"` rather than `NA`.
 
 ---
 
-## Case B: You already have your own dataset
+# 3. Tabulate occurrences per biome
 
-Assume you have a cleaned data frame `df` with these columns:
+`biomes_biome_tab()` summarizes the number of **occurrence records**
+(one row of the input data = one occurrence) per biome and layer:
 
-- decimalLongitude
-- decimalLatitude
-- scientificName (or family, genus, etc.)
-
-Example dummy data:
-
-```{r eval=FALSE}
-df <- data.frame(
-  decimalLongitude = c(10.1, 10.2, 10.3, -60.5, -60.6),
-  decimalLatitude  = c(50.0, 50.1, 50.2,  -3.2,  -3.3),
-  scientificName   = c("Taxon_A", "Taxon_A", "Taxon_B", "Taxon_C", "Taxon_C")
-)
-
-df
+```{r}
+class_multi |>
+  biomes_biome_tab()
 ```
 
-Now run `biomes_compare()` directly on your data. No GBIF call will be made.
-
-```{r eval=FALSE}
-biomes_compare(
-  x = df,
-  lon = "decimalLongitude",
-  lat = "decimalLatitude",
-  taxon_col = "scientificName",
-  layer = c(1, 5, 10),     # test multiple biome schemes
-  biomes_suggest = FALSE,  # skip automatic suggestion
-  env = .GlobalEnv
-)
-```
-
-Again you will get:
-
-- biomes_compare_input
-- biomes_compare_layers
-- biomes_compare_summary
-
-plus one `biomes_count_<layer>` and one `biomes_plot_<layer>` object per tested layer.
+For unique-species counts per biome, deduplicate by species before
+tabulating (see the *Species per biome* article).
 
 ---
 
-# 4. Understanding `biomes_count()` output
+# 4. Custom coordinate columns
 
-Each `biomes_count_<L>` object (the result from `biomes_count()`) contains:
+If your data uses different longitude/latitude column names, pass them
+via `lon` and `lat`:
 
-- `counts_per_biome`: One row per biome class in that layer. Includes:
-    - number of unique taxa considered "present" in that biome,
-    - total number of occurrence records in that biome.
-
-- `summary_species_biome`: A presence matrix (taxon × biome).
-    - Value 1 means that taxon is considered present in that biome.
-    - Presence is controlled by two arguments in `biomes_count()`:
-        - `presence_min_n`: minimum number of records in a biome.
-        - `presence_min_prop`: optional minimum fraction of that taxon's records that must fall in that biome.
-
-Default is `presence_min_n = 1`, meaning a taxon is counted as present in a biome if it has at least one record there.
-
-You can call `biomes_count()` manually and adjust these thresholds:
-
-```{r eval=FALSE}
-res_strict <- biomes_count(
-  x = biomes_compare_input,
-  species = "species",          # column created by biomes_compare()
-  lon = "decimalLongitude",
-  lat = "decimalLatitude",
-  layer = 5,
-  presence_min_n = 5,           # require at least 5 records
-  presence_min_prop = 0.1,      # AND at least 10% of that taxon's records
-  summary = TRUE,
-  return_format = "augment"
-)
-
-res_strict$counts_per_biome
-res_strict$summary_species_biome
+```{r}
+biomes_classify(
+  x     = biomes_example,
+  biome = layers[[1]],
+  lon   = "decimalLongitude",
+  lat   = "decimalLatitude",
+  value = "name"
+) |>
+  head(3)
 ```
-
-You can also ask `biomes_count()` to write CSVs by giving the `path` argument:
-
-```{r eval=FALSE}
-res_export <- biomes_count(
-  x = biomes_compare_input,
-  species = "species",
-  lon = "decimalLongitude",
-  lat = "decimalLatitude",
-  layer = 5,
-  path = "results/layer5_export",   # will create several CSV files
-  summary = TRUE
-)
-```
-
-This writes:
-- layer5_export_biom.csv
-- layer5_export_summary_species_biome.csv
-- layer5_export_counts_per_biome.csv
-
----
-
-# 5. Understanding `biomes_plot()` output
-
-Each `biomes_plot_<L>` object (result from `biomes_plot()`) contains two kinds of products:
-
-- Per-layer occurrence maps  
-  Raster cells are colored by how many occurrences fall inside.
-  Biome boundaries are overlaid.
-
-- Summary barplots  
-  - total number of occurrence records per layer
-  - total number of unique taxa per layer
-
-You can access the barplot data and ggplot objects:
-
-```{r eval=FALSE}
-# Barplot data frame
-biomes_plot_5$barplots$stats_df
-
-# Barplot of total occurrences per layer
-biomes_plot_5$barplots$p_occ
-
-# You can save any ggplot:
-ggplot2::ggsave(
-  filename = "total_occurrences_per_layer.png",
-  plot = biomes_plot_5$barplots$p_occ,
-  width = 6,
-  height = 4,
-  dpi = 300
-)
-
-# Map for layer 5
-biomes_plot_5$map_results[["5"]]$plot
-```
-
----
-
-# 6. Choosing a biome scheme
-
-Different biome layers represent different biome concepts (for example remotely sensed land cover vs. potential natural vegetation vs. climate-driven biome definitions).
-
-`biomes_compare_summary` gives you, per layer:
-- total number of occurrences mapped
-- number of unique taxa detected
-- source label from the legend
-
-This helps you justify and report which biome scheme you will use:
-
-```{r eval=FALSE}
-biomes_compare_summary
-```
-
-If you ran `biomes_compare(..., biomes_suggest = TRUE)`, then `biomes_compare_layers` typically has just one entry. That entry is the layer suggested by `biomes_suggest()`, which tries to match:
-- spatial coverage of your points
-- reasonable number of biome classes in your region
-- the conceptual basis (for example climate vs. land cover)
 
 ---
 
 # Summary
 
-This workflow:
-- Obtain or provide occurrence data (`biomes_GBIF()` or your own data frame).
-- Load biome layers and metadata (`biomes_get()`).
-- Compare biome schemes (`biomes_compare()`).
-- Inspect and export summaries (`biomes_count()`, `biomes_plot()`).
+The typical workflow is:
 
-The result is a reproducible link from occurrences to biome classes, with both tables and publication-ready figures.
+1. Load layers with `biomes_get()` and pick the scheme(s) of interest.
+2. Inspect them with `biomes_info()` or `biomes_information`.
+3. Classify your occurrences with `biomes_classify()`.
+4. Summarize with `biomes_biome_tab()` and / or join the classification
+   back to your data for further analysis.

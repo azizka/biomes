@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(biomer)
+library(biomes)
 
-test_check("biomer")
+test_check("biomes")
