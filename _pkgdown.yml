@@ -24,6 +24,11 @@ reference:
   contents:
   - biomes_classify
   - biomes_biome_tab
+- title: Rank biome layers for a dataset
+  desc: Data-driven scoring of the 31 biome layers for a given occurrence set.
+  contents:
+  - biomes_rank
+  - biomes_show_rank
 
 articles:
 - title: Get started
