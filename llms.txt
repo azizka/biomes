@@ -168,6 +168,18 @@ Load raster layers and metadata shipped with the package.
 - [`biomes_biome_tab()`](https://azizka.github.io/biomes/reference/biomes_biome_tab.md)
   : Tabulate the number of occurrences per biome
 
+## Rank biome layers for a dataset
+
+Data-driven scoring of the 31 biome layers for a given occurrence set.
+
+- [`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md)
+  : Rank biome layers for a given occurrence dataset
+
+- [`biomes_show_rank()`](https://azizka.github.io/biomes/reference/biomes_show_rank.md)
+  :
+
+  Visualise a `biomes_rank` result
+
 # Articles
 
 ### Get started

@@ -1,0 +1,138 @@
+# Rank biome layers for a given occurrence dataset
+
+Scores the 31 biome layers shipped with the package for a user-provided
+set of occurrences and proposes a single "best" layer based on the
+(equal-weight) mean of three data-driven criteria:
+
+1.  **coverage**: share of records classified (non-NA).
+
+2.  **effective_classes**: \\\exp(H')\\ (Hill number of order 1),
+    min-max scaled across layers.
+
+3.  **granularity**: classes actually used / classes available in the
+    layer.
+
+Two additional criteria are available on request via `criteria`:
+`"informativeness"` (Pielou's evenness \\J' = H' / \log(k\_{used})\\)
+and `"agreement"` (mean pairwise Cohen's \\\kappa\\ against the other 30
+layers, Monserud & Leemans 1992). All raw scores are min-max scaled to
+\\\[0, 1\]\\ across layers and combined into a `composite_score`. Layers
+are then ranked by the chosen `tiebreaker`: `"year"` or `"classes"`
+produce strict ranks 1..N via the chain
+`composite_score -> <tiebreaker> -> <secondary> -> name`; `"none"`
+produces dense ranks where layers with identical `composite_score` share
+a rank.
+
+## Usage
+
+``` r
+biomes_rank(
+  x,
+  biome = NULL,
+  lon = "decimalLongitude",
+  lat = "decimalLatitude",
+  criteria = c("coverage", "effective_classes", "granularity"),
+  tiebreaker = c("year", "classes", "none"),
+  verbose = TRUE
+)
+```
+
+## Arguments
+
+- x:
+
+  A data frame with longitude / latitude columns, an `sf` spatial
+  object, or a
+  [`terra::SpatVector`](https://rspatial.github.io/terra/reference/SpatVector-class.html)
+  of point geometries.
+
+- biome:
+
+  Optional
+  [`terra::SpatRaster`](https://rspatial.github.io/terra/reference/SpatRaster-class.html)
+  stack of biome layers. If `NULL` (the default), the 31 layers shipped
+  with the package are used.
+
+- lon:
+
+  Column name of longitude in `x` (only used if `x` is a non-spatial
+  data frame). Default `"decimalLongitude"`.
+
+- lat:
+
+  Column name of latitude in `x` (only used if `x` is a non-spatial data
+  frame). Default `"decimalLatitude"`.
+
+- criteria:
+
+  Character vector with one or more of `"coverage"`,
+  `"effective_classes"`, `"granularity"`, `"informativeness"`,
+  `"agreement"`. Default: the first three.
+
+- tiebreaker:
+
+  How tied `composite_score`s are resolved: `"year"` (default, more
+  recent publication ranks higher), `"classes"` (more classes ranks
+  higher), or `"none"` (do not break ties — tied layers share a rank,
+  dense ranking). With `"year"` and `"classes"` the other key serves as
+  a further fallback, alphabetical `layer_name` resolves any remaining
+  ties, and ranks are strict 1..N. With `"none"` multiple layers may
+  carry `is_best = TRUE`.
+
+- verbose:
+
+  Logical. Print progress messages? Default `TRUE`.
+
+## Examples
+
+``` r
+data("biomes_example")
+
+# Default call: coverage + effective_classes + granularity, equally weighted
+r <- biomes_rank(biomes_example, verbose = FALSE)
+head(r)
+#>   layer
+#> 1     1
+#> 2     2
+#> 3     3
+#> 4     4
+#> 5     5
+#> 6     6
+#>                                                                                                                   layer_name
+#> 1                                                                       Global vegetation patterns of the past 140,000 years
+#> 2                                                  Dataset of the global component of the Copernicus Land Monitoring Service
+#> 3                                            Present and future Köppen-Geiger climate classification maps at 1-km resolution
+#> 4 Global mapping of potential natural vegetation: an assessment of machine learning algorithms for estimating land potential
+#> 5                                                       An ecoregion-based approach to protecting half the terrestrial realm
+#> 6                                              A global classification of vegetation based on NDVI, rainfall and temperature
+#>   year n_total n_hit n_na pct_na coverage_raw coverage_scaled
+#> 1 2020   29104 24452 4652  15.98    0.8401594       0.2844065
+#> 2 2019   29104 27587 1517   5.21    0.9478766       0.7708301
+#> 3 2018   29104 28023 1081   3.71    0.9628573       0.8384794
+#> 4 2018   29104 27538 1566   5.38    0.9461930       0.7632273
+#> 5 2017   29104 27943 1161   3.99    0.9601086       0.8260667
+#> 6 2017   29104 22619 6485  22.28    0.7771784       0.0000000
+#>   effective_classes_raw effective_classes_scaled granularity_raw
+#> 1             10.080182                0.6202006       0.9047619
+#> 2              7.637310                0.3138203       0.8500000
+#> 3             11.659664                0.8182963       0.8333333
+#> 4              9.012508                0.4862950       0.9500000
+#> 5              7.159880                0.2539420       1.0000000
+#> 6              6.163172                0.1289367       1.0000000
+#>   granularity_scaled composite_score rank is_best
+#> 1          0.4285714       0.4443928   26   FALSE
+#> 2          0.1000000       0.3948835   28   FALSE
+#> 3          0.0000000       0.5522586   23   FALSE
+#> 4          0.7000000       0.6498408   20   FALSE
+#> 5          1.0000000       0.6933362   13   FALSE
+#> 6          1.0000000       0.3763122   29   FALSE
+attr(r, "best_layer")
+#> [1] 16
+
+# Restrict to a subset of criteria
+r2 <- biomes_rank(
+  biomes_example,
+  criteria = c("coverage", "effective_classes"),
+  verbose  = FALSE
+)
+```
