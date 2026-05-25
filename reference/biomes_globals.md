@@ -13,4 +13,6 @@ and cleaned automatically.
 
 Authors:
 
+- Hans Christian Groß <grossc@uni-marburg.de>
+
 - Alexander Zizka <alexander.zizka@biologie.uni-marburg.de> \[funder\]

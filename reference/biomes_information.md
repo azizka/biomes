@@ -15,7 +15,7 @@ biomes_information
 
 ## Format
 
-A data frame with 31 rows and 11 columns:
+A data frame with 31 rows and 12 columns:
 
 - publication:
 
@@ -63,6 +63,15 @@ A data frame with 31 rows and 11 columns:
 - access_date:
 
   Date on which the original data source was accessed.
+
+- scheme_type:
+
+  Methodological group the classification belongs to, one of
+  `"climate"`, `"vegetation"`, `"land_cover"`, `"ecoregion"`,
+  `"integrative"` (combined climate-vegetation schemes), or
+  `"anthropogenic"`. Used by
+  [`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md)
+  to rank layers within a conceptually comparable group.
 
 ## Source
 

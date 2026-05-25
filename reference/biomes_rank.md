@@ -28,9 +28,11 @@ a rank.
 ``` r
 biomes_rank(
   x,
+  layer = NULL,
   biome = NULL,
   lon = "decimalLongitude",
   lat = "decimalLatitude",
+  scheme_type = "all",
   criteria = c("coverage", "effective_classes", "granularity"),
   tiebreaker = c("year", "classes", "none"),
   verbose = TRUE
@@ -46,12 +48,18 @@ biomes_rank(
   [`terra::SpatVector`](https://rspatial.github.io/terra/reference/SpatVector-class.html)
   of point geometries.
 
+- layer:
+
+  Optional integer vector in `1:31` to restrict the ranking to a subset
+  of the packaged layers (e.g. `layer = c(1, 5, 25)`). `NULL` (default)
+  ranks all 31 layers. Ignored when `biome` is supplied.
+
 - biome:
 
   Optional
   [`terra::SpatRaster`](https://rspatial.github.io/terra/reference/SpatRaster-class.html)
-  stack of biome layers. If `NULL` (the default), the 31 layers shipped
-  with the package are used.
+  stack of biome layers. Use this for custom rasters; for the packaged
+  stack prefer `layer = <int>` instead.
 
 - lon:
 
@@ -62,6 +70,19 @@ biomes_rank(
 
   Column name of latitude in `x` (only used if `x` is a non-spatial data
   frame). Default `"decimalLatitude"`.
+
+- scheme_type:
+
+  Character. Restrict the ranking to one methodological group of biome
+  definitions: one of `"all"` (default; rank all 31 layers),
+  `"climate"`, `"vegetation"`, `"land_cover"`, `"ecoregion"`,
+  `"integrative"`, or `"anthropogenic"`. The grouping is taken from the
+  `scheme_type` column of
+  [biomes_information](https://azizka.github.io/biomes/reference/biomes_information.md).
+  When a specific type is chosen, only the layers of that type are
+  classified, scored and returned, so the scaled scores and the best
+  layer are determined within that group. Ignored when `biome` is
+  supplied.
 
 - criteria:
 

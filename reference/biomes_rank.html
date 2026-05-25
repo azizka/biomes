@@ -52,9 +52,9 @@ share a rank."></head><body>
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/biomes-workflow.html">Biome classification workflow</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" href="../articles/index.html">More articles...</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/biome-data.html">1. Biome layers and occurrence data</a></li>
+    <li><a class="dropdown-item" href="../articles/classify-summarize-map.html">2. Classify, summarize and map</a></li>
+    <li><a class="dropdown-item" href="../articles/one-call-workflow.html">3. The one-call workflow with biomes_full()</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -95,9 +95,11 @@ share a rank.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">biomes_rank</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
+<span>  layer <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  biome <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  lon <span class="op">=</span> <span class="st">"decimalLongitude"</span>,</span>
 <span>  lat <span class="op">=</span> <span class="st">"decimalLatitude"</span>,</span>
+<span>  scheme_type <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  criteria <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"coverage"</span>, <span class="st">"effective_classes"</span>, <span class="st">"granularity"</span><span class="op">)</span>,</span>
 <span>  tiebreaker <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"classes"</span>, <span class="st">"none"</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -113,9 +115,17 @@ share a rank.</p>
 spatial object, or a <code><a href="https://rspatial.github.io/terra/reference/SpatVector-class.html" class="external-link">terra::SpatVector</a></code> of point geometries.</p></dd>
 
 
+<dt id="arg-layer">layer<a class="anchor" aria-label="anchor" href="#arg-layer"></a></dt>
+<dd><p>Optional integer vector in <code>1:31</code> to restrict the ranking
+to a subset of the packaged layers (e.g. <code>layer = c(1, 5, 25)</code>).
+<code>NULL</code> (default) ranks all 31 layers. Ignored when <code>biome</code> is
+supplied.</p></dd>
+
+
 <dt id="arg-biome">biome<a class="anchor" aria-label="anchor" href="#arg-biome"></a></dt>
-<dd><p>Optional <code><a href="https://rspatial.github.io/terra/reference/SpatRaster-class.html" class="external-link">terra::SpatRaster</a></code> stack of biome layers. If
-<code>NULL</code> (the default), the 31 layers shipped with the package are used.</p></dd>
+<dd><p>Optional <code><a href="https://rspatial.github.io/terra/reference/SpatRaster-class.html" class="external-link">terra::SpatRaster</a></code> stack of biome layers. Use
+this for custom rasters; for the packaged stack prefer
+<code>layer = &lt;int&gt;</code> instead.</p></dd>
 
 
 <dt id="arg-lon">lon<a class="anchor" aria-label="anchor" href="#arg-lon"></a></dt>
@@ -126,6 +136,17 @@ non-spatial data frame). Default <code>"decimalLongitude"</code>.</p></dd>
 <dt id="arg-lat">lat<a class="anchor" aria-label="anchor" href="#arg-lat"></a></dt>
 <dd><p>Column name of latitude in <code>x</code> (only used if <code>x</code> is a
 non-spatial data frame). Default <code>"decimalLatitude"</code>.</p></dd>
+
+
+<dt id="arg-scheme-type">scheme_type<a class="anchor" aria-label="anchor" href="#arg-scheme-type"></a></dt>
+<dd><p>Character. Restrict the ranking to one methodological
+group of biome definitions: one of <code>"all"</code> (default; rank all 31
+layers), <code>"climate"</code>, <code>"vegetation"</code>, <code>"land_cover"</code>, <code>"ecoregion"</code>,
+<code>"integrative"</code>, or <code>"anthropogenic"</code>. The grouping is taken from the
+<code>scheme_type</code> column of <a href="biomes_information.html">biomes_information</a>. When a specific type is
+chosen, only the layers of that type are classified, scored and
+returned, so the scaled scores and the best layer are determined
+within that group. Ignored when <code>biome</code> is supplied.</p></dd>
 
 
 <dt id="arg-criteria">criteria<a class="anchor" aria-label="anchor" href="#arg-criteria"></a></dt>
