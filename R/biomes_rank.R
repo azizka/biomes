@@ -23,12 +23,25 @@
 #'
 #' @param x A data frame with longitude / latitude columns, an `sf`
 #'   spatial object, or a `terra::SpatVector` of point geometries.
-#' @param biome Optional `terra::SpatRaster` stack of biome layers. If
-#'   `NULL` (the default), the 31 layers shipped with the package are used.
+#' @param layer Optional integer vector in `1:31` to restrict the ranking
+#'   to a subset of the packaged layers (e.g. `layer = c(1, 5, 25)`).
+#'   `NULL` (default) ranks all 31 layers. Ignored when `biome` is
+#'   supplied.
+#' @param biome Optional `terra::SpatRaster` stack of biome layers. Use
+#'   this for custom rasters; for the packaged stack prefer
+#'   `layer = <int>` instead.
 #' @param lon Column name of longitude in `x` (only used if `x` is a
 #'   non-spatial data frame). Default `"decimalLongitude"`.
 #' @param lat Column name of latitude in `x` (only used if `x` is a
 #'   non-spatial data frame). Default `"decimalLatitude"`.
+#' @param scheme_type Character. Restrict the ranking to one methodological
+#'   group of biome definitions: one of `"all"` (default; rank all 31
+#'   layers), `"climate"`, `"vegetation"`, `"land_cover"`, `"ecoregion"`,
+#'   `"integrative"`, or `"anthropogenic"`. The grouping is taken from the
+#'   `scheme_type` column of [biomes_information]. When a specific type is
+#'   chosen, only the layers of that type are classified, scored and
+#'   returned, so the scaled scores and the best layer are determined
+#'   within that group. Ignored when `biome` is supplied.
 #' @param criteria Character vector with one or more of `"coverage"`,
 #'   `"effective_classes"`, `"granularity"`, `"informativeness"`,
 #'   `"agreement"`. Default: the first three.
@@ -59,10 +72,12 @@
 #' @export
 biomes_rank <- function(
     x,
+    layer      = NULL,
     biome      = NULL,
-    lon        = "decimalLongitude",
-    lat        = "decimalLatitude",
-    criteria   = c("coverage", "effective_classes", "granularity"),
+    lon         = "decimalLongitude",
+    lat         = "decimalLatitude",
+    scheme_type = "all",
+    criteria    = c("coverage", "effective_classes", "granularity"),
     tiebreaker = c("year", "classes", "none"),
     verbose    = TRUE
 ) {
@@ -80,6 +95,42 @@ biomes_rank <- function(
   if (!is.null(biome)) {
     checkmate::assert_class(biome, "SpatRaster")
   }
+  if (!is.null(layer)) {
+    checkmate::assert_integerish(layer, lower = 1L, upper = 31L,
+                                 any.missing = FALSE, min.len = 1L,
+                                 .var.name = "layer")
+    if (!is.null(biome)) {
+      warning("`layer` is ignored because `biome` was supplied.",
+              call. = FALSE)
+    }
+  }
+
+  # ---- scheme_type: restrict to one methodological group of layers --------
+  scheme_types <- c("all", "climate", "vegetation", "land_cover",
+                    "ecoregion", "integrative", "anthropogenic")
+  checkmate::assert_choice(scheme_type, scheme_types, .var.name = "scheme_type")
+  if (scheme_type != "all") {
+    if (!is.null(biome)) {
+      warning("`scheme_type` is ignored because `biome` was supplied.",
+              call. = FALSE)
+    } else {
+      if (!"scheme_type" %in% names(biomes::biomes_information)) {
+        stop("biomes_information has no `scheme_type` column; reinstall the ",
+             "package to use `scheme_type`.", call. = FALSE)
+      }
+      type_layers <- which(biomes::biomes_information$scheme_type == scheme_type)
+      if (length(type_layers) == 0L) {
+        stop("No layers found for scheme_type = '", scheme_type, "'.",
+             call. = FALSE)
+      }
+      layer <- if (is.null(layer)) type_layers else intersect(layer, type_layers)
+      if (length(layer) == 0L) {
+        stop("`layer` and `scheme_type` together select no layers.",
+             call. = FALSE)
+      }
+    }
+  }
+
   all_criteria <- c("coverage", "effective_classes", "granularity",
                     "informativeness", "agreement")
   checkmate::assert_subset(criteria, choices = all_criteria,
@@ -111,7 +162,9 @@ biomes_rank <- function(
   if (verbose) message("Classifying ", n_total,
                        " record(s) against biome layers ...")
   ids <- suppressMessages(suppressWarnings(
-    biomes_classify(x, biome = biome, lon = lon, lat = lat, value = "ID")
+    biomes_classify(x, layer = layer, biome = biome,
+                    lon = lon, lat = lat,
+                    value = "ID", append = FALSE, na = NA)
   ))
   # biomes_classify returns *_value columns
   layer_cols <- names(ids)
@@ -209,9 +262,10 @@ biomes_rank <- function(
   out <- .apply_tiebreaker(out, tiebreaker)
   best_layer <- out$layer[out$is_best][1]
 
-  attr(out, "criteria")   <- criteria
-  attr(out, "tiebreaker") <- tiebreaker
-  attr(out, "best_layer") <- best_layer
+  attr(out, "criteria")    <- criteria
+  attr(out, "tiebreaker")  <- tiebreaker
+  attr(out, "best_layer")  <- best_layer
+  attr(out, "scheme_type") <- scheme_type
   class(out) <- c("biomes_rank", "data.frame")
 
   if (verbose) {
@@ -343,7 +397,7 @@ biomes_show_rank <- function(ranked, type = c("composite", "na", "criteria")) {
 # Internal helpers
 # =====================================================================
 
-#' Min-max scale a numeric vector to [0, 1].
+#' Min-max scale a numeric vector to `[0, 1]`.
 #'
 #' NA values are preserved. If all non-NA values are equal, the result
 #' is 1 for non-NA entries (every layer is equally good on this

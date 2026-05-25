@@ -6,9 +6,11 @@
 \usage{
 biomes_rank(
   x,
+  layer = NULL,
   biome = NULL,
   lon = "decimalLongitude",
   lat = "decimalLatitude",
+  scheme_type = "all",
   criteria = c("coverage", "effective_classes", "granularity"),
   tiebreaker = c("year", "classes", "none"),
   verbose = TRUE
@@ -18,14 +20,29 @@ biomes_rank(
 \item{x}{A data frame with longitude / latitude columns, an \code{sf}
 spatial object, or a \code{terra::SpatVector} of point geometries.}
 
-\item{biome}{Optional \code{terra::SpatRaster} stack of biome layers. If
-\code{NULL} (the default), the 31 layers shipped with the package are used.}
+\item{layer}{Optional integer vector in \code{1:31} to restrict the ranking
+to a subset of the packaged layers (e.g. \code{layer = c(1, 5, 25)}).
+\code{NULL} (default) ranks all 31 layers. Ignored when \code{biome} is
+supplied.}
+
+\item{biome}{Optional \code{terra::SpatRaster} stack of biome layers. Use
+this for custom rasters; for the packaged stack prefer
+\verb{layer = <int>} instead.}
 
 \item{lon}{Column name of longitude in \code{x} (only used if \code{x} is a
 non-spatial data frame). Default \code{"decimalLongitude"}.}
 
 \item{lat}{Column name of latitude in \code{x} (only used if \code{x} is a
 non-spatial data frame). Default \code{"decimalLatitude"}.}
+
+\item{scheme_type}{Character. Restrict the ranking to one methodological
+group of biome definitions: one of \code{"all"} (default; rank all 31
+layers), \code{"climate"}, \code{"vegetation"}, \code{"land_cover"}, \code{"ecoregion"},
+\code{"integrative"}, or \code{"anthropogenic"}. The grouping is taken from the
+\code{scheme_type} column of \link{biomes_information}. When a specific type is
+chosen, only the layers of that type are classified, scored and
+returned, so the scaled scores and the best layer are determined
+within that group. Ignored when \code{biome} is supplied.}
 
 \item{criteria}{Character vector with one or more of \code{"coverage"},
 \code{"effective_classes"}, \code{"granularity"}, \code{"informativeness"},

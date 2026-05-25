@@ -14,6 +14,7 @@ Provides raster layers of 31 commonly used biome definitions (from Fischer et al
 
 Authors:
 \itemize{
+  \item Hans Christian Groß \email{grossc@uni-marburg.de}
   \item Alexander Zizka \email{alexander.zizka@biologie.uni-marburg.de} [funder]
 }
 
