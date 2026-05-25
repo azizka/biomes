@@ -19,14 +19,14 @@ library(biomes)
 
 The first two vignettes ran the workflow step by step:
 
-1. [Biome layers and occurrence data](biome-data.html) — load layers,
+1. [Biome layers and occurrence data](biome-data.html): load layers,
    get occurrences, rank the layers.
-2. [Classify, summarize and map](classify-summarize-map.html) —
+2. [Classify, summarize and map](classify-summarize-map.html):
    classify, tabulate, visualize.
 
 `biomes_full()` chains all of those steps into a **single call**. Give
 it an occurrence dataset (or a taxon name) and it picks a layer,
-classifies the records, tabulates them, and builds a map — returning
+classifies the records, tabulates them, and builds a map, returning
 everything in one object.
 
 ---
@@ -53,7 +53,7 @@ res
 #> Components: $occ, $layer, $ranking, $classified, $table, $map
 ```
 
-The result is a `biomes_full` object — really just a list with named
+The result is a `biomes_full` object, really just a list with named
 components you can pull apart:
 
 ```{r, eval = FALSE}
@@ -80,7 +80,7 @@ as a side effect:
 biomes_full(x = biomes_example, layer = 1, show = TRUE)
 ```
 
-> **Note** — the map produced by `biomes_full()` follows the
+> **Note:** the map produced by `biomes_full()` follows the
 > `biomes_visualise()` default, so it has **no pie inset**. If you want
 > one, build the map yourself with
 > `biomes_visualise(..., pie = TRUE)` (see vignette 2).
@@ -128,6 +128,6 @@ map        <- biomes_visualise(data, layer = best_id)# vignette 2
 ```
 
 Use `biomes_full()` when you want the standard pipeline with one call;
-reach for the individual functions when you need to tweak a step — a
+reach for the individual functions when you need to tweak a step, e.g. a
 different ranking criterion, custom classification columns, or a map
 with the pie inset or without the legend.

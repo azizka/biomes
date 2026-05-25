@@ -27,7 +27,7 @@ layer to:
 - **map** them with `biomes_visualise()`.
 
 Throughout we use the bundled `biomes_example` dataset and pick a layer
-by its index (`1:31`) — the same index `biomes_rank()` returns as the
+by its index (`1:31`), the same index `biomes_rank()` returns as the
 best layer.
 
 ```{r}
@@ -40,7 +40,7 @@ data(biomes_example)
 
 `biomes_classify()` takes a table of points (or an `sf` / `SpatVector`)
 and returns the **input data with the biome assignment appended on the
-right**. You pick the layer by index — no need to handle `SpatRaster`
+right**. You pick the layer by index; no need to handle `SpatRaster`
 objects yourself.
 
 ```{r}
@@ -59,7 +59,7 @@ table(class_1$Biome_Inventory_layer_01_name, useNA = "ifany")
 ## Common variations
 
 ```{r}
-# Several layers at once — one column per layer
+# Several layers at once, one column per layer
 class_multi <- biomes_classify(biomes_example, layer = c(1, 25))
 head(class_multi)
 
