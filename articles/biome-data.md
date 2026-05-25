@@ -5,16 +5,16 @@
 This is the first of three vignettes that walk through the `biomes`
 package:
 
-1.  **Biome layers and occurrence data** (this vignette) — the raw
+1.  **Biome layers and occurrence data** (this vignette): the raw
     material: load the biome layers, read their metadata, get an
     occurrence dataset, and decide *which* biome definition fits your
     data best.
 2.  [Classify, summarize and
-    map](https://azizka.github.io/biomes/articles/classify-summarize-map.md)
-    — assign occurrences to biomes, tabulate them, and draw a map.
+    map](https://azizka.github.io/biomes/articles/classify-summarize-map.md):
+    assign occurrences to biomes, tabulate them, and draw a map.
 3.  [The one-call
-    workflow](https://azizka.github.io/biomes/articles/one-call-workflow.md)
-    — do all of the above in a single
+    workflow](https://azizka.github.io/biomes/articles/one-call-workflow.md):
+    do all of the above in a single
     [`biomes_full()`](https://azizka.github.io/biomes/reference/biomes_full.md)
     call.
 
@@ -243,11 +243,11 @@ biomes_info(c(1, 14, 21))
 ```
 
 The class-level lookup (raster value → biome name, per layer) lives in
-`biomes_legend`. You rarely call it directly —
+`biomes_legend`. You rarely call it directly;
 [`biomes_classify()`](https://azizka.github.io/biomes/reference/biomes_classify.md)
 and
 [`biomes_visualise()`](https://azizka.github.io/biomes/reference/biomes_visualise.md)
-use it internally to label biomes — but it is there if you need it:
+use it internally to label biomes, but it is there if you need it:
 
 ``` r
 
@@ -302,7 +302,7 @@ If you do not already have a dataset,
 can pull one from GBIF for a taxon (species, genus, family, …) and run
 basic coordinate cleaning. It asks GBIF how many records exist and, for
 up to 100,000, downloads them via `occ_search()` (no login). This is a
-convenience add-on — the rest of the package works on *any* occurrence
+convenience add-on; the rest of the package works on *any* occurrence
 table.
 
 ``` r

@@ -82,7 +82,7 @@ Here we use that layer to:</p>
 <strong>map</strong> them with <code><a href="../reference/biomes_visualise.html">biomes_visualise()</a></code>.</li>
 </ul>
 <p>Throughout we use the bundled <code>biomes_example</code> dataset and
-pick a layer by its index (<code>1:31</code>) — the same index
+pick a layer by its index (<code>1:31</code>), the same index
 <code><a href="../reference/biomes_rank.html">biomes_rank()</a></code> returns as the best layer.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">biomes_example</span><span class="op">)</span></span></code></pre></div>
@@ -94,7 +94,7 @@ pick a layer by its index (<code>1:31</code>) — the same index
 <p><code><a href="../reference/biomes_classify.html">biomes_classify()</a></code> takes a table of points (or an
 <code>sf</code> / <code>SpatVector</code>) and returns the <strong>input
 data with the biome assignment appended on the right</strong>. You pick
-the layer by index — no need to handle <code>SpatRaster</code> objects
+the layer by index; no need to handle <code>SpatRaster</code> objects
 yourself.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">class_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">biomes_example</span>, layer <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -147,7 +147,7 @@ complete:</p>
 <h3 id="common-variations">Common variations<a class="anchor" aria-label="anchor" href="#common-variations"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Several layers at once — one column per layer</span></span>
+<code class="sourceCode R"><span><span class="co"># Several layers at once, one column per layer</span></span>
 <span><span class="va">class_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">biomes_example</span>, layer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">25</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinates provided as data.frame, assuming WGS84 as CRS.</span></span>
 <span><span class="co">#&gt; Classified 29104 record(s) against 2 biome layer(s):</span></span>

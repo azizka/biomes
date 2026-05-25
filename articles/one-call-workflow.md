@@ -5,16 +5,16 @@
 The first two vignettes ran the workflow step by step:
 
 1.  [Biome layers and occurrence
-    data](https://azizka.github.io/biomes/articles/biome-data.md) — load
+    data](https://azizka.github.io/biomes/articles/biome-data.md): load
     layers, get occurrences, rank the layers.
 2.  [Classify, summarize and
-    map](https://azizka.github.io/biomes/articles/classify-summarize-map.md)
-    — classify, tabulate, visualize.
+    map](https://azizka.github.io/biomes/articles/classify-summarize-map.md):
+    classify, tabulate, visualize.
 
 [`biomes_full()`](https://azizka.github.io/biomes/reference/biomes_full.md)
 chains all of those steps into a **single call**. Give it an occurrence
 dataset (or a taxon name) and it picks a layer, classifies the records,
-tabulates them, and builds a map — returning everything in one object.
+tabulates them, and builds a map, returning everything in one object.
 
 ------------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ res
     #>   table rows  : 20 (biomes used)
     #> Components: $occ, $layer, $ranking, $classified, $table, $map
 
-The result is a `biomes_full` object — really just a list with named
+The result is a `biomes_full` object, really just a list with named
 components you can pull apart:
 
 ``` r
@@ -72,7 +72,7 @@ Set `show = TRUE` to also print the map and table as a side effect:
 biomes_full(x = biomes_example, layer = 1, show = TRUE)
 ```
 
-> **Note** — the map produced by
+> **Note:** the map produced by
 > [`biomes_full()`](https://azizka.github.io/biomes/reference/biomes_full.md)
 > follows the
 > [`biomes_visualise()`](https://azizka.github.io/biomes/reference/biomes_visualise.md)
@@ -132,6 +132,6 @@ map        <- biomes_visualise(data, layer = best_id)# vignette 2
 Use
 [`biomes_full()`](https://azizka.github.io/biomes/reference/biomes_full.md)
 when you want the standard pipeline with one call; reach for the
-individual functions when you need to tweak a step — a different ranking
-criterion, custom classification columns, or a map with the pie inset or
-without the legend.
+individual functions when you need to tweak a step, e.g. a different
+ranking criterion, custom classification columns, or a map with the pie
+inset or without the legend.

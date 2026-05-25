@@ -71,16 +71,16 @@
 <p>The first two vignettes ran the workflow step by step:</p>
 <ol style="list-style-type: decimal">
 <li>
-<a href="biome-data.html">Biome layers and occurrence data</a> —
-load layers, get occurrences, rank the layers.</li>
+<a href="biome-data.html">Biome layers and occurrence data</a>: load
+layers, get occurrences, rank the layers.</li>
 <li>
 <a href="classify-summarize-map.html">Classify, summarize and
-map</a> — classify, tabulate, visualize.</li>
+map</a>: classify, tabulate, visualize.</li>
 </ol>
 <p><code><a href="../reference/biomes_full.html">biomes_full()</a></code> chains all of those steps into a
 <strong>single call</strong>. Give it an occurrence dataset (or a taxon
 name) and it picks a layer, classifies the records, tabulates them, and
-builds a map — returning everything in one object.</p>
+builds a map, returning everything in one object.</p>
 <hr>
 </div>
 <div class="section level2">
@@ -100,7 +100,7 @@ the default <code>layer = "best"</code>, <code><a href="../reference/biomes_full
 <span><span class="co">#&gt;   picked by   : biomes_rank() (composite = 0.986)</span></span>
 <span><span class="co">#&gt;   table rows  : 20 (biomes used)</span></span>
 <span><span class="co">#&gt; Components: $occ, $layer, $ranking, $classified, $table, $map</span></span></code></pre>
-<p>The result is a <code>biomes_full</code> object — really just a list
+<p>The result is a <code>biomes_full</code> object, really just a list
 with named components you can pull apart:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span><span class="op">$</span><span class="va">layer</span>       <span class="co"># which layer biomes_rank() picked</span></span>
@@ -121,11 +121,11 @@ effect:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/biomes_full.html">biomes_full</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">biomes_example</span>, layer <span class="op">=</span> <span class="fl">1</span>, show <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <blockquote>
-<p><strong>Note</strong> — the map produced by
-<code><a href="../reference/biomes_full.html">biomes_full()</a></code> follows the <code><a href="../reference/biomes_visualise.html">biomes_visualise()</a></code>
-default, so it has <strong>no pie inset</strong>. If you want one, build
-the map yourself with <code>biomes_visualise(..., pie = TRUE)</code>
-(see vignette 2).</p>
+<p><strong>Note:</strong> the map produced by <code><a href="../reference/biomes_full.html">biomes_full()</a></code>
+follows the <code><a href="../reference/biomes_visualise.html">biomes_visualise()</a></code> default, so it has
+<strong>no pie inset</strong>. If you want one, build the map yourself
+with <code>biomes_visualise(..., pie = TRUE)</code> (see vignette
+2).</p>
 </blockquote>
 <hr>
 </div>
@@ -168,8 +168,8 @@ to:</p>
 <span><span class="va">map</span>        <span class="op">&lt;-</span> <span class="fu"><a href="../reference/biomes_visualise.html">biomes_visualise</a></span><span class="op">(</span><span class="va">data</span>, layer <span class="op">=</span> <span class="va">best_id</span><span class="op">)</span><span class="co"># vignette 2</span></span></code></pre></div>
 <p>Use <code><a href="../reference/biomes_full.html">biomes_full()</a></code> when you want the standard pipeline
 with one call; reach for the individual functions when you need to tweak
-a step — a different ranking criterion, custom classification columns,
-or a map with the pie inset or without the legend.</p>
+a step, e.g. a different ranking criterion, custom classification
+columns, or a map with the pie inset or without the legend.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -17,7 +17,7 @@ to pick a layer. Here we use that layer to:
   [`biomes_visualise()`](https://azizka.github.io/biomes/reference/biomes_visualise.md).
 
 Throughout we use the bundled `biomes_example` dataset and pick a layer
-by its index (`1:31`) — the same index
+by its index (`1:31`), the same index
 [`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md)
 returns as the best layer.
 
@@ -33,7 +33,7 @@ data(biomes_example)
 [`biomes_classify()`](https://azizka.github.io/biomes/reference/biomes_classify.md)
 takes a table of points (or an `sf` / `SpatVector`) and returns the
 **input data with the biome assignment appended on the right**. You pick
-the layer by index — no need to handle `SpatRaster` objects yourself.
+the layer by index; no need to handle `SpatRaster` objects yourself.
 
 ``` r
 
@@ -92,7 +92,7 @@ table(class_1$Biome_Inventory_layer_01_name, useNA = "ifany")
 
 ``` r
 
-# Several layers at once — one column per layer
+# Several layers at once, one column per layer
 class_multi <- biomes_classify(biomes_example, layer = c(1, 25))
 #> Coordinates provided as data.frame, assuming WGS84 as CRS.
 #> Classified 29104 record(s) against 2 biome layer(s):

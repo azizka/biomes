@@ -72,16 +72,16 @@
 <code>biomes</code> package:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Biome layers and occurrence data</strong> (this vignette) —
+<strong>Biome layers and occurrence data</strong> (this vignette):
 the raw material: load the biome layers, read their metadata, get an
 occurrence dataset, and decide <em>which</em> biome definition fits your
 data best.</li>
 <li>
 <a href="classify-summarize-map.html">Classify, summarize and
-map</a> — assign occurrences to biomes, tabulate them, and draw a
+map</a>: assign occurrences to biomes, tabulate them, and draw a
 map.</li>
 <li>
-<a href="one-call-workflow.html">The one-call workflow</a> — do all
+<a href="one-call-workflow.html">The one-call workflow</a>: do all
 of the above in a single <code><a href="../reference/biomes_full.html">biomes_full()</a></code> call.</li>
 </ol>
 <p>Here we cover everything you need <em>before</em> classifying: the 31
@@ -291,9 +291,9 @@ several, or all layers:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -----</span></span></code></pre></div>
 <p>The class-level lookup (raster value → biome name, per layer) lives
-in <code>biomes_legend</code>. You rarely call it directly —
+in <code>biomes_legend</code>. You rarely call it directly;
 <code><a href="../reference/biomes_classify.html">biomes_classify()</a></code> and <code><a href="../reference/biomes_visualise.html">biomes_visualise()</a></code> use
-it internally to label biomes — but it is there if you need it:</p>
+it internally to label biomes, but it is there if you need it:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">biomes_legend</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">biomes_legend</span><span class="op">)</span></span>
@@ -342,7 +342,7 @@ download:</p>
 pull one from GBIF for a taxon (species, genus, family, …) and run basic
 coordinate cleaning. It asks GBIF how many records exist and, for up to
 100,000, downloads them via <code>occ_search()</code> (no login). This
-is a convenience add-on — the rest of the package works on <em>any</em>
+is a convenience add-on; the rest of the package works on <em>any</em>
 occurrence table.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">occ</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/biomes_occ.html">biomes_occ</a></span><span class="op">(</span>taxon <span class="op">=</span> <span class="st">"Fagus sylvatica"</span><span class="op">)</span></span></code></pre></div>
