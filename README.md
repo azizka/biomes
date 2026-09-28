@@ -48,6 +48,14 @@ A single wrapper, `biomes_full()`, runs all four steps in one call.
 
 ## Installation
 
+The released version is available from CRAN:
+
+```r
+install.packages("biomes")
+```
+
+The development version with the latest changes can be installed from GitHub:
+
 ```r
 # install.packages("devtools")
 devtools::install_github("azizka/biomes")
