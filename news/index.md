@@ -1,5 +1,49 @@
 # Changelog
 
+## biomes 0.9.5
+
+- The example dataset is now `bombacoideae_occurrences`: 17,030
+  occurrence records of 185 Bombacoideae species (Zizka et al. 2020),
+  the worked example of the companion paper. It is used in the README,
+  the vignettes and all function examples; the previous dataset
+  `biomes_example` has been removed.
+- `biomes_information` gains the column `biome_definition` (climate,
+  vegetation, land_cover, ecoregion, integrative, anthropogenic); the
+  `definition` argument of
+  [`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md),
+  [`biomes_visualise()`](https://azizka.github.io/biomes/reference/biomes_visualise.md)
+  and `biomes_full(scheme = )` ranks within one biome definition. Scheme
+  6 (Zhang et al. 2017, climate and NDVI clustering) is `integrative`.
+- [`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md):
+  the criterion is called `effective_biomes` (columns
+  `effective_biomes_raw` / `_scaled`); `tiebreaker = "biomes"`. The
+  ranking uses exactly the three criteria of the companion paper
+  (`coverage`, `effective_biomes`, `granularity`), min-max rescaled and
+  averaged with equal weights; the experimental criteria `evenness`,
+  `informativeness` and `agreement` and the `scaling` argument have been
+  removed. A criterion without variation among the compared schemes is
+  left out of the composite (attribute `criteria_used`), and a single
+  compared scheme gets no composite score (`NA`) but is still returned
+  as `best_scheme`.
+- [`biomes_visualise()`](https://azizka.github.io/biomes/reference/biomes_visualise.md):
+  the `rank` panel labels schemes as `25 (Ramankutty & Foley, 1999)`,
+  shows all compared schemes (or the `top_n` best) on one 0 to 1 axis
+  (the rescaled criterion values that enter the composite score; axis
+  titles carry the symbols of the paper, `Coverage (C)`,
+  `Effective biomes (E)`, `Granularity (G)`) and outlines the best
+  composite score and the best value of each criterion in red; panels
+  carry left-aligned titles with the panel letter and the reference of
+  the chosen scheme (`titles`); the map legend lists biome names only
+  (`legend_counts = FALSE`); the barplot uses the map colours per biome,
+  grey for off-map records, and thousands separators.
+- Maintainer e-mail updated.
+
+## biomes 0.9.4
+
+CRAN release: 2026-08-31
+
+- CRAN resubmission addressing reviewer comments.
+
 ## biomes 0.9.3
 
 - Initial CRAN submission.

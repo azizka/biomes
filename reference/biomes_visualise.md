@@ -1,4 +1,4 @@
-# Visualise the biomes workflow (ranking, map and biome-class composition)
+# Visualise the biomes workflow (ranking, map and biome composition)
 
 Produces the publication figure of the *biomes* workflow for a set of
 occurrence records. Up to three panels are drawn and combined:
@@ -9,12 +9,14 @@ occurrence records. Up to three panels are drawn and combined:
 biomes_visualise(
   x,
   scheme = NULL,
-  scheme_type = "all",
+  definition = "all",
   biome = NULL,
   lon = "decimalLongitude",
   lat = "decimalLatitude",
   panels = c("rank", "map", "barplot"),
-  legend_counts = TRUE,
+  top_n = NULL,
+  titles = TRUE,
+  legend_counts = FALSE,
   legend = TRUE,
   point_color = "#B20000",
   point_size = 0.25,
@@ -37,12 +39,12 @@ biomes_visualise(
   Integer in `1:31` (biome scheme number). If `NULL` (default), the
   best-fitting scheme is chosen by
   [`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md)
-  (within `scheme_type`).
+  (within `definition`).
 
-- scheme_type:
+- definition:
 
-  Character. Methodological group to rank within when `scheme` is
-  `NULL`; passed to
+  Character. Biome definition to rank within when `scheme` is `NULL`;
+  passed to
   [`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md).
   Default `"all"`.
 
@@ -63,15 +65,30 @@ biomes_visualise(
   Character vector, any subset of `c("rank", "map", "barplot")` (default
   all three). Panels are drawn and lettered in this order.
 
+- top_n:
+
+  Integer or `NULL` (default). If given, only the `top_n` top-ranked
+  schemes are shown in the `rank` panel; `NULL` shows all compared
+  schemes.
+
+- titles:
+
+  Logical. If `TRUE` (default), each panel carries a left-aligned title:
+  "Ranked biome schemes" (or "Top n ranked biome schemes" with `top_n`),
+  "Spatial projection for " and "Occurrence and species number for ",
+  where the reference is the source of the chosen scheme, e.g.
+  "Ramankutty & Foley (1999)". With `FALSE` no titles are drawn and the
+  panel letters are placed in the top-left corners instead.
+
 - legend_counts:
 
-  Logical. If `TRUE` (default), append the number of records per biome
-  class to the map legend labels.
+  Logical. If `TRUE`, append the number of records per biome to the map
+  legend labels. Default `FALSE` (biome names only).
 
 - legend:
 
-  Logical. If `TRUE` (default), draw the biome-class colour legend on
-  the map panel.
+  Logical. If `TRUE` (default), draw the biome colour legend on the map
+  panel.
 
 - point_color:
 
@@ -86,7 +103,7 @@ biomes_visualise(
   Logical. When more than one panel is drawn: `TRUE` (default) combines
   them into one lettered figure (a, b, c); `FALSE` returns a **named
   list** of the individual panels (no letters). Ignored for a single
-  panel (always returned as a bare `ggplot`).
+  panel (always returned as a bare plot).
 
 - verbose:
 
@@ -96,48 +113,57 @@ biomes_visualise(
 
 ## Value
 
-For a single panel, a `ggplot` object. For several panels: a combined
-`cowplot` object when `combine = TRUE` (default), or a named list of
-`ggplot` objects (`rank`, `map`, `barplot`) when `combine = FALSE`.
-Print to display or save with
+For a single panel, a `ggplot` object (`map`) or a `cowplot` object
+(`rank`, `barplot`). For several panels: a combined `cowplot` object
+when `combine = TRUE` (default), or a named list of the individual
+panels (`rank`, `map`, `barplot`) when `combine = FALSE`. Print to
+display or save with
 [`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html).
 
 ## Details
 
 - **rank**: the data-driven ranking of the biome schemes
   ([`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md)):
-  the composite score per scheme (best highlighted) next to the raw
-  criterion values it averages (coverage, effective number of classes,
-  granularity, ...).
+  the composite score per scheme next to the criterion values it
+  averages (coverage, effective number of biomes, granularity), all on
+  the common 0 to 1 scale that enters the composite (the min-max
+  rescaled values). Schemes are labelled by their biome scheme number
+  and source, e.g. `25 (Ramankutty & Foley, 1999)`; the composite bar of
+  the best scheme and, in each criterion panel, the bar with the best
+  value of that criterion are outlined in red. All compared schemes are
+  shown unless `top_n` cuts the list.
 
 - **map**: the occurrence records (points) mapped over the chosen biome
-  scheme, with the number of records per biome class optionally appended
-  to the legend labels.
+  scheme, with the number of records per biome optionally appended to
+  the legend labels.
 
 - **barplot**: the number of occurrence records (left) and species
-  (right) per biome class, with the biome-class names in the centre.
+  (right) per biome, with the biome names in the centre. Bars use the
+  same colour per biome as the map; off-map records ("no biome") are
+  grey.
 
-Which panels are drawn is controlled by `panels`; the panel letters (a,
-b, c) are assigned in drawing order, so selecting only `rank` and
-`barplot` labels them (a) and (b).
+Which panels are drawn is controlled by `panels`. When several panels
+are combined into one figure, the panel letters (a, b, c) are assigned
+in drawing order and written into the panel titles ("a: ..."), so
+selecting only `rank` and `barplot` labels them (a) and (b).
 
 ## Examples
 
 ``` r
 # \donttest{
-data("biomes_example")
+data("bombacoideae_occurrences")
 # full figure (rank + map + barplot), best scheme chosen automatically
-biomes_visualise(biomes_example)
+biomes_visualise(bombacoideae_occurrences)
 #> <SpatRaster> resampled to 5e+05 cells.
 
 
 # only the map, for a fixed scheme
-biomes_visualise(biomes_example, scheme = 1, panels = "map")
+biomes_visualise(bombacoideae_occurrences, scheme = 1, panels = "map")
 #> <SpatRaster> resampled to 5e+05 cells.
 
 
 # map + barplot for the best vegetation scheme
-biomes_visualise(biomes_example, scheme_type = "vegetation",
+biomes_visualise(bombacoideae_occurrences, definition = "vegetation",
                  panels = c("map", "barplot"))
 #> <SpatRaster> resampled to 5e+05 cells.
 

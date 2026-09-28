@@ -17,14 +17,14 @@ Source:
 
 Groß HC, Zizka A, Walentowitz A, Fischer J-C (2026). biomes: An R
 package for reproducible occurrence-to-biome classification using 31
-global biome schemes. R package version 0.9.4.
+global biome schemes. R package version 0.9.5.
 https://azizka.github.io/biomes/
 
     @Manual{,
       title = {{biomes}: An R package for reproducible occurrence-to-biome classification using 31 global biome schemes},
       author = {Hans Christian Groß and Alexander Zizka and Anna Walentowitz and Jan-Christopher Fischer},
       year = {2026},
-      note = {R package version 0.9.4},
+      note = {R package version 0.9.5},
       url = {https://azizka.github.io/biomes/},
     }
 

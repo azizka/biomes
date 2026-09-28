@@ -1,4 +1,4 @@
-# Metadata for the 31 biome classifications
+# Metadata for the 31 biome schemes
 
 A data frame containing descriptive metadata for each of the 31 biome
 classifications shipped with the package. Each row corresponds to one
@@ -19,15 +19,15 @@ A data frame with 31 rows and 12 columns:
 
 - publication:
 
-  Original publication of the biome classification.
+  Original publication of the biome scheme.
 
 - name_of_classification:
 
-  Full name of the classification scheme.
+  Full name of the biome scheme.
 
-- criteria_for_class_assignment:
+- criteria_for_biome_assignment:
 
-  Criteria used to assign biome classes.
+  Criteria used to assign biomes.
 
 - methodology:
 
@@ -43,10 +43,10 @@ A data frame with 31 rows and 12 columns:
 
   Free-text background information about the classification scheme.
 
-- number_of_classes_zonal_azonal:
+- number_of_biomes_zonal_azonal:
 
-  Total number of biome classes in the classification, with the split
-  between zonal and azonal classes in parentheses.
+  Total number of biomes in the classification, with the split between
+  zonal and azonal biomes in parentheses.
 
 - cover_deviation_percent:
 
@@ -65,14 +65,14 @@ A data frame with 31 rows and 12 columns:
 
   Date on which the original data source was accessed.
 
-- scheme_type:
+- biome_definition:
 
-  Methodological group the classification belongs to, one of
+  The concept on which the scheme delimits its biomes, one of
   `"climate"`, `"vegetation"`, `"land_cover"`, `"ecoregion"`,
-  `"integrative"` (combined climate-vegetation schemes), or
+  `"integrative"` (a synthesis of several criteria or data sources), or
   `"anthropogenic"`. Used by
   [`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md)
-  to rank layers within a conceptually comparable group.
+  to rank schemes within the group sharing one biome definition.
 
 ## Source
 

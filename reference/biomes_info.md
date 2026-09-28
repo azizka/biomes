@@ -1,10 +1,10 @@
 # Print metadata for selected biome definitions
 
-Prints a human-readable summary of the biome classifications shipped
-with the package. For each requested classification the function prints
-the publication, the criteria and methodology used to define the
-classes, a short description, the number of biome classes, the biome
-scheme number, and a list of biome-class names with their raster values.
+Prints a human-readable summary of the biome schemes shipped with the
+package. For each requested classification the function prints the
+publication, the criteria and methodology used to define the biomes, a
+short description, the number of biomes, the biome scheme number, and a
+list of biome names with their raster values.
 
 ## Usage
 
@@ -57,9 +57,9 @@ biomes_info()
 #> 
 #> Description: Global biomes were simulated over the past 140,000 years. Input factors to the dynamic global vegetation model included reconstructed atmospheric CO2 concentrations, Earth's obliquity and paleo- as well as pre-industrial climate simulations by HadCM3. Biomes were assigned according to specified ranges of vegetation carbon mass and leaf area index (LAI) of functional plant types based on consistent rules.
 #> 
-#> Number of biome classes: 21 (21/0)
+#> Number of biomes: 21 (21/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical evergreen forest
 #>      2: Tropical raingreen forest
 #>      3: Savanna
@@ -94,9 +94,9 @@ biomes_info()
 #> 
 #> Description: Copernicus Global Land Service (CGLS) provide an annual dynamic product on global land cover at 100 m spatial resolution derived from classification of daily-synthesis surface reflectance from the PROBA-V sensor.
 #> 
-#> Number of biome classes: 20 (18/2)
+#> Number of biomes: 20 (18/2)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Closed forest (evergreen broadleaf)
 #>      2: Open forest (deciduous broadleaf)
 #>      3: Open forest (unknown)
@@ -130,9 +130,9 @@ biomes_info()
 #> 
 #> Description: This present-day (1980–2016) Köppen-Geiger climate product at 1 km spatial resolution is based on ensemble data of multiple global climatic maps. The classification follows predefined temperature and precipitation thresholds as well as seasonality.
 #> 
-#> Number of biome classes: 30 (30/0)
+#> Number of biomes: 30 (30/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Af - Tropical rainforest
 #>      2: Am - Tropical monsoon
 #>      3: Aw - Tropical savanna
@@ -176,9 +176,9 @@ biomes_info()
 #> 
 #> Description: Biome mapping based on modern pollen reconstructions from the BIOME 6000 data set with 160 explanatory parameters including biophysical, atmospheric, climatic, topographic and lithologic geospatial characteristics.
 #> 
-#> Number of biome classes: 20 (20/0)
+#> Number of biomes: 20 (20/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical evergreen broadleaf forest
 #>      2: Tropical semi-evergreen broadleaf forest
 #>      3: Tropical savanna
@@ -212,9 +212,9 @@ biomes_info()
 #> 
 #> Description: A total of 846 global ecoregions were nested in 14 terrestrial biomes.
 #> 
-#> Number of biome classes: 14 (14/0)
+#> Number of biomes: 14 (14/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical and subtropical moist broadleaf forest
 #>      2: Mangrove
 #>      3: Tropical and subtropical grassland savanna and shrubland
@@ -243,9 +243,9 @@ biomes_info()
 #> 
 #> Description: Reconstruction of global climatic vegetation types by K-means partitioning based on global monthly mean temperature and precipitation data interpolated from observation stations and monthly mean NDVI from the Global Inventory Modelling and Mapping Studies (GIMMS) data set based on satellite imagery from the Advanced Very-High-Resolution Radiometer (AVHRR) from 1982–2013. The number of classes was chosen to align with the 14 main global climate types.
 #> 
-#> Number of biome classes: 14 (14/0)
+#> Number of biomes: 14 (14/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical forest
 #>      2: Tropical monsoon forest
 #>      3: Tropical grassland
@@ -273,9 +273,9 @@ biomes_info()
 #> 
 #> Description: Out of a total of 32 different clustering-based classifications utilizing WorldClim data, two products were derived and compared to the rule-based Köppen-Geiger classification.
 #> 
-#> Number of biome classes: 13 (13/0)
+#> Number of biomes: 13 (13/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Cluster 5
 #>      2: Cluster 9
 #>      3: Cluster 7
@@ -302,9 +302,9 @@ biomes_info()
 #> 
 #> Description: Out of a total of 32 different clustering-based classifications utilizing WorldClim data, two products were derived and compared to the rule-based Köppen-Geiger classification.
 #> 
-#> Number of biome classes: 13 (13/0)
+#> Number of biomes: 13 (13/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Cluster 5
 #>      2: Cluster 7
 #>      3: Cluster 9
@@ -331,9 +331,9 @@ biomes_info()
 #> 
 #> Description: The definition of global biomes is based on vegetation height, productivity and limitation factors (temperature and soil moisture) applied to bi-weekly NDVI data from 1981-2012 provided by the Advanced Very High- Resolution Radiometer (AVHRR) at 0.083° spatial resolution. Out of the 31-year time series, one biome classification of the dominant key vegetation types was created. This product was included in our catalogue. The spatial data is provided by Higgins et al. (2017).
 #> 
-#> Number of biome classes: 24 (24/0)
+#> Number of biomes: 24 (24/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: THN
 #>      2: THD
 #>      3: SHD
@@ -371,9 +371,9 @@ biomes_info()
 #> 
 #> Description: This map of global vegetation patterns is an adaptation of the concept on global vegetation zonation presented in the “Atlas of biogeography” by Schmithüsen (1976). For exact sources of undertaken map modification of the original map (Schmithüsen, 1976) see Pfadenhauer & Klötzli (2014) page 73. “Earth´s Vegetation” is the translated title. The original title is “Vegetation der Erde” (German).
 #> 
-#> Number of biome classes: 34 (31/3)
+#> Number of biomes: 34 (31/3)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Evergreen and seasonal tropical lowland rainforest
 #>      2: Raingreen moist savanna
 #>      3: Evergreen moist savanna
@@ -421,9 +421,9 @@ biomes_info()
 #> 
 #> Description: Reconstruction of 14 global climate types by K-means partitioning based on global monthly mean temperature and precipitation data interpolated from observation stations from 1982–2013. The number of classes was chosen to reflect the 14 main classes in the original Köppen-Geiger climate classification.
 #> 
-#> Number of biome classes: 14 (14/0)
+#> Number of biomes: 14 (14/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical forest
 #>      2: Tropical monsoon forest
 #>      3: Tropical grassland
@@ -451,9 +451,9 @@ biomes_info()
 #> 
 #> Description: For the Global Environmental Stratification (GEnS), a global bioclimatic classification is derived from statistic partitioning of global geographic space according to local bioclimatic conditions. The source of the spatial data set is Metzger (2018).
 #> 
-#> Number of biome classes: 16 (16/0)
+#> Number of biomes: 16 (16/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Extremely hot and moist
 #>      2: Hot and mesic
 #>      3: Extremely hot and xeric
@@ -483,9 +483,9 @@ biomes_info()
 #> 
 #> Description: Earlier product of the Global Ecological Zones (GEZ) classification (GEZ 2000) was updated by the Global Forest Resources Assessment (FRA) of the Food and Agriculture Organization of the United Nations (FAO) in 2011. The result is GEZ 2010 which accounts for more up to date Earth observation data (satellite imagery from 2008-2011) and improved spatial products on climate and land cover.
 #> 
-#> Number of biome classes: 21 (20/1)
+#> Number of biomes: 21 (20/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical rainforest
 #>      2: Tropical moist forest
 #>      3: Tropical mountain system
@@ -520,9 +520,9 @@ biomes_info()
 #> 
 #> Description: Spectral surface reflectance data derived from sevens bands of MODIS Earth observation data from 2003/2008/2013 was classified by supervised (for 14 classes) and unsupervised approaches (for six classes). Training data originated from several remote sensors including Landsat, MODIS NDVI products, Google Earth and Virtual Earth. Satellite imagery is grouped according to the Land Cover Classification System (LCCS) by the Food and Agriculture Organization of the United Nations (FAO). Copyright information of the original data set: Global Land Cover by National Mapping Organizations: GLCNMO Version 1, Geospatial Information Authority of Japan, Chiba University and Collaborating Organizations.
 #> 
-#> Number of biome classes: 19 (18/1)
+#> Number of biomes: 19 (18/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Mangrove
 #>      2: Broadleaf evergreen forest
 #>      3: Herbaceous with sparse tree/shrub
@@ -555,9 +555,9 @@ biomes_info()
 #> 
 #> Description: The underlying procedure of classifying AVHRR data from 1992-1993 according to certain thresholds of vegetation cover and canopy height into distinct classes to generate this product is documented by Hansen et al. (2000).
 #> 
-#> Number of biome classes: 13 (12/1)
+#> Number of biomes: 13 (12/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Evergreen broadleaf forest
 #>      2: Wooded grassland shrubland
 #>      3: Woodland
@@ -584,9 +584,9 @@ biomes_info()
 #> 
 #> Description: Anthromes were formed by rule-based classification of human population density and land use classes to allow comparison with potential natural vegetation (Ramankutty & Foley, 1999). Out of the defined anthropogenic biomes for the years 1700, 1800, 1900 and 2000, the latter was added to our catalogue as the most up to date representative.
 #> 
-#> Number of biome classes: 19 (18/1)
+#> Number of biomes: 19 (18/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Residential rangeland
 #>      2: Pastoral villages
 #>      3: Residential woodland
@@ -619,9 +619,9 @@ biomes_info()
 #> 
 #> Description: The global land cover map is based on automated and regionally specified classification of high resolution (300 m) surface reflectance mosaics. The input data is a time series of MERIS (Medium Resolution Imaging Spectrometer Instrument) observations from the full year 2009.
 #> 
-#> Number of biome classes: 21 (20/1)
+#> Number of biomes: 21 (20/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Closed to open (>15%) broadleaf forest regularly flooded (fresh/brackish water)
 #>      2: Closed to open (>15%) broadleaf evergreen or semi-deciduous forest (>5m)
 #>      3: Open (15-40%) broadleaf deciduous forest/woodland (>5m)
@@ -656,9 +656,9 @@ biomes_info()
 #> 
 #> Description: Several maps were generated from classifications of spectro-temporal data provided by the Collection 5 MODIS Global Land Cover Type product at 500 m spatial resolution (MCD12Q1). One of the applied legends comprises the classes by the International Geosphere-Biosphere Programme (IGBP) legend. This product was included into our catalogue.
 #> 
-#> Number of biome classes: 16 (15/1)
+#> Number of biomes: 16 (15/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Evergreen broadleaf forest
 #>      2: Cropland/natural vegetation mosaic
 #>      3: Closed shrubland
@@ -688,9 +688,9 @@ biomes_info()
 #> 
 #> Description: Different global and regional geospatial resources including global ecoregions by Olson and Dinerstein (2002), ecoregions of the United States by Bailey (1995), terrestrial ecozones of Canada by Wiken (1986) and terrestrial assessment units of The Nature Conservancy were modified according to ecological, bio-physical and political criteria.
 #> 
-#> Number of biome classes: 16 (15/1)
+#> Number of biomes: 16 (15/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical subtropical moist broadleaf forest
 #>      2: Mangrove
 #>      3: Tropical subtropical grassland savanna and shrub
@@ -720,9 +720,9 @@ biomes_info()
 #> 
 #> Description: Long-term monthly time series records on local temperature and precipitation from 4279 climate stations were classified according to the original Köppen-Geiger system (Köppen, 1936) with minor adjustments. Continuous maps were created by two-dimensional spatial interpolation with thin-plate spline.
 #> 
-#> Number of biome classes: 31 (31/0)
+#> Number of biomes: 31 (31/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Af - Tropical rainforest
 #>      2: Am - Tropical monsoon
 #>      3: Aw - Tropical savanna
@@ -767,9 +767,9 @@ biomes_info()
 #> 
 #> Description: This land cover product is generated from global daily images of the year 2000 from the VEGETATION-1 sensors of the SPOT 4 satellite and other remote sensing instruments. Regionally specific continental maps were harmonized into one consistent global map.
 #> 
-#> Number of biome classes: 21 (20/1)
+#> Number of biomes: 21 (20/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tree cover (regularly flooded fresh water)
 #>      2: Tree cover (broadleaf evergreen)
 #>      3: Tree cover (regularly flooded saline water)
@@ -804,9 +804,9 @@ biomes_info()
 #> 
 #> Description: Simulation of the distribution of major potential natural vegetation types to form biomes with the BIOME4 model. Input factors comprise solar radiation, atmospheric CO2, climatic parameters (precipitation, temperature, solar radiation) and soil characteristics. Competition among plant functional types is accounted for by consideration of net primary productivity (NPP) and maximum leaf area (LAI). Biomes are assigned to plant functional types by empirical classification (https://pmip2.lsce.ipsl.fr/synth/biome4.shtml).
 #> 
-#> Number of biome classes: 27 (27/0)
+#> Number of biomes: 27 (27/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical evergreen forest
 #>      2: Tropical semi-deciduous forest
 #>      3: Tropical savanna
@@ -847,9 +847,9 @@ biomes_info()
 #> 
 #> Description: Global biome concepts, biogeographic provinces and distribution maps of certain floristic and zoological groups as well as main vegetation types were reviewed. Realms were detected by hierarchical classification and adjusted according to expert opinion. Delineated ecoregions were refined based on regional maps. Finally, 825 terrestrial ecoregions were nested into biomes and biogeographic realms.
 #> 
-#> Number of biome classes: 16 (15/1)
+#> Number of biomes: 16 (15/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical and subtropical moist broadleaf forest
 #>      2: Mangrove
 #>      3: Tropical and subtropical grassland savanna and shrubland
@@ -879,9 +879,9 @@ biomes_info()
 #> 
 #> Description: The IGBP DISCover global land cover data set served as the base for the derivation of seven distinct land cover products. Those include: Olson Global Ecosystems (Olson, 1994), IGBP DISCover (Belward, 1996), Biosphere–Atmosphere Transfer Scheme (BATS) (Dickinson et al., 1986), Simple Biosphere Model (SiB) (Sellers et al., 1986), Simple Biosphere Model 2 (SiB2) (Sellers et al., 1996), USGS Land Use/Land Cover System (Anderson et al., 1976), Global Remote Sensing Land Cover (Running et al., 1995).
 #> 
-#> Number of biome classes: 16 (15/1)
+#> Number of biomes: 16 (15/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Evergreen broadleaf
 #>      2: Savanna
 #>      3: Crop/natural vegetation
@@ -911,9 +911,9 @@ biomes_info()
 #> 
 #> Description: Potential natural vegetation is derived by classifying DISCover land cover data following the Olson Global Ecosystems framework (Olson, 1994).
 #> 
-#> Number of biome classes: 12 (12/0)
+#> Number of biomes: 12 (12/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical evergreen woodland
 #>      2: Tropical deciduous woodland
 #>      3: Savanna
@@ -939,9 +939,9 @@ biomes_info()
 #> 
 #> Description: Climate observation records of from around 5500 stations around the globe from 1931-1960 were compiled to extract monthly mean temperature and precipitation data. Holdridge’s life zone classification (Holdridge 1947, 1967) was applied to derive a map of world life zones/large-scale vegetation patterns.
 #> 
-#> Number of biome classes: 39 (38/1)
+#> Number of biomes: 39 (38/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical moist forest
 #>      2: Subtropical wet forest
 #>      3: Warm temperate rainforest
@@ -994,9 +994,9 @@ biomes_info()
 #> 
 #> Description: The Ecozones of the Earth were originally published in 1988 with four revised editions (1995, 2002, 2008, 2016). The spatial distribution of the ecozones is based on Troll and Paffen (1964) and was revised in respect to the subdivision of seasonal tropic and summer moist tropic ecozones. We digitized, the third edition (Schultz, 2002) because this map includes mountains (only shown in newer versions from 2002, 2008, and 2016) and large parts of Antarctica (only shown in older versions from 1988, 1995, and 2002). “Ecozones of the Earth” is the translated title. The original title is “Ökozonen der Erde” (German).
 #> 
-#> Number of biome classes: 15 (14/1)
+#> Number of biomes: 15 (14/1)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Continuous moist tropics
 #>      2: Moist savanna
 #>      3: Dry savanna
@@ -1027,9 +1027,9 @@ biomes_info()
 #> 
 #> Description: The biogeographic landscape belts are adapted from Troll & Paffen (1964) considering climatic characteristics in combination with large-scale vegetation patterns from Schmithüsen (1976) and soil characteristics provided by Ganssen & Hädrich (1965). “Landscape belts of the Earth” is the translated title. The original title is “Die Landschaftsgürtel der Erde” (German). The map shown was reissued by Schulze et al. (2019).
 #> 
-#> Number of biome classes: 15 (13/2)
+#> Number of biomes: 15 (13/2)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical rainforest
 #>      2: Tropical pasture highland
 #>      3: Moist savanna
@@ -1058,9 +1058,9 @@ biomes_info()
 #> 
 #> Description: An underlying assumption of the Atlas of Biogeography is that vegetation patterns mirror climatic conditions and are furthermore influenced by regional geological effects and disturbances. Geographical units are defined by zonal natural vegetation with climax stages that cannot be distinguishing by sharp gradients. Anthropogenic effects are not considered in this theoretical concept. The map was adapted by Sitte et al. (2002) and by Pfadenhauer & Klötzli (2014). “Atlas of Biogeography” is the translated title. The original title is “Atlas zur Biogeographie” (German).
 #> 
-#> Number of biome classes: 31 (29/2)
+#> Number of biomes: 31 (29/2)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical rainforest
 #>      2: Paramo heath and wet Puna
 #>      3: Moist savanna
@@ -1105,9 +1105,9 @@ biomes_info()
 #> 
 #> Description: The presented biome map outlines terrestrial macro-biogeographic patterns.
 #> 
-#> Number of biome classes: 14 (12/2)
+#> Number of biomes: 14 (12/2)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical rainforest
 #>      2: Tropical savanna
 #>      3: Tropical thornwood
@@ -1135,9 +1135,9 @@ biomes_info()
 #> 
 #> Description: For this classification, biomes are defined as consistent terrestrial ecological regions to form habitats which correspond to relatively uniform landscapes. Those fundamental global ecological units are characterized by similar vegetation and fauna. Important shaping factors are climate and soil. The concept includes ecotones which mark small-scale transition zones between distinct areas of certain exclusive classes. Zonobiomes are zonally connected and azonal relief units, like mountain systems, are defined as orobiomes.  The first version consisted of two volumes with the original title “Die Vegetation der Erde in öko-physiologischer Betrachtung“ (Walter, 1964, 1968). There have been several later English and German editions of this fundamental book series over the past decades. Those include among others Walter (1973, 1979, 1984, 1990) and Walter & Breckle (1985, 1991, 1999). The map consulted in this inventory was taken from the last edition by Breckle & Rafiqpoor (2019).
 #> 
-#> Number of biome classes: 34 (32/2)
+#> Number of biomes: 34 (32/2)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: ET Tropical rainforest - desert semidesert
 #>      2: Tropical rainforest
 #>      3: ET Tropical rainforest - tropical subtropical seasonal rainforest savanna
@@ -1188,9 +1188,9 @@ biomes_info(1:3)
 #> 
 #> Description: Global biomes were simulated over the past 140,000 years. Input factors to the dynamic global vegetation model included reconstructed atmospheric CO2 concentrations, Earth's obliquity and paleo- as well as pre-industrial climate simulations by HadCM3. Biomes were assigned according to specified ranges of vegetation carbon mass and leaf area index (LAI) of functional plant types based on consistent rules.
 #> 
-#> Number of biome classes: 21 (21/0)
+#> Number of biomes: 21 (21/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Tropical evergreen forest
 #>      2: Tropical raingreen forest
 #>      3: Savanna
@@ -1225,9 +1225,9 @@ biomes_info(1:3)
 #> 
 #> Description: Copernicus Global Land Service (CGLS) provide an annual dynamic product on global land cover at 100 m spatial resolution derived from classification of daily-synthesis surface reflectance from the PROBA-V sensor.
 #> 
-#> Number of biome classes: 20 (18/2)
+#> Number of biomes: 20 (18/2)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Closed forest (evergreen broadleaf)
 #>      2: Open forest (deciduous broadleaf)
 #>      3: Open forest (unknown)
@@ -1261,9 +1261,9 @@ biomes_info(1:3)
 #> 
 #> Description: This present-day (1980–2016) Köppen-Geiger climate product at 1 km spatial resolution is based on ensemble data of multiple global climatic maps. The classification follows predefined temperature and precipitation thresholds as well as seasonality.
 #> 
-#> Number of biome classes: 30 (30/0)
+#> Number of biomes: 30 (30/0)
 #> 
-#> Biome classes (raster value: name):
+#> Biomes (raster value: name):
 #>      1: Af - Tropical rainforest
 #>      2: Am - Tropical monsoon
 #>      3: Aw - Tropical savanna

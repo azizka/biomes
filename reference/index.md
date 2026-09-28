@@ -11,11 +11,11 @@ Load raster layers and metadata shipped with the package.
 - [`biomes_info()`](https://azizka.github.io/biomes/reference/biomes_info.md)
   : Print metadata for selected biome definitions
 - [`biomes_information`](https://azizka.github.io/biomes/reference/biomes_information.md)
-  : Metadata for the 31 biome classifications
+  : Metadata for the 31 biome schemes
 - [`biomes_legend`](https://azizka.github.io/biomes/reference/biomes_legend.md)
-  : Legend (biome class names) for the 31 biome classifications
-- [`biomes_example`](https://azizka.github.io/biomes/reference/biomes_example.md)
-  : Example species occurrence dataset
+  : Legend (biome names) for the 31 biome schemes
+- [`bombacoideae_occurrences`](https://azizka.github.io/biomes/reference/bombacoideae_occurrences.md)
+  : Example occurrence dataset: Bombacoideae
 
 ## Get occurrences from GBIF
 
@@ -40,11 +40,10 @@ Data-driven scoring of the 31 biome schemes for a given occurrence set.
 
 ## Visualise
 
-Ranking, occurrence map and biome-class composition for a chosen scheme.
+Ranking, occurrence map and biome composition for a chosen scheme.
 
 - [`biomes_visualise()`](https://azizka.github.io/biomes/reference/biomes_visualise.md)
-  : Visualise the biomes workflow (ranking, map and biome-class
-  composition)
+  : Visualise the biomes workflow (ranking, map and biome composition)
 
 ## One-call workflow
 

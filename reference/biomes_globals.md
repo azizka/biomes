@@ -1,8 +1,7 @@
 # Internal package setup for biomes
 
-Reproducibly classifies occurrence records into biome classes using 31
-published global terrestrial biome schemes compiled by Fischer and
-colleagues (2022)
+Reproducibly classifies occurrence records into biomes using 31
+published global biome schemes compiled by Fischer and colleagues (2022)
 [doi:10.1111/geb.13574](https://doi.org/10.1111/geb.13574) , provided as
 harmonised raster layers at 10x10 km resolution globally. Includes
 functions to choose the most suitable biome scheme for a dataset by a
@@ -23,11 +22,11 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Hans Christian Groß <hc.gross@gmx.de>
+**Maintainer**: Hans Christian Groß <grossha@uni-marburg.de>
 
 Authors:
 
-- Hans Christian Groß <hc.gross@gmx.de>
+- Hans Christian Groß <grossha@uni-marburg.de>
 
 - Alexander Zizka <alexander.zizka@biologie.uni-marburg.de> \[funder\]
 

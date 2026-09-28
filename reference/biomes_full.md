@@ -39,9 +39,9 @@ biomes_full(
   scheme; `"best"` (default) to pick the best-fitting scheme across all
   31 via
   [`biomes_rank()`](https://azizka.github.io/biomes/reference/biomes_rank.md);
-  or a scheme type (`"climate"`, `"vegetation"`, `"land_cover"`,
+  or a biome definition (`"climate"`, `"vegetation"`, `"land_cover"`,
   `"ecoregion"`, `"integrative"`, `"anthropogenic"`) to pick the
-  best-fitting scheme within that methodological group.
+  best-fitting scheme within that biome definition.
 
 - lon, lat:
 
@@ -159,23 +159,23 @@ res$table
 # \donttest{
 # Path 2: from an existing data frame, pick the best scheme.
 # Uses the biome raster (~36 MB), downloaded on first use.
-data("biomes_example")
-res <- biomes_full(x = biomes_example, scheme = "best")
+data("bombacoideae_occurrences")
+res <- biomes_full(x = bombacoideae_occurrences, scheme = "best")
 #> biomes_full(): best scheme = 16 (Anthropogenic transformation of the biomes, 1700 to 2000)
 
 # Path 2 with a fixed scheme
-res <- biomes_full(x = biomes_example, scheme = 1)
+res <- biomes_full(x = bombacoideae_occurrences, scheme = 1)
 
 # Path 2, best-fitting scheme within the vegetation group,
 # and build the full figure
-res <- biomes_full(x = biomes_example, scheme = "vegetation", plot = "all")
-#> biomes_full(): best scheme = 9 (Defining functional biomes and monitoring their change globally)
+res <- biomes_full(x = bombacoideae_occurrences, scheme = "vegetation", plot = "all")
+#> biomes_full(): best scheme = 25 (Estimating historical changes in global land cover: croplands from 1700 to 1992)
 #> <SpatRaster> resampled to 5e+05 cells.
 res$plot
 
 
 # individual panels (no a-c letters) in $rank / $map / $barplot
-res <- biomes_full(x = biomes_example, plot = c("map", "barplot"))
+res <- biomes_full(x = bombacoideae_occurrences, plot = c("map", "barplot"))
 #> biomes_full(): best scheme = 16 (Anthropogenic transformation of the biomes, 1700 to 2000)
 #> <SpatRaster> resampled to 5e+05 cells.
 res$map

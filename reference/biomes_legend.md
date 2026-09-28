@@ -1,12 +1,12 @@
-# Legend (biome class names) for the 31 biome classifications
+# Legend (biome names) for the 31 biome schemes
 
 A data frame mapping the raster values used in each of the 31 biome
-layers to human-readable biome class names. Each row corresponds to one
-layer in the raster stack returned by
+layers to human-readable biome names. Each row corresponds to one layer
+in the raster stack returned by
 [`biomes_get()`](https://azizka.github.io/biomes/reference/biomes_get.md),
-in the same order. Columns `id_1`, `id_2`, ... give the biome class
-names for raster values 1, 2, ..., respectively. Cells are `NA` for
-classifications with fewer classes than the maximum across all
+in the same order. Columns `id_1`, `id_2`, ... give the biome names for
+raster values 1, 2, ..., respectively. Cells are `NA` for
+classifications with fewer biomes than the maximum across all
 classifications.
 
 ## Usage
@@ -33,8 +33,8 @@ A data frame with 31 rows and 41 columns:
   id_22, id_23, id_24, id_25, id_26, id_27, id_28, id_29, id_30, id_31,
   id_32, id_33, id_34, id_35, id_36, id_37, id_38, id_39:
 
-  Biome class names for raster values 1 through 39. `NA` if the
-  classification has fewer classes.
+  Biome names for raster values 1 through 39. `NA` if the classification
+  has fewer biomes.
 
 ## Source
 

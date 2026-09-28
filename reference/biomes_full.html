@@ -9,7 +9,7 @@ call. There are two entry paths:"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">biomes</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,8 +20,8 @@ call. There are two entry paths:"></head><body>
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/step1-occurrence-records-and-biome-schemes.html">Step 1: Assembling occurrence records and biome schemes</a></li>
-    <li><a class="dropdown-item" href="../articles/step2-choosing-a-biome-scheme.html">Step 2: Choosing a biome scheme</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/step1-assembly-of-occurrence-records-and-biome-schemes.html">Step 1: Assembly of occurrence records and biome schemes</a></li>
+    <li><a class="dropdown-item" href="../articles/step2-choice-of-a-biome-scheme.html">Step 2: Choice of a biome scheme</a></li>
     <li><a class="dropdown-item" href="../articles/step3-occurrence-to-biome-classification.html">Step 3: Occurrences-to-biome classification</a></li>
     <li><a class="dropdown-item" href="../articles/step4-output-and-visualisation.html">Step 4: Output and visualisation</a></li>
   </ul></li>
@@ -80,10 +80,10 @@ Mutually exclusive with <code>x</code>.</p></dd>
 <dt id="arg-scheme">scheme<a class="anchor" aria-label="anchor" href="#arg-scheme"></a></dt>
 <dd><p>One of: an integer in <code>1:31</code> (biome scheme number) to
 force a specific scheme; <code>"best"</code> (default) to pick the best-fitting
-scheme across all 31 via <code><a href="biomes_rank.html">biomes_rank()</a></code>; or a scheme type
+scheme across all 31 via <code><a href="biomes_rank.html">biomes_rank()</a></code>; or a biome definition
 (<code>"climate"</code>, <code>"vegetation"</code>, <code>"land_cover"</code>, <code>"ecoregion"</code>,
 <code>"integrative"</code>, <code>"anthropogenic"</code>) to pick the best-fitting scheme
-within that methodological group.</p></dd>
+within that biome definition.</p></dd>
 
 
 <dt id="arg-lon-lat">lon, lat<a class="anchor" aria-label="anchor" href="#arg-lon-lat"></a></dt>
@@ -177,23 +177,23 @@ by <code>plot</code>; skipped by default for speed).</p></li>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># Path 2: from an existing data frame, pick the best scheme.</span></span></span>
 <span class="r-in"><span><span class="co"># Uses the biome raster (~36 MB), downloaded on first use.</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"biomes_example"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">biomes_full</span><span class="op">(</span>x <span class="op">=</span> <span class="va">biomes_example</span>, scheme <span class="op">=</span> <span class="st">"best"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"bombacoideae_occurrences"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">biomes_full</span><span class="op">(</span>x <span class="op">=</span> <span class="va">bombacoideae_occurrences</span>, scheme <span class="op">=</span> <span class="st">"best"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> biomes_full(): best scheme = 16 (Anthropogenic transformation of the biomes, 1700 to 2000)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Path 2 with a fixed scheme</span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">biomes_full</span><span class="op">(</span>x <span class="op">=</span> <span class="va">biomes_example</span>, scheme <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">biomes_full</span><span class="op">(</span>x <span class="op">=</span> <span class="va">bombacoideae_occurrences</span>, scheme <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Path 2, best-fitting scheme within the vegetation group,</span></span></span>
 <span class="r-in"><span><span class="co"># and build the full figure</span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">biomes_full</span><span class="op">(</span>x <span class="op">=</span> <span class="va">biomes_example</span>, scheme <span class="op">=</span> <span class="st">"vegetation"</span>, plot <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> biomes_full(): best scheme = 9 (Defining functional biomes and monitoring their change globally)</span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">biomes_full</span><span class="op">(</span>x <span class="op">=</span> <span class="va">bombacoideae_occurrences</span>, scheme <span class="op">=</span> <span class="st">"vegetation"</span>, plot <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> biomes_full(): best scheme = 25 (Estimating historical changes in global land cover: croplands from 1700 to 1992)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">&lt;SpatRaster&gt;</span> resampled to <span style="color: #0000BB;">5e+05</span> cells.</span>
 <span class="r-in"><span><span class="va">res</span><span class="op">$</span><span class="va">plot</span></span></span>
 <span class="r-plt img"><img src="biomes_full-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># individual panels (no a-c letters) in $rank / $map / $barplot</span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">biomes_full</span><span class="op">(</span>x <span class="op">=</span> <span class="va">biomes_example</span>, plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"map"</span>, <span class="st">"barplot"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">biomes_full</span><span class="op">(</span>x <span class="op">=</span> <span class="va">bombacoideae_occurrences</span>, plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"map"</span>, <span class="st">"barplot"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> biomes_full(): best scheme = 16 (Anthropogenic transformation of the biomes, 1700 to 2000)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">&lt;SpatRaster&gt;</span> resampled to <span style="color: #0000BB;">5e+05</span> cells.</span>
 <span class="r-in"><span><span class="va">res</span><span class="op">$</span><span class="va">map</span></span></span>
@@ -209,7 +209,7 @@ by <code>plot</code>; skipped by default for speed).</p></li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Hans Christian Groß, Alexander Zizka, Anna Walentowitz, Jan-Christopher Fischer.</p>
+  <p>Developed by Hans Christian Groß.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">biomes</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,8 +18,8 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/step1-occurrence-records-and-biome-schemes.html">Step 1: Assembling occurrence records and biome schemes</a></li>
-    <li><a class="dropdown-item" href="../articles/step2-choosing-a-biome-scheme.html">Step 2: Choosing a biome scheme</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/step1-assembly-of-occurrence-records-and-biome-schemes.html">Step 1: Assembly of occurrence records and biome schemes</a></li>
+    <li><a class="dropdown-item" href="../articles/step2-choice-of-a-biome-scheme.html">Step 2: Choice of a biome scheme</a></li>
     <li><a class="dropdown-item" href="../articles/step3-occurrence-to-biome-classification.html">Step 3: Occurrences-to-biome classification</a></li>
     <li><a class="dropdown-item" href="../articles/step4-output-and-visualisation.html">Step 4: Output and visualisation</a></li>
   </ul></li>
@@ -40,6 +40,21 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.5" id="biomes-095">biomes 0.9.5<a class="anchor" aria-label="anchor" href="#biomes-095"></a></h2>
+<ul><li>The example dataset is now <code>bombacoideae_occurrences</code>: 17,030 occurrence records of 185 Bombacoideae species (Zizka et al. 2020), the worked example of the companion paper. It is used in the README, the vignettes and all function examples; the previous dataset <code>biomes_example</code> has been removed.</li>
+<li>
+<code>biomes_information</code> gains the column <code>biome_definition</code> (climate, vegetation, land_cover, ecoregion, integrative, anthropogenic); the <code>definition</code> argument of <code><a href="../reference/biomes_rank.html">biomes_rank()</a></code>, <code><a href="../reference/biomes_visualise.html">biomes_visualise()</a></code> and <code>biomes_full(scheme = )</code> ranks within one biome definition. Scheme 6 (Zhang et al. 2017, climate and NDVI clustering) is <code>integrative</code>.</li>
+<li>
+<code><a href="../reference/biomes_rank.html">biomes_rank()</a></code>: the criterion is called <code>effective_biomes</code> (columns <code>effective_biomes_raw</code> / <code>_scaled</code>); <code>tiebreaker = "biomes"</code>. The ranking uses exactly the three criteria of the companion paper (<code>coverage</code>, <code>effective_biomes</code>, <code>granularity</code>), min-max rescaled and averaged with equal weights; the experimental criteria <code>evenness</code>, <code>informativeness</code> and <code>agreement</code> and the <code>scaling</code> argument have been removed. A criterion without variation among the compared schemes is left out of the composite (attribute <code>criteria_used</code>), and a single compared scheme gets no composite score (<code>NA</code>) but is still returned as <code>best_scheme</code>.</li>
+<li>
+<code><a href="../reference/biomes_visualise.html">biomes_visualise()</a></code>: the <code>rank</code> panel labels schemes as <code>25 (Ramankutty &amp; Foley, 1999)</code>, shows all compared schemes (or the <code>top_n</code> best) on one 0 to 1 axis (the rescaled criterion values that enter the composite score; axis titles carry the symbols of the paper, <code>Coverage (C)</code>, <code>Effective biomes (E)</code>, <code>Granularity (G)</code>) and outlines the best composite score and the best value of each criterion in red; panels carry left-aligned titles with the panel letter and the reference of the chosen scheme (<code>titles</code>); the map legend lists biome names only (<code>legend_counts = FALSE</code>); the barplot uses the map colours per biome, grey for off-map records, and thousands separators.</li>
+<li>Maintainer e-mail updated.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.4" id="biomes-094">biomes 0.9.4<a class="anchor" aria-label="anchor" href="#biomes-094"></a></h2><p class="text-muted">CRAN release: 2026-08-31</p>
+<ul><li>CRAN resubmission addressing reviewer comments.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.3" id="biomes-093">biomes 0.9.3<a class="anchor" aria-label="anchor" href="#biomes-093"></a></h2>
 <ul><li>Initial CRAN submission.</li>
 <li>Provides raster layers of 31 global biome schemes from Fischer et al. (2022, <em>Global Ecology and Biogeography</em> 31(11): 2172-2183) at 10 x 10 km resolution globally.</li>
@@ -54,11 +69,12 @@
 <ol style="list-style-type: decimal"><li>assembling occurrence records and biome schemes, (2) choosing a biome scheme, (3) occurrences-to-biome classification, and (4) output and visualisation.</li>
 </ol></li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Hans Christian Groß, Alexander Zizka, Anna Walentowitz, Jan-Christopher Fischer.</p>
+  <p>Developed by Hans Christian Groß.</p>
 </div>
 
 <div class="pkgdown-footer-right">

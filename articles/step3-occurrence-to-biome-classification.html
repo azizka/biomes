@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">biomes</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,8 +33,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/step1-occurrence-records-and-biome-schemes.html">Step 1: Assembling occurrence records and biome schemes</a></li>
-    <li><a class="dropdown-item" href="../articles/step2-choosing-a-biome-scheme.html">Step 2: Choosing a biome scheme</a></li>
+<li><a class="dropdown-item" href="../articles/step1-assembly-of-occurrence-records-and-biome-schemes.html">Step 1: Assembly of occurrence records and biome schemes</a></li>
+    <li><a class="dropdown-item" href="../articles/step2-choice-of-a-biome-scheme.html">Step 2: Choice of a biome scheme</a></li>
     <li><a class="dropdown-item" href="../articles/step3-occurrence-to-biome-classification.html">Step 3: Occurrences-to-biome classification</a></li>
     <li><a class="dropdown-item" href="../articles/step4-output-and-visualisation.html">Step 4: Output and visualisation</a></li>
   </ul>
@@ -71,78 +71,74 @@
 <div class="section level2">
 <h2 id="goal">Goal<a class="anchor" aria-label="anchor" href="#goal"></a>
 </h2>
-<p>With a biome scheme chosen in <a href="step2-choosing-a-biome-scheme.html">Step 2</a>,
-<code><a href="../reference/biomes_classify.html">biomes_classify()</a></code> assigns <strong>one biome class per
-occurrence record</strong>. You select the scheme by its <strong>biome
-scheme number</strong> (1-31), the same number
-<code><a href="../reference/biomes_rank.html">biomes_rank()</a></code> returns as the best scheme.</p>
+<p>With a biome scheme chosen in <a href="step2-choice-of-a-biome-scheme.html">Step 2</a>,
+<code><a href="../reference/biomes_classify.html">biomes_classify()</a></code> assigns <strong>one biome per occurrence
+record</strong>. You select the scheme by its <strong>biome scheme
+number</strong> (1-31), the same number <code><a href="../reference/biomes_rank.html">biomes_rank()</a></code>
+returns as the best scheme.</p>
 <blockquote>
 <p><strong>Terms.</strong> <em>Classifying</em> here means assigning
-each <strong>occurrence record</strong> to a <strong>biome
-class</strong> (e.g. <em>savanna</em>) of the chosen <strong>biome
-scheme</strong> (identified by its biome scheme number).</p>
+each <strong>occurrence record</strong> to a <strong>biome</strong>
+(e.g. <em>savanna</em>) of the chosen <strong>biome scheme</strong>
+(identified by its biome scheme number).</p>
 </blockquote>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="classify-occurrence-records-into-biome-classes">1. Classify occurrence records into biome classes<a class="anchor" aria-label="anchor" href="#classify-occurrence-records-into-biome-classes"></a>
+<h2 id="classify-occurrence-records-into-biomes">1. Classify occurrence records into biomes<a class="anchor" aria-label="anchor" href="#classify-occurrence-records-into-biomes"></a>
 </h2>
 <p><code><a href="../reference/biomes_classify.html">biomes_classify()</a></code> takes a table of points (or an
 <code>sf</code> / <code>SpatVector</code>) and returns the <strong>input
-data with the biome-class assignment appended on the right</strong>.
-Pick the scheme with the <code>scheme</code> argument; you never handle
+data with the biome assignment appended on the right</strong>. Pick the
+scheme with the <code>scheme</code> argument; you never handle
 <code>SpatRaster</code> objects yourself.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">classified</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">biomes_example</span>, scheme <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">classified</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">bombacoideae_occurrences</span>, scheme <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinates provided as data.frame, assuming WGS84 as CRS.</span></span>
-<span><span class="co">#&gt; Classified 29104 record(s) against 1 biome layer(s):</span></span>
+<span><span class="co">#&gt; Classified 17030 record(s) against 1 biome layer(s):</span></span>
 <span><span class="co">#&gt;   - Biome_Inventory_layer_01 (Allen et al., 2020)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">classified</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      genus          species countryCode decimalLongitude decimalLatitude</span></span>
-<span><span class="co">#&gt; 1    Felis      Felis catus          US        -74.60746       40.634316</span></span>
-<span><span class="co">#&gt; 2    Felis      Felis catus          US        -74.60794       40.634346</span></span>
-<span><span class="co">#&gt; 3 Acinonyx Acinonyx jubatus          KE         35.47705       -1.228576</span></span>
-<span><span class="co">#&gt; 4     Lynx       Lynx rufus          US       -110.90994       32.298303</span></span>
-<span><span class="co">#&gt; 5     Lynx       Lynx rufus          US        -81.57826       38.397055</span></span>
-<span><span class="co">#&gt; 6 Panthera     Panthera leo          KE         35.44188       -1.372002</span></span>
+<span><span class="co">#&gt;                     species decimalLongitude decimalLatitude countryCode</span></span>
+<span><span class="co">#&gt; 1 Cavanillesia platanifolia        -79.98333         -2.1500         ECU</span></span>
+<span><span class="co">#&gt; 2    Cavanillesia umbellata        -70.25000        -12.0000         PER</span></span>
+<span><span class="co">#&gt; 3    Cavanillesia umbellata        -78.63333         -4.5000         PER</span></span>
+<span><span class="co">#&gt; 4    Cavanillesia umbellata        -76.46666         -2.8000         PER</span></span>
+<span><span class="co">#&gt; 5    Cavanillesia umbellata        -69.10420        -12.0321         PER</span></span>
+<span><span class="co">#&gt; 6    Cavanillesia umbellata        -74.30611        -11.1425         PER</span></span>
 <span><span class="co">#&gt;   Biome_Inventory_layer_01_name</span></span>
-<span><span class="co">#&gt; 1  Temperate summergreen forest</span></span>
-<span><span class="co">#&gt; 2  Temperate summergreen forest</span></span>
-<span><span class="co">#&gt; 3     Tropical raingreen forest</span></span>
-<span><span class="co">#&gt; 4       Warm temperate woodland</span></span>
-<span><span class="co">#&gt; 5  Temperate summergreen forest</span></span>
-<span><span class="co">#&gt; 6     Tropical raingreen forest</span></span></code></pre></div>
+<span><span class="co">#&gt; 1     Tropical raingreen forest</span></span>
+<span><span class="co">#&gt; 2     Tropical evergreen forest</span></span>
+<span><span class="co">#&gt; 3     Tropical evergreen forest</span></span>
+<span><span class="co">#&gt; 4     Tropical evergreen forest</span></span>
+<span><span class="co">#&gt; 5     Tropical evergreen forest</span></span>
+<span><span class="co">#&gt; 6     Tropical evergreen forest</span></span></code></pre></div>
 <p>A new column <code>Biome_Inventory_layer_01_name</code> has been
 added (the column names carry the raster layer names of the packaged
 stack). The appended columns use the suffixes <code>_value</code>
-(raster code) and <code>_name</code> (biome-class name). Records that
-fall <strong>outside</strong> every biome class of a scheme
-(e.g. coastal records or small islands missing from a coarse map) are,
-by default, labelled <code>"no_biome"</code> rather than dropped, so the
-counts stay complete:</p>
+(raster code) and <code>_name</code> (biome name). Records that fall
+<strong>outside</strong> every biome of a scheme (e.g. coastal records
+or small islands missing from a coarse map) are, by default, labelled
+<code>"no_biome"</code> rather than dropped, so the counts stay
+complete:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">classified</span><span class="op">$</span><span class="va">Biome_Inventory_layer_01_name</span>, useNA <span class="op">=</span> <span class="st">"ifany"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;    Boreal evergreen needleleaf forest                       Boreal parkland </span></span>
-<span><span class="co">#&gt;                                  2217                                   367 </span></span>
+<span><span class="co">#&gt;                                     1                                    81 </span></span>
 <span><span class="co">#&gt;   Boreal summergreen broadleaf forest                                Desert </span></span>
-<span><span class="co">#&gt;                                   384                                   221 </span></span>
+<span><span class="co">#&gt;                                     6                                     2 </span></span>
 <span><span class="co">#&gt;                              no_biome                               Savanna </span></span>
-<span><span class="co">#&gt;                                  4652                                   447 </span></span>
-<span><span class="co">#&gt;                            Semidesert                          Shrub tundra </span></span>
-<span><span class="co">#&gt;                                   583                                   483 </span></span>
-<span><span class="co">#&gt;                                Steppe  Temperate broadleaf evergreen forest </span></span>
-<span><span class="co">#&gt;                                   148                                  5171 </span></span>
-<span><span class="co">#&gt;                Temperate mixed forest Temperate needleleaf evergreen forest </span></span>
-<span><span class="co">#&gt;                                  1687                                   323 </span></span>
+<span><span class="co">#&gt;                                  1031                                  1316 </span></span>
+<span><span class="co">#&gt;                            Semidesert                                Steppe </span></span>
+<span><span class="co">#&gt;                                   149                                     3 </span></span>
+<span><span class="co">#&gt;  Temperate broadleaf evergreen forest Temperate needleleaf evergreen forest </span></span>
+<span><span class="co">#&gt;                                   876                                   141 </span></span>
 <span><span class="co">#&gt;                    Temperate parkland                   Temperate shrubland </span></span>
-<span><span class="co">#&gt;                                   407                                   729 </span></span>
-<span><span class="co">#&gt;          Temperate summergreen forest             Tropical evergreen forest </span></span>
-<span><span class="co">#&gt;                                  6139                                  1860 </span></span>
-<span><span class="co">#&gt;                    Tropical grassland             Tropical raingreen forest </span></span>
-<span><span class="co">#&gt;                                   118                                   824 </span></span>
-<span><span class="co">#&gt;                                Tundra               Warm temperate woodland </span></span>
-<span><span class="co">#&gt;                                     2                                  2342</span></span></code></pre></div>
+<span><span class="co">#&gt;                                   186                                   236 </span></span>
+<span><span class="co">#&gt;             Tropical evergreen forest                    Tropical grassland </span></span>
+<span><span class="co">#&gt;                                  7405                                   860 </span></span>
+<span><span class="co">#&gt;             Tropical raingreen forest               Warm temperate woodland </span></span>
+<span><span class="co">#&gt;                                  4367                                   370</span></span></code></pre></div>
 <p>Handling off-map records <strong>explicitly and identically across
 schemes</strong> matters, because the amount and spatial pattern of
 unassigned records differs between schemes, and is itself one of the
@@ -154,51 +150,51 @@ ranking criteria in Step 2.</p>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Several schemes at once, one column per scheme</span></span>
-<span><span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">biomes_example</span>, scheme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">bombacoideae_occurrences</span>, scheme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinates provided as data.frame, assuming WGS84 as CRS.</span></span>
-<span><span class="co">#&gt; Classified 29104 record(s) against 2 biome layer(s):</span></span>
+<span><span class="co">#&gt; Classified 17030 record(s) against 2 biome layer(s):</span></span>
 <span><span class="co">#&gt;   - Biome_Inventory_layer_01 (Allen et al., 2020)</span></span>
 <span><span class="co">#&gt;   - Biome_Inventory_layer_25 (Ramankutty &amp; Foley, 1999)</span></span>
-<span><span class="co">#&gt;      genus          species countryCode decimalLongitude decimalLatitude</span></span>
-<span><span class="co">#&gt; 1    Felis      Felis catus          US        -74.60746       40.634316</span></span>
-<span><span class="co">#&gt; 2    Felis      Felis catus          US        -74.60794       40.634346</span></span>
-<span><span class="co">#&gt; 3 Acinonyx Acinonyx jubatus          KE         35.47705       -1.228576</span></span>
+<span><span class="co">#&gt;                     species decimalLongitude decimalLatitude countryCode</span></span>
+<span><span class="co">#&gt; 1 Cavanillesia platanifolia        -79.98333           -2.15         ECU</span></span>
+<span><span class="co">#&gt; 2    Cavanillesia umbellata        -70.25000          -12.00         PER</span></span>
+<span><span class="co">#&gt; 3    Cavanillesia umbellata        -78.63333           -4.50         PER</span></span>
 <span><span class="co">#&gt;   Biome_Inventory_layer_01_name Biome_Inventory_layer_25_name</span></span>
-<span><span class="co">#&gt; 1  Temperate summergreen forest  Temperate deciduous woodland</span></span>
-<span><span class="co">#&gt; 2  Temperate summergreen forest  Temperate deciduous woodland</span></span>
-<span><span class="co">#&gt; 3     Tropical raingreen forest                       Savanna</span></span>
+<span><span class="co">#&gt; 1     Tropical raingreen forest          Grassland and steppe</span></span>
+<span><span class="co">#&gt; 2     Tropical evergreen forest   Tropical evergreen woodland</span></span>
+<span><span class="co">#&gt; 3     Tropical evergreen forest   Tropical evergreen woodland</span></span>
 <span></span>
-<span><span class="co"># Keep both the raster value and the biome-class name</span></span>
-<span><span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">biomes_example</span>, scheme <span class="op">=</span> <span class="fl">1</span>, value <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co"># Keep both the raster value and the biome name</span></span>
+<span><span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">bombacoideae_occurrences</span>, scheme <span class="op">=</span> <span class="fl">1</span>, value <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinates provided as data.frame, assuming WGS84 as CRS.</span></span>
-<span><span class="co">#&gt; Classified 29104 record(s) against 1 biome layer(s):</span></span>
+<span><span class="co">#&gt; Classified 17030 record(s) against 1 biome layer(s):</span></span>
 <span><span class="co">#&gt;   - Biome_Inventory_layer_01 (Allen et al., 2020)</span></span>
-<span><span class="co">#&gt;      genus          species countryCode decimalLongitude decimalLatitude</span></span>
-<span><span class="co">#&gt; 1    Felis      Felis catus          US        -74.60746       40.634316</span></span>
-<span><span class="co">#&gt; 2    Felis      Felis catus          US        -74.60794       40.634346</span></span>
-<span><span class="co">#&gt; 3 Acinonyx Acinonyx jubatus          KE         35.47705       -1.228576</span></span>
+<span><span class="co">#&gt;                     species decimalLongitude decimalLatitude countryCode</span></span>
+<span><span class="co">#&gt; 1 Cavanillesia platanifolia        -79.98333           -2.15         ECU</span></span>
+<span><span class="co">#&gt; 2    Cavanillesia umbellata        -70.25000          -12.00         PER</span></span>
+<span><span class="co">#&gt; 3    Cavanillesia umbellata        -78.63333           -4.50         PER</span></span>
 <span><span class="co">#&gt;   Biome_Inventory_layer_01_value Biome_Inventory_layer_01_name</span></span>
-<span><span class="co">#&gt; 1                             13  Temperate summergreen forest</span></span>
-<span><span class="co">#&gt; 2                             13  Temperate summergreen forest</span></span>
-<span><span class="co">#&gt; 3                              2     Tropical raingreen forest</span></span>
+<span><span class="co">#&gt; 1                              2     Tropical raingreen forest</span></span>
+<span><span class="co">#&gt; 2                              1     Tropical evergreen forest</span></span>
+<span><span class="co">#&gt; 3                              1     Tropical evergreen forest</span></span>
 <span></span>
 <span><span class="co"># Return only the classification columns (drop the input)</span></span>
-<span><span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">biomes_example</span>, scheme <span class="op">=</span> <span class="fl">1</span>, append <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">bombacoideae_occurrences</span>, scheme <span class="op">=</span> <span class="fl">1</span>, append <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinates provided as data.frame, assuming WGS84 as CRS.</span></span>
-<span><span class="co">#&gt; Classified 29104 record(s) against 1 biome layer(s):</span></span>
+<span><span class="co">#&gt; Classified 17030 record(s) against 1 biome layer(s):</span></span>
 <span><span class="co">#&gt;   - Biome_Inventory_layer_01 (Allen et al., 2020)</span></span>
 <span><span class="co">#&gt;   Biome_Inventory_layer_01_name</span></span>
-<span><span class="co">#&gt; 1  Temperate summergreen forest</span></span>
-<span><span class="co">#&gt; 2  Temperate summergreen forest</span></span>
-<span><span class="co">#&gt; 3     Tropical raingreen forest</span></span>
+<span><span class="co">#&gt; 1     Tropical raingreen forest</span></span>
+<span><span class="co">#&gt; 2     Tropical evergreen forest</span></span>
+<span><span class="co">#&gt; 3     Tropical evergreen forest</span></span>
 <span></span>
 <span><span class="co"># Keep NA for off-map points instead of the "no_biome" label</span></span>
-<span><span class="va">class_na</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">biomes_example</span>, scheme <span class="op">=</span> <span class="fl">1</span>, na <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="va">class_na</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/biomes_classify.html">biomes_classify</a></span><span class="op">(</span><span class="va">bombacoideae_occurrences</span>, scheme <span class="op">=</span> <span class="fl">1</span>, na <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinates provided as data.frame, assuming WGS84 as CRS.</span></span>
-<span><span class="co">#&gt; Classified 29104 record(s) against 1 biome layer(s):</span></span>
+<span><span class="co">#&gt; Classified 17030 record(s) against 1 biome layer(s):</span></span>
 <span><span class="co">#&gt;   - Biome_Inventory_layer_01 (Allen et al., 2020)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">class_na</span><span class="op">$</span><span class="va">Biome_Inventory_layer_01_name</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4652</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1031</span></span></code></pre></div>
 <p>For a scheme outside the packaged stack, pass your own single-layer
 <code><a href="https://rspatial.github.io/terra/reference/SpatRaster-class.html" class="external-link">terra::SpatRaster</a></code> via <code>biome =</code> instead of a
 scheme number.</p>
@@ -207,7 +203,7 @@ scheme number.</p>
 <div class="section level2">
 <h2 id="next">Next<a class="anchor" aria-label="anchor" href="#next"></a>
 </h2>
-<p>Your records now carry a biome-class assignment. Continue with <a href="step4-output-and-visualisation.html">Step 4: Output and
+<p>Your records now carry a biome assignment. Continue with <a href="step4-output-and-visualisation.html">Step 4: Output and
 visualisation</a> to tabulate and map them.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -217,7 +213,7 @@ visualisation</a> to tabulate and map them.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Hans Christian Groß, Alexander Zizka, Anna Walentowitz, Jan-Christopher Fischer.</p>
+  <p>Developed by Hans Christian Groß.</p>
 </div>
 
 <div class="pkgdown-footer-right">
