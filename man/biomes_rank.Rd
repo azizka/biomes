@@ -10,9 +10,9 @@ biomes_rank(
   biome = NULL,
   lon = "decimalLongitude",
   lat = "decimalLatitude",
-  scheme_type = "all",
-  criteria = c("coverage", "effective_classes", "granularity"),
-  tiebreaker = c("year", "classes", "none"),
+  definition = "all",
+  criteria = c("coverage", "effective_biomes", "granularity"),
+  tiebreaker = c("year", "biomes", "none"),
   verbose = TRUE
 )
 }
@@ -35,26 +35,26 @@ non-spatial data frame). Default \code{"decimalLongitude"}.}
 \item{lat}{Column name of latitude in \code{x} (only used if \code{x} is a
 non-spatial data frame). Default \code{"decimalLatitude"}.}
 
-\item{scheme_type}{Character. Restrict the ranking to one methodological
-group of biome definitions: one of \code{"all"} (default; rank all 31
-layers), \code{"climate"}, \code{"vegetation"}, \code{"land_cover"}, \code{"ecoregion"},
-\code{"integrative"}, or \code{"anthropogenic"}. The grouping is taken from the
-\code{scheme_type} column of \link{biomes_information}. When a specific type is
-chosen, only the layers of that type are classified, scored and
-returned, so the scaled scores and the best layer are determined
-within that group. Ignored when \code{biome} is supplied.}
+\item{definition}{Character. Restrict the ranking to the schemes that
+share one biome definition: one of \code{"all"} (default; rank all 31
+schemes), \code{"climate"}, \code{"vegetation"}, \code{"land_cover"},
+\code{"ecoregion"}, \code{"integrative"}, or \code{"anthropogenic"}. The grouping
+is taken from the \code{biome_definition} column of \link{biomes_information}.
+When a specific definition is chosen, only the schemes of that
+definition are classified, scored and returned, so the scaled scores
+and the best scheme are determined within that group. Ignored when
+\code{biome} is supplied.}
 
 \item{criteria}{Character vector with one or more of \code{"coverage"},
-\code{"effective_classes"}, \code{"granularity"}, \code{"informativeness"},
-\code{"agreement"}. Default: the first three.}
+\code{"effective_biomes"}, \code{"granularity"}. Default: all three.}
 
 \item{tiebreaker}{How tied \code{composite_score}s are resolved: \code{"year"}
-(default, more recent publication ranks higher), \code{"classes"} (more
-classes ranks higher), or \code{"none"} (do not break ties; tied layers
-share a rank, dense ranking). With \code{"year"} and \code{"classes"} the
+(default, more recent publication ranks higher), \code{"biomes"} (more
+biomes ranks higher), or \code{"none"} (do not break ties; tied schemes
+share a rank, dense ranking). With \code{"year"} and \code{"biomes"} the
 other key serves as a further fallback, alphabetical \code{scheme_name}
 resolves any remaining ties, and ranks are strict 1..N. With
-\code{"none"} multiple layers may carry \code{is_best = TRUE}.}
+\code{"none"} multiple schemes may carry \code{is_best = TRUE}.}
 
 \item{verbose}{Logical. Print progress messages? Default \code{TRUE}.}
 }
@@ -65,72 +65,81 @@ scheme number, 1-31), \code{scheme_name}, \code{year} (publication year of
 the scheme), \code{n_total}, \code{n_hit} and \code{n_na} (number of records in
 total, classified, and unclassified), \code{pct_na} (percentage of
 unclassified records), then one \verb{*_raw} and one \verb{*_scaled} column
-per requested criterion (the raw score and its min-max scaled
-version), \code{composite_score} (mean of the scaled criteria, drives
-the ranking), \code{rank} (1 = best), and \code{is_best} (\code{TRUE} for the
-top-ranked scheme). The result carries the attributes \code{criteria},
-\code{tiebreaker}, \code{scheme_type}, and \code{best_scheme} (the biome scheme
-number of the top-ranked scheme, ready to be used as the \code{scheme}
-argument of \code{\link[=biomes_classify]{biomes_classify()}} or \code{\link[=biomes_full]{biomes_full()}}).
+per requested criterion (the raw score and its rescaled version),
+\code{composite_score} (mean
+of the scaled criteria, drives the ranking), \code{rank} (1 = best), and
+\code{is_best} (\code{TRUE} for the top-ranked scheme). The result carries the
+attributes \code{criteria} (requested), \code{criteria_used} (those that entered
+the composite), \code{tiebreaker}, \code{definition}, and
+\code{best_scheme} (the biome scheme number of the top-ranked scheme, ready
+to be used as the \code{scheme} argument of \code{\link[=biomes_classify]{biomes_classify()}} or
+\code{\link[=biomes_full]{biomes_full()}}).
 }
 \description{
-Compares the biome classification layers for a user-supplied set of
-occurrences and proposes a single "best" layer for that dataset. Each
-layer is scored on several data-driven criteria that are combined into
-one \code{composite_score}, which drives the ranking.
+Compares the biome schemes for a user-supplied set of occurrence
+records and proposes a single "best" scheme for that dataset. Each
+scheme is scored on several data-driven criteria that are combined
+into one \code{composite_score}, which drives the ranking.
 }
 \details{
-By default, three equally weighted criteria are used:
+Three equally weighted criteria are used:
 \enumerate{
-\item \strong{coverage}: fraction of records that the layer places in
-a biome at all (the rest fall on unclassified, NA cells).
-\item \strong{effective_classes}: \eqn{\exp(H')} (Hill number of
+\item \strong{coverage}: fraction of records that the scheme places
+in a biome at all (the rest fall on unclassified, NA cells).
+\item \strong{effective_biomes}: \eqn{\exp(H')} (Hill number of
 order 1), i.e. the effective number of biomes the records spread
 across, weighted by evenness.
-\item \strong{granularity}: biome classes actually used, divided by
-the classes available in the layer.
+\item \strong{granularity}: biomes actually used, divided by the
+biomes available in the scheme.
 }
-
-Two further criteria can be requested via \code{criteria}:
-\itemize{
-\item \strong{informativeness}: Pielou's evenness
-\eqn{J' = H' / \log(k_{used})}.
-\item \strong{agreement}: mean pairwise Cohen's \eqn{\kappa} against
-the other layers (Monserud & Leemans 1992).
-}
-
-All raw scores are min-max scaled to \eqn{[0, 1]} across the compared
-layers and averaged into the \code{composite_score}. Layers are then ordered
-by this score and ties resolved according to \code{tiebreaker}.
 }
 \note{
 \code{biomes_rank()} gives a data-driven ranking, not an authoritative
-"best" classification. The criteria favour layers that cover your
-records and split them into many, evenly-used classes, but the
-top-ranked layer is not necessarily the most suitable one for your
-question. For best results, narrow the comparison to a meaningful
-group via \code{scheme_type}, and treat the ranking as a shortlist rather
-than a verdict: inspect the per-criterion columns in the result and
-use \code{\link[=biomes_info]{biomes_info()}} to choose the layer whose definition and
+"best" classification. The criteria favour schemes that cover your
+records and split them into many, evenly-used biomes, but the
+top-ranked scheme is not necessarily the most suitable one for your
+question. For best results, narrow the comparison to one biome
+definition via \code{definition}, and treat the ranking as a shortlist
+rather than a verdict: inspect the per-criterion columns in the
+result and use \code{\link[=biomes_info]{biomes_info()}} to choose the scheme whose concept and
 resolution actually match your data.
 }
+\section{Scaling and the composite score}{
+
+Every criterion is min-max rescaled to \eqn{[0, 1]} across the compared
+schemes: the scheme with the lowest value gets 0, the one with the
+highest gets 1. The \code{composite_score} is the equal-weight mean of the
+rescaled criteria. Because the rescaling is relative to the compared
+set, composite scores are comparable only among schemes that were
+ranked together, and a rescaled 0 means "lowest among the compared
+schemes", not zero. Two edge cases: a criterion that does not vary
+among the compared schemes carries no information and is left out of
+the composite (its \verb{*_scaled} column is \code{NA}; see the attribute
+\code{criteria_used}), and a single compared scheme gets no composite score
+(\code{NA}) but is still returned as \code{best_scheme}.
+
+Schemes are ordered by \code{composite_score} and ties resolved according to
+\code{tiebreaker}.
+}
+
 \examples{
-data("biomes_example")
+data("bombacoideae_occurrences")
 
 \donttest{
-# Ranks layers of the biome raster (~36 MB), downloaded on first use.
+# Ranks the schemes of the biome raster (~36 MB), downloaded on first use.
 
-# Default call: coverage + effective_classes + granularity, equally weighted
-r <- biomes_rank(biomes_example, verbose = FALSE)
+# Default call: coverage + effective_biomes + granularity, equally weighted
+r <- biomes_rank(bombacoideae_occurrences, verbose = FALSE)
 head(r)
 attr(r, "best_scheme")
 
 # Restrict to a subset of criteria
 r2 <- biomes_rank(
-  biomes_example,
-  criteria = c("coverage", "effective_classes"),
+  bombacoideae_occurrences,
+  criteria = c("coverage", "effective_biomes"),
   verbose  = FALSE
 )
+
 }
 
 }

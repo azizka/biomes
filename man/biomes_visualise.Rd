@@ -2,17 +2,19 @@
 % Please edit documentation in R/biomes_visualise.R
 \name{biomes_visualise}
 \alias{biomes_visualise}
-\title{Visualise the biomes workflow (ranking, map and biome-class composition)}
+\title{Visualise the biomes workflow (ranking, map and biome composition)}
 \usage{
 biomes_visualise(
   x,
   scheme = NULL,
-  scheme_type = "all",
+  definition = "all",
   biome = NULL,
   lon = "decimalLongitude",
   lat = "decimalLatitude",
   panels = c("rank", "map", "barplot"),
-  legend_counts = TRUE,
+  top_n = NULL,
+  titles = TRUE,
+  legend_counts = FALSE,
   legend = TRUE,
   point_color = "#B20000",
   point_size = 0.25,
@@ -26,9 +28,9 @@ object, or a \code{terra::SpatVector} of point geometries.}
 
 \item{scheme}{Integer in \code{1:31} (biome scheme number). If \code{NULL}
 (default), the best-fitting scheme is chosen by \code{\link[=biomes_rank]{biomes_rank()}}
-(within \code{scheme_type}).}
+(within \code{definition}).}
 
-\item{scheme_type}{Character. Methodological group to rank within when
+\item{definition}{Character. Biome definition to rank within when
 \code{scheme} is \code{NULL}; passed to \code{\link[=biomes_rank]{biomes_rank()}}. Default \code{"all"}.}
 
 \item{biome}{Optional single-layer \code{terra::SpatRaster}. If supplied it
@@ -40,10 +42,23 @@ is mapped directly and only the \code{map} panel is available (no ranking).}
 \item{panels}{Character vector, any subset of \code{c("rank", "map", "barplot")} (default all three). Panels are drawn and lettered in
 this order.}
 
-\item{legend_counts}{Logical. If \code{TRUE} (default), append the number of
-records per biome class to the map legend labels.}
+\item{top_n}{Integer or \code{NULL} (default). If given, only the \code{top_n}
+top-ranked schemes are shown in the \code{rank} panel; \code{NULL} shows all
+compared schemes.}
 
-\item{legend}{Logical. If \code{TRUE} (default), draw the biome-class colour
+\item{titles}{Logical. If \code{TRUE} (default), each panel carries a
+left-aligned title: "Ranked biome schemes" (or "Top n ranked biome
+schemes" with \code{top_n}), "Spatial projection for \if{html}{\out{<reference>}}" and
+"Occurrence and species number for \if{html}{\out{<reference>}}", where the reference
+is the source of the chosen scheme, e.g. "Ramankutty & Foley (1999)".
+With \code{FALSE} no titles are drawn and the panel letters are placed in
+the top-left corners instead.}
+
+\item{legend_counts}{Logical. If \code{TRUE}, append the number of records
+per biome to the map legend labels. Default \code{FALSE} (biome names
+only).}
+
+\item{legend}{Logical. If \code{TRUE} (default), draw the biome colour
 legend on the map panel.}
 
 \item{point_color}{Colour of the occurrence points. Default \code{"#B20000"}.}
@@ -53,15 +68,16 @@ legend on the map panel.}
 \item{combine}{Logical. When more than one panel is drawn: \code{TRUE}
 (default) combines them into one lettered figure (a, b, c); \code{FALSE}
 returns a \strong{named list} of the individual panels (no letters).
-Ignored for a single panel (always returned as a bare \code{ggplot}).}
+Ignored for a single panel (always returned as a bare plot).}
 
 \item{verbose}{Logical. Passed to \code{\link[=biomes_rank]{biomes_rank()}}. Default \code{FALSE}.}
 }
 \value{
-For a single panel, a \code{ggplot} object. For several panels: a
-combined \code{cowplot} object when \code{combine = TRUE} (default), or a named
-list of \code{ggplot} objects (\code{rank}, \code{map}, \code{barplot}) when
-\code{combine = FALSE}. Print to display or save with \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
+For a single panel, a \code{ggplot} object (\code{map}) or a \code{cowplot}
+object (\code{rank}, \code{barplot}). For several panels: a combined \code{cowplot}
+object when \code{combine = TRUE} (default), or a named list of the
+individual panels (\code{rank}, \code{map}, \code{barplot}) when \code{combine = FALSE}.
+Print to display or save with \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
 }
 \description{
 Produces the publication figure of the \emph{biomes} workflow for a set of
@@ -70,31 +86,40 @@ occurrence records. Up to three panels are drawn and combined:
 \details{
 \itemize{
 \item \strong{rank}: the data-driven ranking of the biome schemes
-(\code{\link[=biomes_rank]{biomes_rank()}}): the composite score per scheme (best highlighted)
-next to the raw criterion values it averages (coverage, effective
-number of classes, granularity, ...).
+(\code{\link[=biomes_rank]{biomes_rank()}}): the composite score per scheme next to the
+criterion values it averages (coverage, effective number of biomes,
+granularity), all on the common 0 to 1 scale that enters the
+composite (the min-max rescaled values). Schemes are labelled by their
+biome scheme number
+and source, e.g. \code{25 (Ramankutty & Foley, 1999)}; the composite bar
+of the best scheme and, in each criterion panel, the bar with the
+best value of that criterion are outlined in red. All compared
+schemes are shown unless \code{top_n} cuts the list.
 \item \strong{map}: the occurrence records (points) mapped over the chosen
-biome scheme, with the number of records per biome class optionally
+biome scheme, with the number of records per biome optionally
 appended to the legend labels.
 \item \strong{barplot}: the number of occurrence records (left) and species
-(right) per biome class, with the biome-class names in the centre.
+(right) per biome, with the biome names in the centre. Bars use the
+same colour per biome as the map; off-map records ("no biome") are
+grey.
 }
 
-Which panels are drawn is controlled by \code{panels}; the panel letters
-(a, b, c) are assigned in drawing order, so selecting only \code{rank} and
-\code{barplot} labels them (a) and (b).
+Which panels are drawn is controlled by \code{panels}. When several panels
+are combined into one figure, the panel letters (a, b, c) are assigned
+in drawing order and written into the panel titles ("a: ..."), so
+selecting only \code{rank} and \code{barplot} labels them (a) and (b).
 }
 \examples{
 \donttest{
-data("biomes_example")
+data("bombacoideae_occurrences")
 # full figure (rank + map + barplot), best scheme chosen automatically
-biomes_visualise(biomes_example)
+biomes_visualise(bombacoideae_occurrences)
 
 # only the map, for a fixed scheme
-biomes_visualise(biomes_example, scheme = 1, panels = "map")
+biomes_visualise(bombacoideae_occurrences, scheme = 1, panels = "map")
 
 # map + barplot for the best vegetation scheme
-biomes_visualise(biomes_example, scheme_type = "vegetation",
+biomes_visualise(bombacoideae_occurrences, definition = "vegetation",
                  panels = c("map", "barplot"))
 }
 

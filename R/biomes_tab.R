@@ -1,8 +1,8 @@
 #' Tabulate the number of occurrences per biome
 #'
 #' Summarizes the number of **occurrence records** (one row of `x` =
-#' one occurrence) in each biome, for one or more biome layers. The
-#' output is a long-format table with one row per (layer, biome) pair.
+#' one occurrence) in each biome, for one or more biome schemes. The
+#' output is a long-format table with one row per (scheme, biome) pair.
 #'
 #' This function counts occurrences, not species. To count unique species
 #' per biome, deduplicate by species before tabulating
@@ -15,25 +15,25 @@
 #'   columns.
 #'
 #' @return A data frame with columns `scheme`, `biome`, and `n` (the number
-#'   of occurrence records in that biome class on that scheme).
+#'   of occurrence records in that biome on that scheme).
 #'
 #' @examples
 #' # Load example occurrence data
-#' data("biomes_example")
+#' data("bombacoideae_occurrences")
 #'
 #' \donttest{
 #' # biomes_classify() downloads and caches the biome raster (~36 MB).
 #'
 #' # Tabulate by biome name
 #' classified_names <- biomes_classify(
-#'   x     = biomes_example,
+#'   x     = bombacoideae_occurrences,
 #'   value = "name"
 #' )
 #' biomes_tab(classified_names, value = "names")
 #'
 #' # Tabulate by raster value
 #' classified_ids <- biomes_classify(
-#'   x     = biomes_example,
+#'   x     = bombacoideae_occurrences,
 #'   value = "ID"
 #' )
 #' biomes_tab(classified_ids, value = "ID")

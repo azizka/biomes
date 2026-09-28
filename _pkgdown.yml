@@ -3,13 +3,18 @@ url: https://azizka.github.io/biomes/
 template:
   bootstrap: 5
 
+authors:
+  footer:
+    roles: [cre]
+    text: "Developed by"
+
 home:
   title: 'biomes: An R package for reproducible occurrence-to-biome classification using 31 global biome schemes'
   description: >
-    biomes provides 31 published global terrestrial biome schemes (Fischer
+    biomes provides 31 published global biome schemes (Fischer
     et al. 2022) as harmonised raster layers at 10x10 km resolution, plus
     functions to rank the schemes for a dataset, classify occurrence records
-    into biome classes, and tabulate and visualise the result.
+    into biomes, and tabulate and visualise the result.
 
 reference:
 - title: Biome data
@@ -20,7 +25,7 @@ reference:
   - biomes_info
   - biomes_information
   - biomes_legend
-  - biomes_example
+  - bombacoideae_occurrences
 - title: Get occurrences from GBIF
   desc: Download and clean GBIF occurrences for a taxon.
   contents:
@@ -34,7 +39,7 @@ reference:
   contents:
   - biomes_rank
 - title: Visualise
-  desc: Ranking, occurrence map and biome-class composition for a chosen scheme.
+  desc: Ranking, occurrence map and biome composition for a chosen scheme.
   contents:
   - biomes_visualise
 - title: One-call workflow
@@ -46,7 +51,7 @@ articles:
 - title: The four-step workflow
   navbar: ~
   contents:
-  - step1-occurrence-records-and-biome-schemes
-  - step2-choosing-a-biome-scheme
+  - step1-assembly-of-occurrence-records-and-biome-schemes
+  - step2-choice-of-a-biome-scheme
   - step3-occurrence-to-biome-classification
   - step4-output-and-visualisation

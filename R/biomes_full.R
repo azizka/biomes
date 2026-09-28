@@ -26,10 +26,10 @@
 #'   Mutually exclusive with `x`.
 #' @param scheme One of: an integer in `1:31` (biome scheme number) to
 #'   force a specific scheme; `"best"` (default) to pick the best-fitting
-#'   scheme across all 31 via [biomes_rank()]; or a scheme type
+#'   scheme across all 31 via [biomes_rank()]; or a biome definition
 #'   (`"climate"`, `"vegetation"`, `"land_cover"`, `"ecoregion"`,
 #'   `"integrative"`, `"anthropogenic"`) to pick the best-fitting scheme
-#'   within that methodological group.
+#'   within that biome definition.
 #' @param lon,lat Column names of longitude / latitude in `x`
 #'   (data frame only). Defaults `"decimalLongitude"`/`"decimalLatitude"`.
 #' @param value Passed to [biomes_classify()]: `"name"` (default),
@@ -75,19 +75,19 @@
 #' \donttest{
 #' # Path 2: from an existing data frame, pick the best scheme.
 #' # Uses the biome raster (~36 MB), downloaded on first use.
-#' data("biomes_example")
-#' res <- biomes_full(x = biomes_example, scheme = "best")
+#' data("bombacoideae_occurrences")
+#' res <- biomes_full(x = bombacoideae_occurrences, scheme = "best")
 #'
 #' # Path 2 with a fixed scheme
-#' res <- biomes_full(x = biomes_example, scheme = 1)
+#' res <- biomes_full(x = bombacoideae_occurrences, scheme = 1)
 #'
 #' # Path 2, best-fitting scheme within the vegetation group,
 #' # and build the full figure
-#' res <- biomes_full(x = biomes_example, scheme = "vegetation", plot = "all")
+#' res <- biomes_full(x = bombacoideae_occurrences, scheme = "vegetation", plot = "all")
 #' res$plot
 #'
 #' # individual panels (no a-c letters) in $rank / $map / $barplot
-#' res <- biomes_full(x = biomes_example, plot = c("map", "barplot"))
+#' res <- biomes_full(x = bombacoideae_occurrences, plot = c("map", "barplot"))
 #' res$map
 #' res$barplot
 #' }
@@ -124,20 +124,20 @@ biomes_full <- function(
                               .var.name = "plot")
   checkmate::assert_subset(plot, plot_choices, .var.name = "plot")
 
-  scheme_types <- c("climate", "vegetation", "land_cover", "ecoregion",
+  definitions <- c("climate", "vegetation", "land_cover", "ecoregion",
                     "integrative", "anthropogenic")
   is_best   <- FALSE
-  rank_type <- "all"
+  rank_def <- "all"
   if (is.character(scheme)) {
     s <- tolower(scheme)
     if (identical(s, "best")) {
       is_best <- TRUE
-    } else if (s %in% scheme_types) {
+    } else if (s %in% definitions) {
       is_best   <- TRUE
-      rank_type <- s
+      rank_def <- s
     } else {
       stop("`scheme` must be an integer in 1:31, \"best\", or one of the ",
-           "scheme types (", paste(scheme_types, collapse = ", "), ").",
+           "biome definitions (", paste(definitions, collapse = ", "), ").",
            call. = FALSE)
     }
   } else {
@@ -162,7 +162,7 @@ biomes_full <- function(
   # ---------------------------------------------------------- choose scheme
   ranking <- NULL
   if (is_best) {
-    ranking <- biomes_rank(occ, scheme_type = rank_type,
+    ranking <- biomes_rank(occ, definition = rank_def,
                            lon = lon, lat = lat, verbose = FALSE)
     scheme  <- as.integer(attr(ranking, "best_scheme"))
     if (is.na(scheme)) {
@@ -192,12 +192,12 @@ biomes_full <- function(
   fig_plot <- fig_rank <- fig_map <- fig_barplot <- NULL
   if (!("none" %in% plot)) {
     if ("all" %in% plot) {
-      fig_plot <- biomes_visualise(occ, scheme = scheme, scheme_type = rank_type,
+      fig_plot <- biomes_visualise(occ, scheme = scheme, definition = rank_def,
                                    panels = c("rank", "map", "barplot"),
                                    lon = lon, lat = lat)
     } else {
       panels <- unique(plot)
-      figs <- biomes_visualise(occ, scheme = scheme, scheme_type = rank_type,
+      figs <- biomes_visualise(occ, scheme = scheme, definition = rank_def,
                                panels = panels, combine = FALSE,
                                lon = lon, lat = lat)
       if (length(panels) == 1L) figs <- stats::setNames(list(figs), panels)
@@ -242,7 +242,7 @@ print.biomes_full <- function(x, ...) {
     cat(sprintf("  picked by   : biomes_rank() (composite = %.3f)\n",
                 x$ranking$composite_score[x$ranking$is_best][1]))
   }
-  cat(sprintf("  table rows  : %d (biome classes used)\n", nrow(x$table)))
+  cat(sprintf("  table rows  : %d (biomes used)\n", nrow(x$table)))
   built <- c(if (!is.null(x$plot))    "$plot",
              if (!is.null(x$rank))    "$rank",
              if (!is.null(x$map))     "$map",

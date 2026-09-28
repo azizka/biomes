@@ -12,7 +12,7 @@ Sys.setenv(OPENBLAS_NUM_THREADS = "1")
 Sys.setenv(OMP_NUM_THREADS      = "1")
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(biomes)
-data(biomes_example)
+data(bombacoideae_occurrences)
 
 run_raster <- isTRUE(as.logical(Sys.getenv("NOT_CRAN", "false")))
 if (run_raster) {
@@ -23,25 +23,25 @@ if (run_raster) {
 
 # Goal
 
-The records were assigned to biome classes in
+The records were assigned to biomes in
 [Step 3](step3-occurrence-to-biome-classification.html). This final step **summarises**
-the result per biome class with `biomes_tab()` and **visualises** the whole workflow
+the result per biome with `biomes_tab()` and **visualises** the whole workflow
 with `biomes_visualise()`.
 
 ---
 
-# 1. Tabulate records per biome class
+# 1. Tabulate records per biome
 
 `biomes_tab()` counts **occurrence records** (one input row = one record) per biome
-class and scheme, returning a long table with one row per (scheme, biome class) pair:
+and scheme, returning a long table with one row per (scheme, biome) pair:
 
 ```{r, eval = run_raster}
-classified <- biomes_classify(biomes_example, scheme = 1)
+classified <- biomes_classify(bombacoideae_occurrences, scheme = 1)
 biomes_tab(classified)
 ```
 
 The returned columns are `scheme`, `biome` and `n`. To count **unique species** per
-biome class instead of records, deduplicate by `species` first:
+biome instead of records, deduplicate by `species` first:
 
 ```{r, eval = run_raster && requireNamespace("dplyr", quietly = TRUE)}
 library(dplyr)
@@ -59,14 +59,14 @@ classified |>
 
 - **rank**: the ranking of the biome schemes (best highlighted);
 - **map**: the occurrence records (red points) over the chosen scheme, with the
-  number of records per biome class appended to the legend labels;
-- **barplot**: the number of records and species per biome class.
+  number of records per biome appended to the legend labels;
+- **barplot**: the number of records and species per biome.
 
 By default all three are drawn and lettered **a, b, c**. If `scheme` is `NULL`, the
-best-fitting scheme is chosen by `biomes_rank()` (within `scheme_type`).
+best-fitting scheme is chosen by `biomes_rank()` (within `definition`).
 
-```{r, eval = run_raster && all(vapply(c("sf","ggplot2","viridis","tidyterra","cowplot"), requireNamespace, logical(1), quietly = TRUE)), fig.width = 7, fig.height = 10, fig.alt = "Ranking, occurrence map and biome-class composition"}
-biomes_visualise(biomes_example)               # rank + map + barplot
+```{r, eval = run_raster && all(vapply(c("sf","ggplot2","viridis","tidyterra","cowplot"), requireNamespace, logical(1), quietly = TRUE)), fig.width = 7, fig.height = 10, fig.alt = "Ranking, occurrence map and biome composition"}
+biomes_visualise(bombacoideae_occurrences)               # rank + map + barplot
 ```
 
 Select individual panels with `panels`; the panel letters adjust to the selection
@@ -74,7 +74,7 @@ Select individual panels with `panels`; the panel letters adjust to the selectio
 
 ```{r, eval = run_raster && all(vapply(c("sf","ggplot2","viridis","tidyterra"), requireNamespace, logical(1), quietly = TRUE)), fig.width = 7, fig.height = 4, fig.alt = "Occurrence map over biome scheme 1"}
 # just the map, for a fixed scheme
-biomes_visualise(biomes_example, scheme = 1, panels = "map")
+biomes_visualise(bombacoideae_occurrences, scheme = 1, panels = "map")
 ```
 
 The **red points are the occurrence records** you supplied. Drop the record counts
@@ -82,7 +82,7 @@ from the legend labels with `legend_counts = FALSE`, or the whole colour legend 
 `legend = FALSE`. Save any panel with `ggplot2::ggsave()`:
 
 ```{r, eval = FALSE}
-p <- biomes_visualise(biomes_example, scheme = 1, panels = "map", legend = FALSE)
+p <- biomes_visualise(bombacoideae_occurrences, scheme = 1, panels = "map", legend = FALSE)
 ggplot2::ggsave("biome_map.jpg", p, width = 13, height = 8, dpi = 600)
 ```
 
@@ -95,9 +95,9 @@ schemes and uses the best one. No figure is drawn by default (`plot = "none"`, t
 fastest option). `plot = "all"` returns the **combined** lettered figure in `res$plot`:
 
 ```{r, eval = FALSE}
-res <- biomes_full(x = biomes_example, plot = "all")   # scheme = "best"
+res <- biomes_full(x = bombacoideae_occurrences, plot = "all")   # scheme = "best"
 res$scheme     # the chosen biome scheme number
-res$table      # records per biome class
+res$table      # records per biome
 res$plot       # the combined figure (rank + map + barplot)
 ```
 
@@ -105,13 +105,13 @@ A subset of `c("rank", "map", "barplot")` returns the panels **individually** (n
 panel letters), each in its own component `res$rank`, `res$map`, `res$barplot`:
 
 ```{r, eval = FALSE}
-res <- biomes_full(x = biomes_example, plot = c("rank", "map", "barplot"))
+res <- biomes_full(x = bombacoideae_occurrences, plot = c("rank", "map", "barplot"))
 res$map        # just the map panel, on its own
 res$barplot    # just the barplot panel
 ```
 
 To force a specific scheme, pass its number (`scheme = 1`); to rank within one group,
-pass a scheme type (`scheme = "vegetation"`). Reach for the individual functions when
+pass a biome definition (`scheme = "vegetation"`). Reach for the individual functions when
 you want to tweak a step; use `biomes_full()` when you want the standard pipeline in
 one call.
 
@@ -121,4 +121,4 @@ one call.
 
 That completes the four-step workflow: **assemble → choose a scheme → classify →
 output and visualise.** Back to
-[Step 1](step1-occurrence-records-and-biome-schemes.html).
+[Step 1](step1-assembly-of-occurrence-records-and-biome-schemes.html).

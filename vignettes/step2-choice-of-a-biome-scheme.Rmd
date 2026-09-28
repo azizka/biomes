@@ -1,8 +1,8 @@
 ---
-title: "Step 2: Choosing a biome scheme"
+title: "Step 2: Choice of a biome scheme"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Step 2: Choosing a biome scheme}
+  %\VignetteIndexEntry{Step 2: Choice of a biome scheme}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,7 +12,7 @@ Sys.setenv(OPENBLAS_NUM_THREADS = "1")
 Sys.setenv(OMP_NUM_THREADS      = "1")
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(biomes)
-data(biomes_example)
+data(bombacoideae_occurrences)
 
 run_raster <- isTRUE(as.logical(Sys.getenv("NOT_CRAN", "false")))
 if (run_raster) {
@@ -23,14 +23,15 @@ if (run_raster) {
 
 # Goal
 
-[Step 1](step1-occurrence-records-and-biome-schemes.html) gave us occurrence records and
+[Step 1](step1-assembly-of-occurrence-records-and-biome-schemes.html) gave us occurrence records and
 the 31 biome schemes. With 31 schemes to choose from, this step picks the one that
 best fits *your* data, so the choice is explicit and reproducible rather than
 defaulting to a familiar scheme.
 
-> **Terms.** A **biome scheme** is one of the 31 classification systems; a **biome
-> class** is a category within it; a **biome scheme number** (1-31) identifies a
-> scheme. The `scheme_type` argument groups schemes by methodology.
+> **Terms.** A **biome scheme** is one of the 31 classification systems; a **biome**
+> is a category within it; a **biome scheme number** (1-31) identifies a scheme. A
+> **biome definition** is the concept on which a scheme delimits its biomes; the
+> `definition` argument restricts the ranking to the schemes sharing one definition.
 
 ---
 
@@ -40,19 +41,26 @@ defaulting to a familiar scheme.
 best-fitting scheme. Each scheme is rated on three complementary, data-driven
 criteria:
 
-- **coverage**: share of records that fall on a defined biome class.
-- **effective number of classes**: `exp(H')`, the effective number of biome classes
+- **coverage**: share of records that fall on a defined biome.
+- **effective number of biomes**: `exp(H')`, the effective number of biomes
   the records occupy (rewards schemes that spread the data over several
-  well-populated classes).
-- **granularity**: occupied biome classes divided by the total number of biome
-  classes in the scheme.
+  well-populated biomes).
+- **granularity**: occupied biomes divided by the total number of biomes in the
+  scheme.
 
-The three criteria are min-max scaled to `[0, 1]` and averaged (equal weights) into a
-**composite score**. The best-scoring scheme is returned in
-`attr(ranking, "best_scheme")`.
+The three criteria are min-max scaled to `[0, 1]` across the compared schemes and
+averaged (equal weights) into a **composite score**. The best-scoring scheme is
+returned in `attr(ranking, "best_scheme")`.
+
+Because the scaling is relative to the compared schemes, a composite score is only
+comparable among schemes that were ranked together, and a scaled value of 0 means
+"lowest among the compared schemes", not zero. A criterion that does not vary among
+the compared schemes is left out of the composite (see `attr(ranking, "criteria_used")`),
+and a single compared scheme gets no composite score. Ties in the composite score
+are broken by the publication year of the scheme (more recent first; see `tiebreaker`).
 
 ```{r, eval = run_raster}
-ranking <- biomes_rank(biomes_example, verbose = FALSE)
+ranking <- biomes_rank(bombacoideae_occurrences, verbose = FALSE)
 best    <- attr(ranking, "best_scheme")
 best
 head(ranking)
@@ -61,19 +69,19 @@ head(ranking)
 The result is a data frame with one row per scheme; the key columns are `scheme`
 (the biome scheme number), `scheme_name`, `composite_score` and `is_best`.
 
-### Rank within a conceptually comparable group
+### Rank within one biome definition
 
-Comparing schemes of different methodologies can mislead, so restrict the ranking to
-one group with `scheme_type`:
+Comparing schemes built on different biome definitions can mislead, so restrict the
+ranking to the schemes sharing one definition with `definition`:
 
 ```{r, eval = run_raster}
-r_veg <- biomes_rank(biomes_example, scheme_type = "vegetation", verbose = FALSE)
+r_veg <- biomes_rank(bombacoideae_occurrences, definition = "vegetation", verbose = FALSE)
 attr(r_veg, "best_scheme")
 
-table(biomes_information$scheme_type)   # how many schemes per group
+table(biomes_information$biome_definition)   # how many schemes per group
 ```
 
-`scheme_type = "all"` (the default) ranks all 31 schemes. Other groups are
+`definition = "all"` (the default) ranks all 31 schemes. The biome definitions are
 `"climate"`, `"vegetation"`, `"land_cover"`, `"ecoregion"`, `"integrative"` and
 `"anthropogenic"`.
 
@@ -85,7 +93,7 @@ The `rank` panel of `biomes_visualise()` shows the composite score per scheme wi
 the best scheme highlighted:
 
 ```{r, eval = run_raster && requireNamespace("ggplot2", quietly = TRUE), fig.width = 7, fig.height = 5}
-biomes_visualise(biomes_example, panels = "rank")
+biomes_visualise(bombacoideae_occurrences, panels = "rank")
 ```
 
 Treat the ranking as a **shortlist**, not an authoritative answer: the most suitable

@@ -1,42 +1,46 @@
 #' Rank biome schemes for a given occurrence dataset
 #'
-#' Compares the biome classification layers for a user-supplied set of
-#' occurrences and proposes a single "best" layer for that dataset. Each
-#' layer is scored on several data-driven criteria that are combined into
-#' one `composite_score`, which drives the ranking.
+#' Compares the biome schemes for a user-supplied set of occurrence
+#' records and proposes a single "best" scheme for that dataset. Each
+#' scheme is scored on several data-driven criteria that are combined
+#' into one `composite_score`, which drives the ranking.
 #'
-#' By default, three equally weighted criteria are used:
+#' Three equally weighted criteria are used:
 #' \enumerate{
-#'   \item \strong{coverage}: fraction of records that the layer places in
-#'     a biome at all (the rest fall on unclassified, NA cells).
-#'   \item \strong{effective_classes}: \eqn{\exp(H')} (Hill number of
+#'   \item \strong{coverage}: fraction of records that the scheme places
+#'     in a biome at all (the rest fall on unclassified, NA cells).
+#'   \item \strong{effective_biomes}: \eqn{\exp(H')} (Hill number of
 #'     order 1), i.e. the effective number of biomes the records spread
 #'     across, weighted by evenness.
-#'   \item \strong{granularity}: biome classes actually used, divided by
-#'     the classes available in the layer.
+#'   \item \strong{granularity}: biomes actually used, divided by the
+#'     biomes available in the scheme.
 #' }
 #'
-#' Two further criteria can be requested via `criteria`:
-#' \itemize{
-#'   \item \strong{informativeness}: Pielou's evenness
-#'     \eqn{J' = H' / \log(k_{used})}.
-#'   \item \strong{agreement}: mean pairwise Cohen's \eqn{\kappa} against
-#'     the other layers (Monserud & Leemans 1992).
-#' }
+#' @section Scaling and the composite score:
+#' Every criterion is min-max rescaled to \eqn{[0, 1]} across the compared
+#' schemes: the scheme with the lowest value gets 0, the one with the
+#' highest gets 1. The `composite_score` is the equal-weight mean of the
+#' rescaled criteria. Because the rescaling is relative to the compared
+#' set, composite scores are comparable only among schemes that were
+#' ranked together, and a rescaled 0 means "lowest among the compared
+#' schemes", not zero. Two edge cases: a criterion that does not vary
+#' among the compared schemes carries no information and is left out of
+#' the composite (its `*_scaled` column is `NA`; see the attribute
+#' `criteria_used`), and a single compared scheme gets no composite score
+#' (`NA`) but is still returned as `best_scheme`.
 #'
-#' All raw scores are min-max scaled to \eqn{[0, 1]} across the compared
-#' layers and averaged into the `composite_score`. Layers are then ordered
-#' by this score and ties resolved according to `tiebreaker`.
+#' Schemes are ordered by `composite_score` and ties resolved according to
+#' `tiebreaker`.
 #'
 #' @note
 #' `biomes_rank()` gives a data-driven ranking, not an authoritative
-#' "best" classification. The criteria favour layers that cover your
-#' records and split them into many, evenly-used classes, but the
-#' top-ranked layer is not necessarily the most suitable one for your
-#' question. For best results, narrow the comparison to a meaningful
-#' group via `scheme_type`, and treat the ranking as a shortlist rather
-#' than a verdict: inspect the per-criterion columns in the result and
-#' use [biomes_info()] to choose the layer whose definition and
+#' "best" classification. The criteria favour schemes that cover your
+#' records and split them into many, evenly-used biomes, but the
+#' top-ranked scheme is not necessarily the most suitable one for your
+#' question. For best results, narrow the comparison to one biome
+#' definition via `definition`, and treat the ranking as a shortlist
+#' rather than a verdict: inspect the per-criterion columns in the
+#' result and use [biomes_info()] to choose the scheme whose concept and
 #' resolution actually match your data.
 #'
 #' @param x A data frame with longitude / latitude columns, an `sf`
@@ -52,24 +56,24 @@
 #'   non-spatial data frame). Default `"decimalLongitude"`.
 #' @param lat Column name of latitude in `x` (only used if `x` is a
 #'   non-spatial data frame). Default `"decimalLatitude"`.
-#' @param scheme_type Character. Restrict the ranking to one methodological
-#'   group of biome definitions: one of `"all"` (default; rank all 31
-#'   layers), `"climate"`, `"vegetation"`, `"land_cover"`, `"ecoregion"`,
-#'   `"integrative"`, or `"anthropogenic"`. The grouping is taken from the
-#'   `scheme_type` column of [biomes_information]. When a specific type is
-#'   chosen, only the layers of that type are classified, scored and
-#'   returned, so the scaled scores and the best layer are determined
-#'   within that group. Ignored when `biome` is supplied.
+#' @param definition Character. Restrict the ranking to the schemes that
+#'   share one biome definition: one of `"all"` (default; rank all 31
+#'   schemes), `"climate"`, `"vegetation"`, `"land_cover"`,
+#'   `"ecoregion"`, `"integrative"`, or `"anthropogenic"`. The grouping
+#'   is taken from the `biome_definition` column of [biomes_information].
+#'   When a specific definition is chosen, only the schemes of that
+#'   definition are classified, scored and returned, so the scaled scores
+#'   and the best scheme are determined within that group. Ignored when
+#'   `biome` is supplied.
 #' @param criteria Character vector with one or more of `"coverage"`,
-#'   `"effective_classes"`, `"granularity"`, `"informativeness"`,
-#'   `"agreement"`. Default: the first three.
+#'   `"effective_biomes"`, `"granularity"`. Default: all three.
 #' @param tiebreaker How tied `composite_score`s are resolved: `"year"`
-#'   (default, more recent publication ranks higher), `"classes"` (more
-#'   classes ranks higher), or `"none"` (do not break ties; tied layers
-#'   share a rank, dense ranking). With `"year"` and `"classes"` the
+#'   (default, more recent publication ranks higher), `"biomes"` (more
+#'   biomes ranks higher), or `"none"` (do not break ties; tied schemes
+#'   share a rank, dense ranking). With `"year"` and `"biomes"` the
 #'   other key serves as a further fallback, alphabetical `scheme_name`
 #'   resolves any remaining ties, and ranks are strict 1..N. With
-#'   `"none"` multiple layers may carry `is_best = TRUE`.
+#'   `"none"` multiple schemes may carry `is_best = TRUE`.
 #' @param verbose Logical. Print progress messages? Default `TRUE`.
 #'
 #' @return A data frame of classes `biomes_rank` and `data.frame`, with
@@ -78,31 +82,34 @@
 #'   the scheme), `n_total`, `n_hit` and `n_na` (number of records in
 #'   total, classified, and unclassified), `pct_na` (percentage of
 #'   unclassified records), then one `*_raw` and one `*_scaled` column
-#'   per requested criterion (the raw score and its min-max scaled
-#'   version), `composite_score` (mean of the scaled criteria, drives
-#'   the ranking), `rank` (1 = best), and `is_best` (`TRUE` for the
-#'   top-ranked scheme). The result carries the attributes `criteria`,
-#'   `tiebreaker`, `scheme_type`, and `best_scheme` (the biome scheme
-#'   number of the top-ranked scheme, ready to be used as the `scheme`
-#'   argument of [biomes_classify()] or [biomes_full()]).
+#'   per requested criterion (the raw score and its rescaled version),
+#'   `composite_score` (mean
+#'   of the scaled criteria, drives the ranking), `rank` (1 = best), and
+#'   `is_best` (`TRUE` for the top-ranked scheme). The result carries the
+#'   attributes `criteria` (requested), `criteria_used` (those that entered
+#'   the composite), `tiebreaker`, `definition`, and
+#'   `best_scheme` (the biome scheme number of the top-ranked scheme, ready
+#'   to be used as the `scheme` argument of [biomes_classify()] or
+#'   [biomes_full()]).
 #'
 #' @examples
-#' data("biomes_example")
+#' data("bombacoideae_occurrences")
 #'
 #' \donttest{
-#' # Ranks layers of the biome raster (~36 MB), downloaded on first use.
+#' # Ranks the schemes of the biome raster (~36 MB), downloaded on first use.
 #'
-#' # Default call: coverage + effective_classes + granularity, equally weighted
-#' r <- biomes_rank(biomes_example, verbose = FALSE)
+#' # Default call: coverage + effective_biomes + granularity, equally weighted
+#' r <- biomes_rank(bombacoideae_occurrences, verbose = FALSE)
 #' head(r)
 #' attr(r, "best_scheme")
 #'
 #' # Restrict to a subset of criteria
 #' r2 <- biomes_rank(
-#'   biomes_example,
-#'   criteria = c("coverage", "effective_classes"),
+#'   bombacoideae_occurrences,
+#'   criteria = c("coverage", "effective_biomes"),
 #'   verbose  = FALSE
 #' )
+#'
 #' }
 #'
 #' @export
@@ -112,9 +119,9 @@ biomes_rank <- function(
     biome      = NULL,
     lon         = "decimalLongitude",
     lat         = "decimalLatitude",
-    scheme_type = "all",
-    criteria    = c("coverage", "effective_classes", "granularity"),
-    tiebreaker = c("year", "classes", "none"),
+    definition = "all",
+    criteria    = c("coverage", "effective_biomes", "granularity"),
+    tiebreaker = c("year", "biomes", "none"),
     verbose    = TRUE
 ) {
 
@@ -141,34 +148,33 @@ biomes_rank <- function(
     }
   }
 
-  # ---- scheme_type: restrict to one methodological group of schemes -------
-  scheme_types <- c("all", "climate", "vegetation", "land_cover",
+  # ---- definition: restrict to one methodological group of schemes -------
+  definitions <- c("all", "climate", "vegetation", "land_cover",
                     "ecoregion", "integrative", "anthropogenic")
-  checkmate::assert_choice(scheme_type, scheme_types, .var.name = "scheme_type")
-  if (scheme_type != "all") {
+  checkmate::assert_choice(definition, definitions, .var.name = "definition")
+  if (definition != "all") {
     if (!is.null(biome)) {
-      warning("`scheme_type` is ignored because `biome` was supplied.",
+      warning("`definition` is ignored because `biome` was supplied.",
               call. = FALSE)
     } else {
-      if (!"scheme_type" %in% names(biomes::biomes_information)) {
-        stop("biomes_information has no `scheme_type` column; reinstall the ",
-             "package to use `scheme_type`.", call. = FALSE)
+      if (!"biome_definition" %in% names(biomes::biomes_information)) {
+        stop("biomes_information has no `biome_definition` column; reinstall the ",
+             "package to use `definition`.", call. = FALSE)
       }
-      type_layers <- which(biomes::biomes_information$scheme_type == scheme_type)
-      if (length(type_layers) == 0L) {
-        stop("No schemes found for scheme_type = '", scheme_type, "'.",
+      def_schemes <- which(biomes::biomes_information$biome_definition == definition)
+      if (length(def_schemes) == 0L) {
+        stop("No schemes found for definition = '", definition, "'.",
              call. = FALSE)
       }
-      scheme <- if (is.null(scheme)) type_layers else intersect(scheme, type_layers)
+      scheme <- if (is.null(scheme)) def_schemes else intersect(scheme, def_schemes)
       if (length(scheme) == 0L) {
-        stop("`scheme` and `scheme_type` together select no schemes.",
+        stop("`scheme` and `definition` together select no schemes.",
              call. = FALSE)
       }
     }
   }
 
-  all_criteria <- c("coverage", "effective_classes", "granularity",
-                    "informativeness", "agreement")
+  all_criteria <- c("coverage", "effective_biomes", "granularity")
   checkmate::assert_subset(criteria, choices = all_criteria,
                            empty.ok = FALSE, .var.name = "criteria")
   criteria   <- unique(criteria)
@@ -196,7 +202,7 @@ biomes_rank <- function(
 
   # ---------------------------------------------------------- classify
   if (verbose) message("Classifying ", n_total,
-                       " record(s) against biome schemes ...")
+                       " record(s) against the biome schemes ...")
   ids <- suppressMessages(suppressWarnings(
     biomes_classify(x, scheme = scheme, biome = biome,
                     lon = lon, lat = lat,
@@ -209,34 +215,31 @@ biomes_rank <- function(
   use_default_legend <- all(!is.na(layer_idx)) &&
     all(layer_idx >= 1 & layer_idx <= nrow(biomes::biomes_information))
 
-  # layer-level metadata (year, total classes, layer_name)
+  # scheme-level metadata (year, total biomes, scheme name)
   info <- .layer_info(layer_idx, use_default_legend)
 
-  # ---------------------------------------------------------- per-layer
-  if (verbose) message("Computing per-layer criteria ...")
+  # ---------------------------------------------------------- per-scheme
+  if (verbose) message("Computing per-scheme criteria ...")
   per_layer <- lapply(seq_along(layer_cols), function(i) {
     vals <- ids[[i]]
     n_hit <- sum(!is.na(vals))
     n_na  <- n_total - n_hit
     raw <- list(
-      coverage          = n_hit / n_total,
-      granularity       = NA_real_,
-      informativeness   = NA_real_,
-      effective_classes = NA_real_,
-      agreement         = NA_real_   # filled in below
+      coverage         = n_hit / n_total,
+      effective_biomes = NA_real_,
+      granularity      = NA_real_
     )
     if (n_hit > 0) {
       used <- table(vals, useNA = "no")
       k_used <- length(used)
-      total_classes <- info$total_classes[i]
-      raw$granularity <- if (!is.na(total_classes) && total_classes > 0) {
-        min(k_used / total_classes, 1)
+      total_biomes <- info$total_biomes[i]
+      raw$granularity <- if (!is.na(total_biomes) && total_biomes > 0) {
+        min(k_used / total_biomes, 1)
       } else {
         NA_real_
       }
       shannon <- .compute_shannon(used)
-      raw$informativeness <- if (k_used > 1) shannon / log(k_used) else 0
-      raw$effective_classes <- exp(shannon)
+      raw$effective_biomes <- exp(shannon)
     }
     list(
       n_total = n_total,
@@ -246,22 +249,13 @@ biomes_rank <- function(
     )
   })
 
-  # ---------------------------------------------------------- agreement
-  if ("agreement" %in% criteria) {
-    if (verbose) message("Computing pairwise Cohen's kappa across ",
-                         length(layer_cols), " layers ...")
-    agree <- .compute_pairwise_kappa(ids)
-    for (i in seq_along(per_layer)) {
-      per_layer[[i]]$raw$agreement <- agree[i]
-    }
-  }
-
   # ---------------------------------------------------------- assemble
   raw_mat <- do.call(rbind, lapply(per_layer, function(z) {
     unlist(z$raw[criteria])
   }))
   colnames(raw_mat) <- criteria
 
+  # min-max rescaling of every criterion across the compared schemes
   scaled_mat <- apply(raw_mat, 2, .minmax)
   if (is.null(dim(scaled_mat))) {
     # apply collapses to a vector when only 1 row -> reshape
@@ -269,8 +263,21 @@ biomes_rank <- function(
                          dimnames = list(NULL, criteria))
   }
 
+  # criteria that carry no information for this comparison (no variation
+  # among the compared schemes, or all NA) are left out of the composite
+  has_raw  <- colSums(!is.na(raw_mat)) > 0
+  has_info <- colSums(!is.na(scaled_mat)) > 0
+  criteria_used <- criteria[has_info]
+  if (nrow(raw_mat) == 1L) {
+    if (verbose) message("Only one scheme compared: no composite score.")
+  } else if (any(has_raw & !has_info) && verbose) {
+    message("Criterion without variation among the compared schemes, left ",
+            "out of the composite score: ",
+            paste(criteria[has_raw & !has_info], collapse = ", "))
+  }
+
   # composite is the equal-weight mean of the available scaled criteria;
-  # layers with NA on one criterion are not punished twice.
+  # schemes with NA on one criterion are not punished twice.
   composite <- vapply(seq_len(nrow(scaled_mat)), function(i) {
     s <- scaled_mat[i, ]
     ok <- !is.na(s)
@@ -298,13 +305,14 @@ biomes_rank <- function(
   out <- .apply_tiebreaker(out, tiebreaker)
   best_scheme <- out$scheme[out$is_best][1]
 
-  attr(out, "criteria")    <- criteria
-  attr(out, "tiebreaker")  <- tiebreaker
+  attr(out, "criteria")      <- criteria
+  attr(out, "criteria_used") <- criteria_used
+  attr(out, "tiebreaker")    <- tiebreaker
   attr(out, "best_scheme") <- best_scheme
-  attr(out, "scheme_type") <- scheme_type
+  attr(out, "definition") <- definition
   class(out) <- c("biomes_rank", "data.frame")
 
-  if (verbose) {
+  if (verbose && !is.na(out$composite_score[out$is_best][1])) {
     message(sprintf(
       "Best scheme: %s, %s (composite = %.3f)",
       best_scheme,
@@ -322,9 +330,9 @@ biomes_rank <- function(
 
 #' Min-max scale a numeric vector to `[0, 1]`.
 #'
-#' NA values are preserved. If all non-NA values are equal, the result
-#' is 1 for non-NA entries (every layer is equally good on this
-#' criterion, so we do not punish any of them in the composite).
+#' NA values are preserved. If all non-NA values are equal, the criterion
+#' does not discriminate between the compared schemes and all entries
+#' become NA, so that the criterion is left out of the composite score.
 #'
 #' @keywords internal
 #' @noRd
@@ -333,9 +341,7 @@ biomes_rank <- function(
   mn <- min(x, na.rm = TRUE)
   mx <- max(x, na.rm = TRUE)
   if (isTRUE(all.equal(mn, mx))) {
-    out <- rep(1, length(x))
-    out[is.na(x)] <- NA_real_
-    return(out)
+    return(rep(NA_real_, length(x)))
   }
   (x - mn) / (mx - mn)
 }
@@ -351,55 +357,7 @@ biomes_rank <- function(
   -sum(p * log(p))
 }
 
-#' Mean pairwise Cohen's kappa per layer across all other layers.
-#'
-#' For two layers (vectors of class IDs at the same records), kappa is
-#' computed on records non-NA in both, with raw class IDs as labels
-#' (Monserud & Leemans 1992). Layers whose label space is fully
-#' disjoint from another layer's are still scored (kappa close to 0).
-#'
-#' @param ids Data frame: one column per layer of class IDs (NA = miss).
-#' @keywords internal
-#' @noRd
-.compute_pairwise_kappa <- function(ids) {
-  L <- length(ids)
-  if (L < 2) return(rep(NA_real_, L))
-  K <- matrix(NA_real_, L, L)
-  for (i in seq_len(L - 1)) {
-    a <- ids[[i]]
-    for (j in (i + 1):L) {
-      b <- ids[[j]]
-      ok <- !is.na(a) & !is.na(b)
-      if (!any(ok)) next
-      K[i, j] <- K[j, i] <- .kappa_pair(a[ok], b[ok])
-    }
-  }
-  rowMeans(K, na.rm = TRUE)
-}
-
-#' Cohen's kappa between two equal-length, complete categorical vectors.
-#'
-#' @keywords internal
-#' @noRd
-.kappa_pair <- function(a, b) {
-  n <- length(a)
-  if (n == 0) return(NA_real_)
-  cats <- union(unique(a), unique(b))
-  if (length(cats) < 2) {
-    # only one label in common -> agreement is trivial
-    return(if (all(a == b)) 1 else 0)
-  }
-  fa <- factor(a, levels = cats)
-  fb <- factor(b, levels = cats)
-  po <- sum(a == b) / n
-  pa <- as.numeric(table(fa)) / n
-  pb <- as.numeric(table(fb)) / n
-  pe <- sum(pa * pb)
-  if (isTRUE(all.equal(pe, 1))) return(NA_real_)
-  (po - pe) / (1 - pe)
-}
-
-#' Layer-level metadata: layer_name, publication year, class count.
+#' Scheme-level metadata: scheme name, publication year, biome count.
 #'
 #' @keywords internal
 #' @noRd
@@ -409,7 +367,7 @@ biomes_rank <- function(
   total_cls  <- rep(NA_integer_,   length(layer_idx))
   if (!use_default_legend) return(list(layer_name = layer_name,
                                        year = year,
-                                       total_classes = total_cls))
+                                       total_biomes = total_cls))
 
   info <- biomes::biomes_information
   leg  <- biomes::biomes_legend
@@ -425,21 +383,27 @@ biomes_rank <- function(
     leg_row <- leg[k, -c(1, 2), drop = FALSE]
     total_cls[i] <- sum(!is.na(unlist(leg_row)))
   }
-  list(layer_name = layer_name, year = year, total_classes = total_cls)
+  list(layer_name = layer_name, year = year, total_biomes = total_cls)
 }
 
 #' Assign ranks per the chosen tiebreaker.
 #'
-#' - `"year"`  : strict 1..N, order chain composite -> year -> classes -> name
-#' - `"classes"`: strict 1..N, order chain composite -> classes -> year -> name
+#' - `"year"`  : strict 1..N, order chain composite -> year -> biomes -> name
+#' - `"biomes"`: strict 1..N, order chain composite -> biomes -> year -> name
 #' - `"none"`  : dense ranks, ties on `composite_score` share a rank;
-#'                multiple layers may carry `is_best = TRUE`.
-#' Layers with NA `composite_score` get NA rank.
+#'                multiple schemes may carry `is_best = TRUE`.
+#' Schemes with NA `composite_score` get NA rank.
 #'
 #' @keywords internal
 #' @noRd
 .apply_tiebreaker <- function(df, tiebreaker) {
-  cls    <- .total_classes_from_df(df)
+  # a single compared scheme is trivially the best, even without composite
+  if (nrow(df) == 1L) {
+    df$rank    <- 1L
+    df$is_best <- TRUE
+    return(df)
+  }
+  cls    <- .total_biomes_from_df(df)
   non_na <- !is.na(df$composite_score)
 
   if (tiebreaker == "none") {
@@ -471,7 +435,7 @@ biomes_rank <- function(
       df$scheme_name[non_na],
       na.last = TRUE
     )
-  } else {  # "classes"
+  } else {  # "biomes"
     sort_idx <- order(
       -df$composite_score[non_na],
       -cls[non_na],
@@ -490,12 +454,12 @@ biomes_rank <- function(
   df
 }
 
-#' Compute "total classes" for a ranked data frame, even if the user
+#' Compute "total biomes" for a ranked data frame, even if the user
 #' passed a custom raster (legend unknown); fall back to NA there.
 #'
 #' @keywords internal
 #' @noRd
-.total_classes_from_df <- function(df) {
+.total_biomes_from_df <- function(df) {
   k <- df$scheme
   leg <- biomes::biomes_legend
   out <- rep(NA_integer_, length(k))
@@ -526,8 +490,9 @@ biomes_rank <- function(
   base$composite_score <- numeric()
   base$rank            <- integer()
   base$is_best         <- logical()
-  attr(base, "criteria")   <- criteria
-  attr(base, "tiebreaker") <- tiebreaker
+  attr(base, "criteria")      <- criteria
+  attr(base, "criteria_used") <- character()
+  attr(base, "tiebreaker")    <- tiebreaker
   attr(base, "best_scheme") <- NA_integer_
   class(base) <- c("biomes_rank", "data.frame")
   base

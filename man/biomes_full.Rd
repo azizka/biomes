@@ -26,10 +26,10 @@ Mutually exclusive with \code{x}.}
 
 \item{scheme}{One of: an integer in \code{1:31} (biome scheme number) to
 force a specific scheme; \code{"best"} (default) to pick the best-fitting
-scheme across all 31 via \code{\link[=biomes_rank]{biomes_rank()}}; or a scheme type
+scheme across all 31 via \code{\link[=biomes_rank]{biomes_rank()}}; or a biome definition
 (\code{"climate"}, \code{"vegetation"}, \code{"land_cover"}, \code{"ecoregion"},
 \code{"integrative"}, \code{"anthropogenic"}) to pick the best-fitting scheme
-within that methodological group.}
+within that biome definition.}
 
 \item{lon, lat}{Column names of longitude / latitude in \code{x}
 (data frame only). Defaults \code{"decimalLongitude"}/\code{"decimalLatitude"}.}
@@ -105,19 +105,19 @@ res$table
 \donttest{
 # Path 2: from an existing data frame, pick the best scheme.
 # Uses the biome raster (~36 MB), downloaded on first use.
-data("biomes_example")
-res <- biomes_full(x = biomes_example, scheme = "best")
+data("bombacoideae_occurrences")
+res <- biomes_full(x = bombacoideae_occurrences, scheme = "best")
 
 # Path 2 with a fixed scheme
-res <- biomes_full(x = biomes_example, scheme = 1)
+res <- biomes_full(x = bombacoideae_occurrences, scheme = 1)
 
 # Path 2, best-fitting scheme within the vegetation group,
 # and build the full figure
-res <- biomes_full(x = biomes_example, scheme = "vegetation", plot = "all")
+res <- biomes_full(x = bombacoideae_occurrences, scheme = "vegetation", plot = "all")
 res$plot
 
 # individual panels (no a-c letters) in $rank / $map / $barplot
-res <- biomes_full(x = biomes_example, plot = c("map", "barplot"))
+res <- biomes_full(x = bombacoideae_occurrences, plot = c("map", "barplot"))
 res$map
 res$barplot
 }

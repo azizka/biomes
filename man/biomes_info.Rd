@@ -16,11 +16,11 @@ was printed. The function is called for its side effect of printing
 to the console.
 }
 \description{
-Prints a human-readable summary of the biome classifications shipped
+Prints a human-readable summary of the biome schemes shipped
 with the package. For each requested classification the function prints
 the publication, the criteria and methodology used to define the
-classes, a short description, the number of biome classes, the biome
-scheme number, and a list of biome-class names with their raster values.
+biomes, a short description, the number of biomes, the biome
+scheme number, and a list of biome names with their raster values.
 }
 \details{
 This is the \emph{interactive} sibling of the \code{biomes_information} data set:

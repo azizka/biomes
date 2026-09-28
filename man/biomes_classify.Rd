@@ -70,22 +70,22 @@ data frame corresponds to one row (one occurrence record) of \code{x}.
 }
 \examples{
 # Load example occurrence data
-data("biomes_example")
+data("bombacoideae_occurrences")
 
 \donttest{
 # The biome raster (~36 MB) is downloaded and cached on first use.
 
 # Default: classify against all 31 layers and append the result to x
-biomes_classify(biomes_example)
+biomes_classify(bombacoideae_occurrences)
 
 # Single scheme, both raster value and biome name
-biomes_classify(biomes_example, scheme = 1, value = "both")
+biomes_classify(bombacoideae_occurrences, scheme = 1, value = "both")
 
 # Multiple schemes
-biomes_classify(biomes_example, scheme = c(1, 25))
+biomes_classify(bombacoideae_occurrences, scheme = c(1, 25))
 
 # Return only the classification columns (old default behaviour)
-biomes_classify(biomes_example, scheme = 1, append = FALSE)
+biomes_classify(bombacoideae_occurrences, scheme = 1, append = FALSE)
 }
 
 }

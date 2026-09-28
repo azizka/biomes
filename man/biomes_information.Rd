@@ -3,21 +3,21 @@
 \docType{data}
 \name{biomes_information}
 \alias{biomes_information}
-\title{Metadata for the 31 biome classifications}
+\title{Metadata for the 31 biome schemes}
 \format{
 A data frame with 31 rows and 12 columns:
 \describe{
-\item{publication}{Original publication of the biome classification.}
-\item{name_of_classification}{Full name of the classification scheme.}
-\item{criteria_for_class_assignment}{Criteria used to assign biome classes.}
+\item{publication}{Original publication of the biome scheme.}
+\item{name_of_classification}{Full name of the biome scheme.}
+\item{criteria_for_biome_assignment}{Criteria used to assign biomes.}
 \item{methodology}{Methodology used to derive the biome classification.}
 \item{scheme_number}{Biome scheme number (1-31); index of the
 corresponding layer in the raster stack returned by \code{\link[=biomes_get]{biomes_get()}}.}
 \item{background_and_specifications}{Free-text background information
 about the classification scheme.}
-\item{number_of_classes_zonal_azonal}{Total number of biome classes
+\item{number_of_biomes_zonal_azonal}{Total number of biomes
 in the classification, with the split between zonal and azonal
-classes in parentheses.}
+biomes in parentheses.}
 \item{cover_deviation_percent}{Deviation of the total area covered by
 this classification from the mean area of all 31 classifications,
 in percent.}
@@ -25,11 +25,11 @@ in percent.}
 (e.g. raster, shapefile).}
 \item{source}{URL or citation of the original data source.}
 \item{access_date}{Date on which the original data source was accessed.}
-\item{scheme_type}{Methodological group the classification belongs to,
-one of \code{"climate"}, \code{"vegetation"}, \code{"land_cover"}, \code{"ecoregion"},
-\code{"integrative"} (combined climate-vegetation schemes), or
-\code{"anthropogenic"}. Used by \code{\link[=biomes_rank]{biomes_rank()}} to rank layers within a
-conceptually comparable group.}
+\item{biome_definition}{The concept on which the scheme delimits its
+biomes, one of \code{"climate"}, \code{"vegetation"}, \code{"land_cover"},
+\code{"ecoregion"}, \code{"integrative"} (a synthesis of several criteria or
+data sources), or \code{"anthropogenic"}. Used by \code{\link[=biomes_rank]{biomes_rank()}} to rank
+schemes within the group sharing one biome definition.}
 }
 }
 \source{

@@ -1,18 +1,20 @@
-# data-raw/data-scheme_type.R
-# Add a `scheme_type` column to biomes_information, grouping the 31 biome
-# definitions by methodological approach. The grouping is derived from the
-# `criteria_for_class_assignment` and `methodology` fields (Fischer et al.
-# 2022). Run from the package root.
+# data-raw/data-biome_definition.R
+# Add the `biome_definition` column to biomes_information: the concept on
+# which each of the 31 biome schemes delimits its biomes (climate,
+# vegetation, land cover, ecoregions, integrative, anthropogenic). The
+# grouping is derived from the `criteria_for_biome_assignment` and
+# `methodology` fields (Fischer et al. 2022). Run from the package root,
+# after data-raw/data-biome_information-rds.R.
 
 load("data/biomes_information.rda")   # loads object `biomes_information`
 
-scheme_type <- c(
+biome_definition <- c(
   "vegetation",    #  1 Global vegetation patterns of the past 140,000 yrs (LPJ-GUESS DGVM)
   "land_cover",    #  2 Copernicus Global Land Cover
   "climate",       #  3 Koeppen-Geiger climate classification
   "vegetation",    #  4 Global mapping of potential natural vegetation (ML)
   "ecoregion",     #  5 Ecoregion-based approach (Dinerstein et al.)
-  "climate",       #  6 Global vegetation classification from NDVI + climate clustering
+  "integrative",   #  6 Zhang et al. 2017: K-means on temperature, precipitation AND NDVI
   "climate",       #  7 Climate clustering (dynamic time warping)
   "climate",       #  8 Climate clustering (Euclidean)
   "vegetation",    #  9 Functional biomes
@@ -40,10 +42,20 @@ scheme_type <- c(
   "integrative"    # 31 Vegetation and climate (Walter)
 )
 
-stopifnot(length(scheme_type) == nrow(biomes_information))
-biomes_information$scheme_type <- scheme_type
+stopifnot(length(biome_definition) == nrow(biomes_information))
+
+# harmonise column names of older builds
+old_new <- c(number_of_classes_zonal_azonal = "number_of_biomes_zonal_azonal",
+             criteria_for_class_assignment  = "criteria_for_biome_assignment")
+for (nm in names(old_new)) {
+  if (nm %in% names(biomes_information)) {
+    names(biomes_information)[names(biomes_information) == nm] <- old_new[[nm]]
+  }
+}
+biomes_information$scheme_type <- NULL
+biomes_information$biome_definition <- biome_definition
 
 save(biomes_information, file = "data/biomes_information.rda", compress = "xz")
 
-cat("scheme_type counts:\n")
-print(table(scheme_type))
+cat("biome_definition counts:\n")
+print(table(biome_definition))

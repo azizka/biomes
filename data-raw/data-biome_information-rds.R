@@ -14,11 +14,11 @@ biomes_information <- as.data.frame(biomes_information)
 names(biomes_information) <- c(
   "publication",
   "name_of_classification",
-  "criteria_for_class_assignment",
+  "criteria_for_biome_assignment",
   "methodology",
   "scheme_number",
   "background_and_specifications",
-  "number_of_classes_zonal_azonal",
+  "number_of_biomes_zonal_azonal",
   "cover_deviation_percent",
   "original_file_format",
   "source",
