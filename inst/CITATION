@@ -1,22 +1,22 @@
-citHeader(
-  "To cite the biomes package in publications, please cite both the R package",
-  "and the underlying biome inventory:"
-)
+citHeader("To cite the biomes package in publications use:")
 
 bibentry(
-  bibtype = "Manual",
+  bibtype = "Article",
   title   = "{biomes}: An R package for reproducible occurrence-to-biome classification using 31 global biome schemes",
   author  = c(person("Hans Christian", "Groß"),
               person("Alexander", "Zizka"),
-              person("Anna", "Walentowitz"),
-              person("Jan-Christopher", "Fischer")),
+              person("Jan-Christopher", "Fischer"),
+              person("Anna", "Walentowitz")),
+  journal = "bioRxiv",
   year    = "2026",
   note    = paste("R package version", meta$Version),
-  url     = "https://azizka.github.io/biomes/",
+  doi     = "10.64898/2026.09.25.754345",
+  url     = "https://github.com/azizka/biomes",
   textVersion = paste0(
-    "Groß HC, Zizka A, Walentowitz A, Fischer J-C (2026). ",
+    "Groß HC, Zizka A, Fischer J-C & Walentowitz A (2026) ",
     "biomes: An R package for reproducible occurrence-to-biome classification using 31 global biome schemes. ",
-    "R package version ", meta$Version, ". https://azizka.github.io/biomes/"
+    "bioRxiv, doi:10.64898/2026.09.25.754345, https://github.com/azizka/biomes. ",
+    "R package version ", meta$Version, "."
   )
 )
 

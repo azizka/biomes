@@ -142,10 +142,7 @@ them locally with `browseVignettes("biomes")`.
 
 ## Citation
 
-Please cite both:
-
-1. Groß HC, Zizka A, Walentowitz A, Fischer J-C (2026): _biomes_: An R package for reproducible occurrence-to-biome classification using 31 global biome schemes. R package version 0.9.5.
-   <https://azizka.github.io/biomes/>
+1. Groß HC, Zizka A, Fischer J-C & Walentowitz A (2026) _biomes_: An R package for reproducible occurrence-to-biome classification using 31 global biome schemes. bioRxiv, doi:[10.64898/2026.09.25.754345](https://doi.org/10.64898/2026.09.25.754345), <https://github.com/azizka/biomes>. R package version 0.9.5.
 2. Fischer J-C, Walentowitz A, Beierkuhnlein C (2022): The biome inventory – Standardizing global biogeographical land units. Global Ecology and Biogeography 31(11): 2172-2183.
    <https://doi.org/10.1111/geb.13574>
 
