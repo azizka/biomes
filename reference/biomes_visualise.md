@@ -75,10 +75,11 @@ biomes_visualise(
 
   Logical. If `TRUE` (default), each panel carries a left-aligned title:
   "Ranked biome schemes" (or "Top n ranked biome schemes" with `top_n`),
-  "Spatial projection for " and "Occurrence and species number for ",
-  where the reference is the source of the chosen scheme, e.g.
-  "Ramankutty & Foley (1999)". With `FALSE` no titles are drawn and the
-  panel letters are placed in the top-left corners instead.
+  "Spatial projection for `<reference>`" and "Occurrence and species
+  number for `<reference>`", where the reference is the source of the
+  chosen scheme, e.g. "Ramankutty & Foley (1999)". With `FALSE` no
+  titles are drawn and the panel letters are placed in the top-left
+  corners instead.
 
 - legend_counts:
 

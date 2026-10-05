@@ -75,8 +75,8 @@ to load the raster as a
 # Downloads ~36 MB into the session's temporary directory.
 raster_path <- biomes_download(path = tempdir())
 #> Downloading biome raster stack (~36 MB) to:
-#>   /tmp/RtmpDw71Q0/Biomes_Inventory_RasterStack.tif
+#>   /tmp/Rtmpy9dAUi/Biomes_Inventory_RasterStack.tif
 raster_path
-#> [1] "/tmp/RtmpDw71Q0/Biomes_Inventory_RasterStack.tif"
+#> [1] "/tmp/Rtmpy9dAUi/Biomes_Inventory_RasterStack.tif"
 # }
 ```
