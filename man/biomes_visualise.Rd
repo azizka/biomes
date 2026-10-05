@@ -48,8 +48,8 @@ compared schemes.}
 
 \item{titles}{Logical. If \code{TRUE} (default), each panel carries a
 left-aligned title: "Ranked biome schemes" (or "Top n ranked biome
-schemes" with \code{top_n}), "Spatial projection for \if{html}{\out{<reference>}}" and
-"Occurrence and species number for \if{html}{\out{<reference>}}", where the reference
+schemes" with \code{top_n}), "Spatial projection for \verb{<reference>}" and
+"Occurrence and species number for \verb{<reference>}", where the reference
 is the source of the chosen scheme, e.g. "Ramankutty & Foley (1999)".
 With \code{FALSE} no titles are drawn and the panel letters are placed in
 the top-left corners instead.}
