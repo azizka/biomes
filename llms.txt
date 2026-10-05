@@ -149,7 +149,7 @@ locally with `browseVignettes("biomes")`.
 
 ## Citation
 
-1.  Groß HC, Zizka A, Fischer J-C & Walentowitz A (2026) *biomes*: An R
+1.  Groß HC, Fischer J-C, Walentowitz A & Zizka A (2026) *biomes*: An R
     package for reproducible occurrence-to-biome classification using 31
     global biome schemes. bioRxiv,
     <doi:%5B10.64898/2026.09.25.754345>\](<https://doi.org/10.64898/2026.09.25.754345>),

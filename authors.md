@@ -15,14 +15,14 @@
 Source:
 [`inst/CITATION`](https://github.com/azizka/biomes/blob/main/inst/CITATION)
 
-Groß HC, Zizka A, Fischer J-C & Walentowitz A (2026) biomes: An R
+Groß HC, Fischer J-C, Walentowitz A & Zizka A (2026) biomes: An R
 package for reproducible occurrence-to-biome classification using 31
 global biome schemes. bioRxiv, doi:10.64898/2026.09.25.754345,
 https://github.com/azizka/biomes. R package version 0.9.5.
 
     @Article{,
       title = {{biomes}: An R package for reproducible occurrence-to-biome classification using 31 global biome schemes},
-      author = {Hans Christian Groß and Alexander Zizka and Jan-Christopher Fischer and Anna Walentowitz},
+      author = {Hans Christian Groß and Jan-Christopher Fischer and Anna Walentowitz and Alexander Zizka},
       journal = {bioRxiv},
       year = {2026},
       note = {R package version 0.9.5},
