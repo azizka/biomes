@@ -103,7 +103,7 @@ data("bombacoideae_occurrences")
 biomes_classify(bombacoideae_occurrences)
 #> no biome file or scheme provided using default biomes
 #> Downloading biome raster stack (~36 MB) to:
-#>   /tmp/Rtmpy9dAUi/biomes/Biomes_Inventory_RasterStack.tif
+#>   /tmp/RtmpboFvOr/biomes/Biomes_Inventory_RasterStack.tif
 #> Coordinates provided as data.frame, assuming WGS84 as CRS.
 #> Classified 17030 record(s) against 31 biome layer(s):
 #>   - Biome_Inventory_layer_01 (Allen et al., 2020)

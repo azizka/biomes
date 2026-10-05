@@ -4,11 +4,11 @@
 
 - **Hans Christian Groß**. Maintainer, author.
 
-- **Alexander Zizka**. Author, funder.
+- **Jan-Christopher Fischer**. Author.
 
 - **Anna Walentowitz**. Author.
 
-- **Jan-Christopher Fischer**. Author.
+- **Alexander Zizka**. Author, funder.
 
 ## Citation
 
