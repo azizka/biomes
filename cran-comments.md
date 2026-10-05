@@ -43,7 +43,10 @@ full list):
   (Groß, Fischer, Walentowitz & Zizka 2026, bioRxiv,
   <https://doi.org/10.64898/2026.09.25.754345>).
 
-All changes are documented in NEWS.md.
+All changes are documented in NEWS.md. The renamed arguments and
+columns and the removed example dataset are breaking changes relative
+to 0.9.4; there are no reverse dependencies on CRAN, so no other
+package is affected.
 
 ## R CMD check results
 
@@ -51,7 +54,7 @@ Local check: 0 errors | 0 warnings | 0 notes
 (Windows 11 x64, R 4.6.0, `devtools::check()`).
 
 win-builder check: 0 errors | 0 warnings | 1 note
-(R-release and R-devel).
+(R-release 4.6.1 and R-devel 2026-09-30 r90605; results identical).
 
 NOTE: checking CRAN incoming feasibility ... NOTE
   Maintainer: 'Hans Christian Groß <grossha@uni-marburg.de>'
@@ -63,9 +66,6 @@ NOTE: checking CRAN incoming feasibility ... NOTE
 
 * The "New maintainer" note reflects the change of e-mail address
   described above; the maintainer is unchanged.
-* The word "Reproducibly" (Description) may be flagged as possibly
-  misspelled. It is a correctly spelled English adverb; this is a false
-  positive.
 
 ## Test environments
 
